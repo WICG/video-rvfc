@@ -1,5 +1,7 @@
 # video.requestAnimationFrame() Explainer
 
+[Original explainer] (https://github.com/dalecurtis/video-animation-frame/blob/master/explainer.md)
+
 # Introduction
 Today [`<video>`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLVideoElement) elements have no means by which to signal when a video frame has been presented for composition nor any means to provide metadata about that frame.
 
