@@ -47,7 +47,8 @@
 <body>
   <section id="abstract">
     <p>
-      This specification does neat stuff.
+      This proposal extends <a href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement">HTMLVideoElement</a>
+      to include a requestAnimationFrame() method.
     </p>
   </section>
   <section id="sotd">
@@ -62,24 +63,74 @@
       user guide</a> for how to get started!
     </p>
   </section>
-  <section data-dfn-for="Foo">
-    <h2>Start your spec!</h2>
+  <section data-dfn-for="VideoFrameMetadata">
+    <h2>VideoFrameMetadata</h2>
     <pre class="idl">
-    interface Foo {
-      attribute Bar bar;
-      void doTheFoo();
+    dictionary VideoFrameMetadata {
+        // The time at which the user agent submitted the frame for composition.
+        required DOMHighResTimeStamp presentationTime;
+
+        // The time at which the user agent expects the frame to be visible.
+        required DOMHighResTimeStamp expectedPresentationTime;
+
+        // The width and height of the presented video frame.
+        required unsigned long width;
+        required unsigned long height;
+
+        // The presentation timestamp in seconds of the frame presented. May not be
+        // known to the compositor or exist in all cases.
+        double presentationTimestamp;  // optional
+
+        // The elapsed time in seconds from submission of the encoded packet with
+        // the same presentationTimestamp as this frame to the decoder until the
+        // decoded frame was ready for presentation.
+        //
+        // In addition to decoding time, may include processing time. E.g., YUV
+        // conversion and/or staging into GPU backed memory.
+        double elapsedProcessingTime;  // optional
+
+        // A count of the number of frames submitted for composition. Allows clients
+        // to determine if frames were missed between VideoFrameRequestCallbacks.
+        //
+        // https://wiki.whatwg.org/wiki/Video_Metrics#presentedFrames
+        unsigned long presentedFrames;  // optional
+
+        // For video frames coming from either a local or remote source, this is the
+        // time the encoded packet with the same presentationTimestamp as this frame
+        // was received by the platform. E.g., for a local camera, this is the time
+        // at which the frame was captured by the camera. For a remote source, this
+        // would be the time at which the packet was received over the network.
+        //
+        // TODO: For remote sources should this instead be an estimate of the
+        // capture time on the remote endpoint?
+        DOMHighResTimeStamp captureTime;  // optional
+
+        // The RTP timestamp associated with this video frame.
+        //
+        // https://w3c.github.io/webrtc-pc/#dom-rtcrtpcontributingsource
+        unsigned long rtpTimestamp;  // optional
+
+        // Potentially other useful properties?
     };
     </pre>
-    <p>
-      See <a href="https://github.com/w3c/respec/wiki/WebIDL-Guide">ReSpec's
-      WebIDL guide</a> for how to write [[!WebIDL-2]] interfaces!
-    </p>
-    <p>
-      The <dfn>doTheFoo</dfn> method.
-    </p>
-    <p>
-      The <dfn>bar</dfn> attribute.
-    </p>
+  </section>
+  <section data-dfn-for="VideoFrameRequestCallback">
+    <h2>VideoFrameRequestCallback</h2>
+    <pre class="idl">
+    callback VideoFrameRequestCallback = void(DOMHighResTimeStamp time, VideoFrameMetadata);
+    </pre>
+  <section data-dfn-for="HTMLVideoElement">
+    <h2>HTMLMediaElement.requestAnimationFrame</h2>
+    <pre class="idl">
+    partial interface HTMLVideoElement {
+        // Extends the AnimationFrameProvider mixin with the addition of an
+        // VideoFrameMetadata parameter on the FrameRequestCallback.
+        //
+        // https://html.spec.whatwg.org/multipage/imagebitmap-and-animations.html#animation-frames
+        unsigned long requestAnimationFrame(VideoFrameRequestCallback callback);
+        void cancelAnimationFrame(unsigned long handle);
+    };
+    </pre>
   </section>
 </body>
 
