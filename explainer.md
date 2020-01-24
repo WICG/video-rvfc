@@ -119,7 +119,7 @@ Presented frame 0s (1280x720) at 1000ms for display at 1016ms.
 # Implementation Details
 * When texImage2D() or drawImage() is called during an active VideoFrameRequestCallback, implementations shall ensure that the video frame used is the one matching the active callback.
 * Just like window.requestAnimationFrame(), callbacks are one-shot. video.requestAnimationFrame() must be called again to get the next frame.
-* Since VideoFrameRequestCallback will only occur on new frames, error states
+* Since VideoFrameRequestCallback will only occur on new frames, error states may never satisfy the requestAnimationFrame.
 * In cases where VideoFrameMetadata can't be surfaced (e.g., [encrypted media](https://w3c.github.io/encrypted-media/#media-element-restrictions)) implementations may never satisfy the requestAnimationFrame.
 
 
