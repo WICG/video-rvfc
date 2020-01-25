@@ -63,8 +63,9 @@
       user guide</a> for how to get started!
     </p>
   </section>
+  <h2>HTMLVideoElement.requestAnimationFrame()</h2>
   <section data-dfn-for="VideoFrameMetadata">
-    <h2>VideoFrameMetadata</h2>
+    <h3>VideoFrameMetadata<h3>
     <pre class="idl">
     dictionary VideoFrameMetadata {
         // The time at which the user agent submitted the frame for composition.
@@ -114,14 +115,14 @@
     };
     </pre>
   </section>
+  <h3>VideoFrameRequestCallback</h3>
   <section data-dfn-for="VideoFrameRequestCallback">
-    <h2>VideoFrameRequestCallback</h2>
     <pre class="idl">
     callback VideoFrameRequestCallback = void(DOMHighResTimeStamp time, VideoFrameMetadata);
     </pre>
   </section>
+  <h3>requestAnimationFrame()</h3>
   <section data-dfn-for="HTMLVideoElement">
-    <h2>HTMLMediaElement.requestAnimationFrame</h2>
     <pre class="idl">
     partial interface HTMLVideoElement {
         // Extends the AnimationFrameProvider mixin with the addition of an
