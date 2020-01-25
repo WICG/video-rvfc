@@ -10,7 +10,7 @@ Editor: Thomas Guilbert, w3cid 120583, Google Inc. https://google.com/
 Abstract: &lt;video&gt;.requestAnimationFrame() allows web authors to be notified when a frame has been presented for composition.
 !Participate: <a href="https://github.com/wicg/video-raf">Git Repository.</a>
 !Participate: <a href="https://github.com/wicg/video-raf/issues/new">File an issue.</a>
-!Version History: <a href="https://github.com/wicg/video-raf/commits">https://github.com/wicg/web-codecs/commits</a>
+!Version History: <a href="https://github.com/wicg/video-raf/commits">https://github.com/wicg/video-raf/commits</a>
 </pre>
 
 <section class='non-normative'>
