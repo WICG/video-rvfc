@@ -1,0 +1,53 @@
+<pre class='metadata'>
+Title: HTMLVideoElement.requestAnimationFrame()
+Repository: wicg/video-raf
+Status: CG-DRAFT
+ED: https://wicg.github.io/video-raf/
+Shortname: video-raf
+Level: 1
+Group: wicg
+Editor: Thomas Guilbert, w3cid 120583, Google Inc. https://google.com/
+Abstract: &lt;video&gt;.requestAnimationFrame() allows web authors to be notified when a frame has been presented for composition.
+!Participate: <a href="https://github.com/wicg/video-raf">Git Repository.</a>
+!Participate: <a href="https://github.com/wicg/video-raf/issues/new">File an issue.</a>
+!Version History: <a href="https://github.com/wicg/video-raf/commits">https://github.com/wicg/web-codecs/commits</a>
+</pre>
+
+<section class='non-normative'>
+  <h2 id='introduction'>Introduction</h2>
+  <em>This section is non-normative</em>
+  <p>
+    The introduction has not yet been written.
+  </p>
+  <p class='note'>
+    NOTE: The interfaces that follow are a work in progress.
+  </p>
+</section>
+
+<section>
+  <h2 id='video-raf'>HTMLVideoElement.requestAnimationFrame()</h2>
+  <pre class='idl'>
+    dictionary VideoFrameMetadata {
+      required DOMHighResTimeStamp presentationTime;
+      required DOMHighResTimeStamp expectedPresentationTime;
+
+      required unsigned long width;
+      required unsigned long height;
+
+      double presentationTimestamp;
+      double elapsedProcessingTime;
+      unsigned long presentedFrames;
+      DOMHighResTimeStamp captureTime;
+      unsigned long rtpTimestamp;
+    };
+  </pre>
+  <pre class='idl'>
+    callback VideoFrameRequestCallback = void(DOMHighResTimeStamp time, VideoFrameMetadata metadata);
+  </pre>
+  <pre class='idl'>
+    partial interface HTMLVideoElement {
+        unsigned long requestAnimationFrame(VideoFrameRequestCallback callback);
+        void cancelAnimationFrame(unsigned long handle);
+    };
+  </pre>
+</section>
