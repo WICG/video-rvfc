@@ -67,20 +67,20 @@
     <h2><dfn>VideoFrameMetadata</dfn></h2>
     <pre class="idl">
     dictionary VideoFrameMetadata {
-        required DOMHighResTimeStamp presentationTime;
-        required DOMHighResTimeStamp expectedPresentationTime;
-        required unsigned long width;
-        required unsigned long height;
-        optional double presentationTimestamp; 
-        optional double elapsedProcessingTime; 
-        optional unsigned long presentedFrames;
-        optional DOMHighResTimeStamp captureTime; 
-        optional unsigned long rtpTimestamp;
+        DOMHighResTimeStamp presentationTime;
+        DOMHighResTimeStamp expectedPresentationTime;
+        unsigned long width;
+        unsigned long height;
+        double presentationTimestamp; 
+        double elapsedProcessingTime; 
+        unsigned long presentedFrames;
+        DOMHighResTimeStamp captureTime; 
+        unsigned long rtpTimestamp;
     };
     </pre>
     <section>
       <h2><dfn>presentationTime<dfn/></h2>
-      <p> //Todo</p>
+      <p>// Todo</p>
     </section>
   </section>
   <section data-dfn-for="VideoFrameRequestCallback">
@@ -89,14 +89,10 @@
     callback VideoFrameRequestCallback = void(DOMHighResTimeStamp time, VideoFrameMetadata);
     </pre>
   </section>
-  <h3>requestAnimationFrame()</h3>
   <section data-dfn-for="HTMLVideoElement">
+    <h2>requestAnimationFrame()</h2>
     <pre class="idl">
     partial interface HTMLVideoElement {
-        // Extends the AnimationFrameProvider mixin with the addition of an
-        // VideoFrameMetadata parameter on the FrameRequestCallback.
-        //
-        // https://html.spec.whatwg.org/multipage/imagebitmap-and-animations.html#animation-frames
         unsigned long requestAnimationFrame(VideoFrameRequestCallback callback);
         void cancelAnimationFrame(unsigned long handle);
     };
