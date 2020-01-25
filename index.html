@@ -71,22 +71,66 @@
         DOMHighResTimeStamp expectedPresentationTime;
         unsigned long width;
         unsigned long height;
-        double presentationTimestamp; 
-        double elapsedProcessingTime; 
-        unsigned long presentedFrames;
-        DOMHighResTimeStamp captureTime; 
-        unsigned long rtpTimestamp;
+        double? presentationTimestamp; 
+        double? elapsedProcessingTime; 
+        unsigned long? presentedFrames;
+        DOMHighResTimeStamp? captureTime; 
+        unsigned long? rtpTimestamp;
     };
     </pre>
     <section>
       <h2><dfn>presentationTime<dfn/></h2>
-      <p>// Todo</p>
+      <p>The time at which the user agent submitted the frame for composition.</p>
+    </section>
+    <section>
+      <h2><dfn>expectedPresentationTime<dfn/></h2>
+      <p>The time at which the user agent expects the frame to be visible.</p>
+    </section>
+    <section>
+      <h2><dfn>width<dfn/></h2>
+      <p>The width of the presented video frame.</p>
+    </section>
+    <section>
+      <h2><dfn>height<dfn/></h2>
+      <p>The height of the presented video frame.</p>
+    </section>
+    <section>
+      <h2><dfn>presentationTimestamp<dfn/></h2>
+      <p>The presentation timestamp in seconds of the frame presented.
+        May not be known to the compositor or exist in all cases.</p>
+    </section>
+    <section>
+      <h2><dfn>elapsedProcessingTime<dfn/></h2>
+      <p>The elapsed time in seconds from submission of the encoded packet with
+        the same presentationTimestamp as this frame to the decoder until the
+        decoded frame was ready for presentation.<br/>
+        In addition to decoding time, may include processing time. E.g., YUV
+        conversion and/or staging into GPU backed memory.</p>
+    </section>
+    <section>
+      <h2><dfn>presentedFrames<dfn/></h2>
+      <p> A count of the number of frames submitted for composition. Allows clients
+      to determine if frames were missed between VideoFrameRequestCallbacks.<br/>
+     https://wiki.whatwg.org/wiki/Video_Metrics#presentedFrames.</p>
+    </section>
+    <section>
+      <h2><dfn>captureTime<dfn/></h2>
+      <p> For video frames coming from either a local or remote source, this is the
+       time the encoded packet with the same presentationTimestamp as this frame
+       was received by the platform. E.g., for a local camera, this is the time
+       at which the frame was captured by the camera. For a remote source, this
+       would be the time at which the packet was received over the network.</p>
+    </section>
+    <section>
+      <h2><dfn>captureTime<dfn/></h2>
+      <p>The <a href="https://w3c.github.io/webrtc-pc/#dom-rtcrtpcontributingsource">RTP timestamp</a>
+        associated with this video frame.</p>
     </section>
   </section>
   <section data-dfn-for="VideoFrameRequestCallback">
     <h2>VideoFrameRequestCallback</h2>
     <pre class="idl">
-    callback VideoFrameRequestCallback = void(DOMHighResTimeStamp time, VideoFrameMetadata);
+    callback VideoFrameRequestCallback = void(DOMHighResTimeStamp time, VideoFrameMetadata metadata);
     </pre>
   </section>
   <section data-dfn-for="HTMLVideoElement">
