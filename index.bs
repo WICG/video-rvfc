@@ -11,43 +11,116 @@ Abstract: &lt;video&gt;.requestAnimationFrame() allows web authors to be notifie
 !Participate: <a href="https://github.com/wicg/video-raf">Git Repository.</a>
 !Participate: <a href="https://github.com/wicg/video-raf/issues/new">File an issue.</a>
 !Version History: <a href="https://github.com/wicg/video-raf/commits">https://github.com/wicg/video-raf/commits</a>
+Indent: 2
+Markup Shorthands: markdown yes
 </pre>
 
-<section class='non-normative'>
-  <h2 id='introduction'>Introduction</h2>
-  <em>This section is non-normative</em>
-  <p>
-    The introduction has not yet been written.
-  </p>
-  <p class='note'>
-    NOTE: The interfaces that follow are a work in progress.
-  </p>
-</section>
 
-<section>
-  <h2 id='video-raf'>HTMLVideoElement.requestAnimationFrame()</h2>
-  <pre class='idl'>
-    dictionary VideoFrameMetadata {
-      required DOMHighResTimeStamp presentationTime;
-      required DOMHighResTimeStamp expectedPresentationTime;
 
-      required unsigned long width;
-      required unsigned long height;
+# Introduction #    {#introduction}
 
-      double presentationTimestamp;
-      double elapsedProcessingTime;
-      unsigned long presentedFrames;
-      DOMHighResTimeStamp captureTime;
-      unsigned long rtpTimestamp;
-    };
-  </pre>
-  <pre class='idl'>
-    callback VideoFrameRequestCallback = void(DOMHighResTimeStamp time, VideoFrameMetadata metadata);
-  </pre>
-  <pre class='idl'>
-    partial interface HTMLVideoElement {
-        unsigned long requestAnimationFrame(VideoFrameRequestCallback callback);
-        void cancelAnimationFrame(unsigned long handle);
-    };
-  </pre>
-</section>
+*This section is non-normative*
+
+This section has not been written yet. Please refer to <a href="https://github.com/WICG/video-raf/blob/gh-pages/explainer.md">the explainer</a> for now.
+
+<p class='note'>
+  NOTE: The interfaces that follow are a work in progress.
+</p>
+
+# VideoFrameMetadata #    {#video-frame-metadata}
+
+<pre class='idl'>
+  dictionary VideoFrameMetadata {
+    required DOMHighResTimeStamp presentationTime;
+    required DOMHighResTimeStamp expectedPresentationTime;
+
+    required unsigned long width;
+    required unsigned long height;
+
+    double presentationTimestamp;
+    double elapsedProcessingTime;
+    unsigned long presentedFrames;
+    DOMHighResTimeStamp captureTime;
+    unsigned long rtpTimestamp;
+  };
+</pre>
+
+## Attributes ## {#video-frame-metadata-attributes}
+
+: <dfn for="VideoFrameMetadata" attribute>presentationTime</dfn>
+:: The time at which the user agent submitted the frame for composition.
+
+: <dfn for="VideoFrameMetadata" attribute>expectedPresentationTime</dfn>
+:: The time at which the user agent expects the frame to be visible.
+
+: <dfn for="VideoFrameMetadata" attribute>width</dfn>
+:: The width of the video frame.
+
+: <dfn for="VideoFrameMetadata" attribute>height</dfn>
+:: The height of the video frame.
+
+: <dfn for="VideoFrameMetadata" attribute>presentationTimestamp</dfn>
+::  The presentation timestamp in seconds of the frame presented. May not be known
+to the compositor or exist in all cases.
+
+: <dfn for="VideoFrameMetadata" attribute>elapsedProcessingTime</dfn>
+::  The elapsed time in seconds from submission of the encoded packet with
+the same presentationTimestamp as this frame to the decoder until the
+decoded frame was ready for presentation.
+
+:: In addition to decoding time, may include processing time. E.g., YUV
+conversion and/or staging into GPU backed memory.
+
+: <dfn for="VideoFrameMetadata" attribute>presentedFrames</dfn>
+::  A count of the number of frames submitted for composition. Allows clients
+to determine if frames were missed between VideoFrameRequestCallbacks.
+
+: <dfn for="VideoFrameMetadata" attribute>captureTime</dfn>
+::  For video frames coming from either a local or remote source, this is the
+time the encoded packet with the same presentationTimestamp as this frame
+was received by the platform. E.g., for a local camera, this is the time
+at which the frame was captured by the camera. For a remote source, this
+would be the time at which the packet was received over the network.
+
+: <dfn for="VideoFrameMetadata" attribute>rtpTimestamp</dfn>
+::  The RTP timestamp associated with this video frame.
+
+# VideoFrameRequestCallback #    {#video-frame-request-callback}
+
+<pre class='idl'>
+  callback VideoFrameRequestCallback = void(DOMHighResTimeStamp time, VideoFrameMetadata metadata);
+</pre>
+
+Each {{VideoFrameRequestCallback}} object has a <dfn>cancelled</dfn> boolean initially set to false.
+
+# HTMLVideoElement.requestAnimationFrame() #  {#video-raf}
+<pre class='idl'>
+  partial interface HTMLVideoElement {
+      unsigned long requestAnimationFrame(VideoFrameRequestCallback callback);
+      void cancelAnimationFrame(unsigned long handle);
+  };
+</pre>
+
+## Methods ## {#video-raf-methods}
+
+Each {{HTMLVideoElement}} has a <dfn>list of animation frame callbacks</dfn>, which is initially empty, and an <dfn>animation frame callback identifier</dfn>, which is a number which is initially zero.
+
+: <dfn for="HTMLVideoElement" method>requestAnimationFrame(|callback|)</dfn>
+:: Registers a callback to be fired the next time a frame is presented to the compositor.
+
+   When `requestAnimationFrame` is called, the user agent MUST run the following steps:
+     1. Let |video| be the {{HTMLVideoElement}} on which `requestAnimationFrame` is
+        invoked.
+     1. Increment |video|'s [=animation frame callback identifier=] by one.
+     1. Append |callback| to |video|'s [=list of animation frame callbacks=], associated with |video|'s [=animation frame callback identifier=]’s current value.
+     1. Return |video|'s [=animation frame callback identifier=]’s current value.
+
+: <dfn for="HTMLVideoElement" method>cancelAnimationFrame(|handle|)</dfn>
+:: Cancels an existing video frame request callback given its handle.
+
+  When `cancelAnimationFrame` is called, the user agent MUST run the following steps:
+
+  1. Let |session| be the target {{HTMLVideoElement}} object on which `requestAnimationFrame` is invoked.
+  1. Find the entry in |video|'s [=list of animation frame callbacks=] that is associated with the value |handle|.
+  1. If there is such an entry, set its [=cancelled=] boolean to <code>true</code> and remove it from |video|'s [=list of animation frame callbacks=].
+
