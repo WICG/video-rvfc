@@ -91,7 +91,7 @@ would be the time at which the packet was received over the network.
   callback VideoFrameRequestCallback = void(DOMHighResTimeStamp time, VideoFrameMetadata metadata);
 </pre>
 
-Each {{VideoFrameRequestCallback}} object has a <dfn>cancelled</dfn> boolean initially set to false.
+Each {{VideoFrameRequestCallback}} object has a <dfn>canceled</dfn> boolean initially set to false.
 
 # HTMLVideoElement.requestAnimationFrame() #  {#video-raf}
 <pre class='idl'>
@@ -122,5 +122,5 @@ Each {{HTMLVideoElement}} has a <dfn>list of animation frame callbacks</dfn>, wh
 
   1. Let |session| be the target {{HTMLVideoElement}} object on which `requestAnimationFrame` is invoked.
   1. Find the entry in |video|'s [=list of animation frame callbacks=] that is associated with the value |handle|.
-  1. If there is such an entry, set its [=cancelled=] boolean to <code>true</code> and remove it from |video|'s [=list of animation frame callbacks=].
+  1. If there is such an entry, set its [=canceled=] boolean to <code>true</code> and remove it from |video|'s [=list of animation frame callbacks=].
 
