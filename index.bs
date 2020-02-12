@@ -85,9 +85,8 @@ to convert RTP timestamps to capture time as specified in
 
 : <dfn for="VideoFrameMetadata" attribute>receiveTime</dfn>
 ::  For video frames coming from a remote source, this is the
-time the encoded packet with the same presentationTimestamp as this frame
-was received by the platform, i.e., the time at which all packets belonging
-to this frame was received over the network.
+time the encoded frame was received by the platform, i.e., the time at
+which the last packet belonging to this frame was received over the network.
 
 : <dfn for="VideoFrameMetadata" attribute>rtpTimestamp</dfn>
 ::  The RTP timestamp associated with this video frame.
