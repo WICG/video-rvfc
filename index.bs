@@ -80,7 +80,8 @@ to determine if frames were missed between VideoFrameRequestCallbacks.
 ::  For video frames coming from either a local or remote source, this is the
 time at which the frame was captured by the camera. For a remote source, the
 capture time is estimated using clock synchronization and RTCP sender reports
-as specified in <a href="https://tools.ietf.org/html/rfc3550#section-6.4.1">RFC 3550 Section 6.4.1</a>.
+to convert RTP timestamps to capture time as specified in
+<a href="https://tools.ietf.org/html/rfc3550#section-6.4.1">RFC 3550 Section 6.4.1</a>.
 
 : <dfn for="VideoFrameMetadata" attribute>receiveTime</dfn>
 ::  For video frames coming from a remote source, this is the
