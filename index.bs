@@ -45,42 +45,42 @@ This method allows web authors to register a callback which will run the next ti
 
 ## Attributes ## {#video-frame-metadata-attributes}
 
-: <dfn for="VideoFrameMetadata" attribute>presentationTime</dfn>
+: <dfn for="VideoFrameMetadata" dict-member>presentationTime</dfn>
 :: The time at which the user agent submitted the frame for composition.
 
-: <dfn for="VideoFrameMetadata" attribute>expectedPresentationTime</dfn>
+: <dfn for="VideoFrameMetadata" dict-member>expectedPresentationTime</dfn>
 :: The time at which the user agent expects the frame to be visible.
 
-: <dfn for="VideoFrameMetadata" attribute>width</dfn>
+: <dfn for="VideoFrameMetadata" dict-member>width</dfn>
 :: The width of the video frame.
 
-: <dfn for="VideoFrameMetadata" attribute>height</dfn>
+: <dfn for="VideoFrameMetadata" dict-member>height</dfn>
 :: The height of the video frame.
 
-: <dfn for="VideoFrameMetadata" attribute>presentationTimestamp</dfn>
+: <dfn for="VideoFrameMetadata" dict-member>presentationTimestamp</dfn>
 ::  The presentation timestamp in seconds of the frame presented. May not be known
-to the compositor or exist in all cases.
+  to the compositor or exist in all cases.
 
-: <dfn for="VideoFrameMetadata" attribute>elapsedProcessingTime</dfn>
+: <dfn for="VideoFrameMetadata" dict-member>elapsedProcessingTime</dfn>
 ::  The elapsed time in seconds from submission of the encoded packet with
-the same presentationTimestamp as this frame to the decoder until the
-decoded frame was ready for presentation.
+  the same presentationTimestamp as this frame to the decoder until the
+  decoded frame was ready for presentation.
 
 :: In addition to decoding time, may include processing time. E.g., YUV
-conversion and/or staging into GPU backed memory.
+  conversion and/or staging into GPU backed memory.
 
-: <dfn for="VideoFrameMetadata" attribute>presentedFrames</dfn>
+: <dfn for="VideoFrameMetadata" dict-member>presentedFrames</dfn>
 ::  A count of the number of frames submitted for composition. Allows clients
-to determine if frames were missed between VideoFrameRequestCallbacks.
+  to determine if frames were missed between VideoFrameRequestCallbacks.
 
-: <dfn for="VideoFrameMetadata" attribute>captureTime</dfn>
+: <dfn for="VideoFrameMetadata" dict-member>captureTime</dfn>
 ::  For video frames coming from either a local or remote source, this is the
-time the encoded packet with the same presentationTimestamp as this frame
-was received by the platform. E.g., for a local camera, this is the time
-at which the frame was captured by the camera. For a remote source, this
-would be the time at which the packet was received over the network.
+  time the encoded packet with the same presentationTimestamp as this frame
+  was received by the platform. E.g., for a local camera, this is the time
+  at which the frame was captured by the camera. For a remote source, this
+  would be the time at which the packet was received over the network.
 
-: <dfn for="VideoFrameMetadata" attribute>rtpTimestamp</dfn>
+: <dfn for="VideoFrameMetadata" dict-member>rtpTimestamp</dfn>
 ::  The RTP timestamp associated with this video frame.
 
 # VideoFrameRequestCallback #    {#video-frame-request-callback}
