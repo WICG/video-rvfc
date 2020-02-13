@@ -21,11 +21,9 @@ Markup Shorthands: markdown yes
 
 *This section is non-normative*
 
-This section has not been written yet. Please refer to <a href="https://github.com/WICG/video-raf/blob/gh-pages/explainer.md">the explainer</a> for now.
+This is a proposal to add a {{AnimationFrameProvider|requestAnimationFrame()}} method to the {{HTMLVideoElement}}.
 
-<p class='note'>
-  NOTE: The interfaces that follow are a work in progress.
-</p>
+This method allows web authors to register a callback which will run the next time a video frame has been presented for composition. The callback provides {{VideoFrameMetadata|metadata}} about the frame that was presented, and is executed during the "[=update the rendering=]" portion of the [=event loop processing model=].
 
 # VideoFrameMetadata #    {#video-frame-metadata}
 
