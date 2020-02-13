@@ -113,11 +113,19 @@ Presented frame 0s (1280x720) at 1000ms for display at 1016ms.
 
 
 # Implementation Details
-* Just like window.requestAnimationFrame(), callbacks are one-shot. video.requestAnimationFrame() must be called again to get the next frame.
-* VideoFrameRequestCallbacks are run before window.requestAnimationFrame() callbacks, during the "[update the rendering](https://html.spec.whatwg.org/multipage/webappapis.html#update-the-rendering)" steps.
-* window.requestAnimationFrame() callbacks registered from within a video.requestAnimationFrame() callback will be run in the same turn of the event loop.
-* Since VideoFrameRequestCallback will only occur on new frames, error states may never satisfy the requestAnimationFrame.
-* In cases where VideoFrameMetadata can't be surfaced (e.g., [encrypted media](https://w3c.github.io/encrypted-media/#media-element-restrictions)) implementations may never satisfy the requestAnimationFrame.
+* Just like `window.requestAnimationFrame()`, callbacks are one-shot. `video.requestAnimationFrame()` must be called again to get the next frame.
+* Since `VideoFrameRequestCallback` will only occur on new frames, error states may never satisfy the requestAnimationFrame.
+* In cases where `VideoFrameMetadata` can't be surfaced (e.g., [encrypted media](https://w3c.github.io/encrypted-media/#media-element-restrictions)) implementations may never satisfy the requestAnimationFrame.
+* `VideoFrameRequestCallbacks` are run before `window.requestAnimationFrame()` callbacks, during the "[update the rendering](https://html.spec.whatwg.org/multipage/webappapis.html#update-the-rendering)" steps.
+* `window.requestAnimationFrame()` callbacks registered from within a `video.requestAnimationFrame()` callback will be run in the same turn of the event loop. E.g:
+```Javascript
+  video.requestAnimationFrame(vid_now => {
+    window.requestAnimationFrame(win_now => {
+        if (vid_now != win_now)
+            throw "This should never throw";
+    });
+  });
+```
 
 
 # Open Questions / Notes / Links
