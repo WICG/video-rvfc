@@ -120,7 +120,7 @@ Each {{HTMLVideoElement}} has a <dfn>list of animation frame callbacks</dfn>, wh
 
   When `cancelAnimationFrame` is called, the user agent MUST run the following steps:
 
-  1. Let |session| be the target {{HTMLVideoElement}} object on which `requestAnimationFrame` is invoked.
+  1. Let |video| be the target {{HTMLVideoElement}} object on which `requestAnimationFrame` is invoked.
   1. Find the entry in |video|'s [=list of animation frame callbacks=] that is associated with the value |handle|.
   1. If there is such an entry, set its [=cancelled=] boolean to <code>true</code> and remove it from |video|'s [=list of animation frame callbacks=].
 
