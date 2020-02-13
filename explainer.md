@@ -81,12 +81,6 @@ partial interface HTMLVideoElement {
     unsigned long requestAnimationFrame(VideoFrameRequestCallback callback);
     void cancelAnimationFrame(unsigned long handle);
 };
-
-partial interface WebGLVideoTexture {
-    // Allows DOM-less WebGL usage where texImage2D() is the only compositor to
-    // avoid the need for requestAnimationFrame() to get video frame metadata.
-    VideoFrameMetadata VideoElementTargetVideoTexture(GLenum target, HTMLVideoElement video)
-}
 ```
 
 
@@ -119,14 +113,22 @@ Presented frame 0s (1280x720) at 1000ms for display at 1016ms.
 
 
 # Implementation Details
-* When texImage2D() or drawImage() is called during an active VideoFrameRequestCallback, implementations shall ensure that the video frame used is the one matching the active callback.
-* Just like window.requestAnimationFrame(), callbacks are one-shot. video.requestAnimationFrame() must be called again to get the next frame.
-* Since VideoFrameRequestCallback will only occur on new frames, error states may never satisfy the requestAnimationFrame.
-* In cases where VideoFrameMetadata can't be surfaced (e.g., [encrypted media](https://w3c.github.io/encrypted-media/#media-element-restrictions)) implementations may never satisfy the requestAnimationFrame.
+* Just like `window.requestAnimationFrame()`, callbacks are one-shot. `video.requestAnimationFrame()` must be called again to get the next frame.
+* Since `VideoFrameRequestCallback` will only occur on new frames, error states may never satisfy the requestAnimationFrame.
+* In cases where `VideoFrameMetadata` can't be surfaced (e.g., [encrypted media](https://w3c.github.io/encrypted-media/#media-element-restrictions)) implementations may never satisfy the requestAnimationFrame.
+* `VideoFrameRequestCallbacks` are run before `window.requestAnimationFrame()` callbacks, during the "[update the rendering](https://html.spec.whatwg.org/multipage/webappapis.html#update-the-rendering)" steps.
+* `window.requestAnimationFrame()` callbacks registered from within a `video.requestAnimationFrame()` callback will be run in the same turn of the event loop. E.g:
+```Javascript
+  video.requestAnimationFrame(vid_now => {
+    window.requestAnimationFrame(win_now => {
+        if (vid_now != win_now)
+            throw "This should never throw";
+    });
+  });
+```
 
 
 # Open Questions / Notes / Links
-* The API as proposed will miss some frames when compositing happens off the main thread if a subsequent video.requestAnimationFrame() call does not happen in time. To rectify this we would need to make callbacks repeating.
 * [Link to GitHub repository.](https://github.com/WICG/video-raf)
 * [Link to WICG Discourse.](https://discourse.wicg.io/t/proposal-video-requestanimationframe/3691)
 * [Link to TAG review.](https://github.com/w3ctag/design-reviews/issues/429)
