@@ -1224,7 +1224,7 @@ Possible extra rowspan handling
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version 8bc2fccb49a45a0af18c5e75ce18049d75f824b6" name="generator">
   <link href="https://wicg.github.io/video-raf/" rel="canonical">
-  <meta content="8c9247a985eac36c7359e83f24c983c5cd648c94" name="document-revision">
+  <meta content="b74c62605439b7974253837b2af21f597e3b8a2a" name="document-revision">
 <style>/* style-md-lists */
 
 /* This is a weird hack for me not yet following the commonmark spec
@@ -1310,6 +1310,17 @@ figcaption {
 figcaption:not(.no-marker)::before {
     content: "Figure " counter(figure) " ";
 }</style>
+<style>/* style-var-click-highlighting */
+
+    var { cursor: pointer; }
+    var.selected0 { background-color: #F4D200; box-shadow: 0 0 0 2px #F4D200; }
+    var.selected1 { background-color: #FF87A2; box-shadow: 0 0 0 2px #FF87A2; }
+    var.selected2 { background-color: #96E885; box-shadow: 0 0 0 2px #96E885; }
+    var.selected3 { background-color: #3EEED2; box-shadow: 0 0 0 2px #3EEED2; }
+    var.selected4 { background-color: #EACFB6; box-shadow: 0 0 0 2px #EACFB6; }
+    var.selected5 { background-color: #82DDFF; box-shadow: 0 0 0 2px #82DDFF; }
+    var.selected6 { background-color: #FFBCF2; box-shadow: 0 0 0 2px #FFBCF2; }
+    </style>
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
@@ -1478,6 +1489,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
      <dd><a class="u-url" href="https://wicg.github.io/video-raf/">https://wicg.github.io/video-raf/</a>
      <dt>Issue Tracking:
      <dd><a href="https://github.com/wicg/video-raf/issues/">GitHub</a>
+     <dd><a href="#issues-index">Inline In Spec</a>
      <dt class="editor">Editor:
      <dd class="editor p-author h-card vcard" data-editor-id="120583"><span class="p-name fn">Thomas Guilbert</span> (<a class="p-org org" href="https://google.com/">Google Inc.</a>)
      <dt>Participate:
@@ -1522,6 +1534,7 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
      <a href="#video-raf"><span class="secno">4</span> <span class="content">HTMLVideoElement.requestAnimationFrame()</span></a>
      <ol class="toc">
       <li><a href="#video-raf-methods"><span class="secno">4.1</span> <span class="content">Methods</span></a>
+      <li><a href="#video-raf-procedures"><span class="secno">4.2</span> <span class="content">Procedures</span></a>
      </ol>
     <li><a href="#conformance"><span class="secno"></span> <span class="content"> Conformance</span></a>
     <li>
@@ -1536,6 +1549,7 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
       <li><a href="#normative"><span class="secno"></span> <span class="content">Normative References</span></a>
      </ol>
     <li><a href="#idl-index"><span class="secno"></span> <span class="content">IDL Index</span></a>
+    <li><a href="#issues-index"><span class="secno"></span> <span class="content">Issues Index</span></a>
    </ol>
   </nav>
   <main>
@@ -1640,6 +1654,31 @@ would be the time at which the packet was received over the network.</p>
        <p>If there is such an entry, set its <a data-link-type="dfn" href="#canceled" id="ref-for-canceled">canceled</a> boolean to <code>true</code> and remove it from <var>video</var>’s <a data-link-type="dfn" href="#list-of-animation-frame-callbacks" id="ref-for-list-of-animation-frame-callbacks②">list of animation frame callbacks</a>.</p>
      </ol>
    </dl>
+   <h3 class="heading settled" data-level="4.2" id="video-raf-procedures"><span class="secno">4.2. </span><span class="content">Procedures</span><a class="self-link" href="#video-raf-procedures"></a></h3>
+   <p class="issue" id="issue-e25085c1"><a class="self-link" href="#issue-e25085c1"></a> Describe how an <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement" id="ref-for-htmlvideoelement⑤">HTMLVideoElement</a></code> should schedule the <a data-link-type="dfn" href="#run-the-video-animation-frame-callbacks" id="ref-for-run-the-video-animation-frame-callbacks">run the video animation frame callbacks</a> procedure when a new frame is presented.</p>
+   <div class="algorithm" data-algorithm="run the video animation frame callbacks">
+    <p>To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="run-the-video-animation-frame-callbacks">run the video animation frame callbacks</dfn> for a <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement" id="ref-for-htmlvideoelement⑥">HTMLVideoElement</a></code> <var>video</var> with a timestamp <var>now</var>, run the following steps:</p>
+    <ol>
+     <li data-md>
+      <p>If <var>video</var>’s <a data-link-type="dfn" href="#list-of-animation-frame-callbacks" id="ref-for-list-of-animation-frame-callbacks③">list of animation frame callbacks</a> is empty, abort these steps.</p>
+     <li data-md>
+      <p>Let <var>metadata</var> be the <code class="idl"><a data-link-type="idl" href="#dictdef-videoframemetadata" id="ref-for-dictdef-videoframemetadata②">VideoFrameMetadata</a></code> dictionary built from <var>video</var>’s latest presented frame.</p>
+     <li data-md>
+      <p>Let <var>callbacks</var> be the <a data-link-type="dfn" href="#list-of-animation-frame-callbacks" id="ref-for-list-of-animation-frame-callbacks④">list of animation frame callbacks</a>.</p>
+     <li data-md>
+      <p>Set <var>video</var>’s <a data-link-type="dfn" href="#list-of-animation-frame-callbacks" id="ref-for-list-of-animation-frame-callbacks⑤">list of animation frame callbacks</a> to be empty.</p>
+     <li data-md>
+      <p>For each entry in <var>callbacks</var></p>
+      <ol>
+       <li data-md>
+        <p>If the entry’s <a data-link-type="dfn" href="#canceled" id="ref-for-canceled①">canceled</a> boolean is <code>true</code>, continue to the next entry.</p>
+       <li data-md>
+        <p><a data-link-type="dfn" href="https://heycam.github.io/webidl/#invoke-a-callback-function" id="ref-for-invoke-a-callback-function">Invoke</a> the callback, passing <var>now</var> and <var>metadata</var> as arguments</p>
+       <li data-md>
+        <p>If an exception is thrown, <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#report-the-exception" id="ref-for-report-the-exception">report the exception</a>.</p>
+      </ol>
+    </ol>
+   </div>
   </main>
   <div data-fill-with="conformance">
    <h2 class="no-ref no-num heading settled" id="conformance"><span class="content"> Conformance</span><a class="self-link" href="#conformance"></a></h2>
@@ -1803,6 +1842,7 @@ would be the time at which the packet was received over the network.</p>
    <li><a href="#dom-videoframemetadata-presentedframes">presentedFrames</a><span>, in §2.1</span>
    <li><a href="#dom-htmlvideoelement-requestanimationframe">requestAnimationFrame(callback)</a><span>, in §4.1</span>
    <li><a href="#dom-videoframemetadata-rtptimestamp">rtpTimestamp</a><span>, in §2.1</span>
+   <li><a href="#run-the-video-animation-frame-callbacks">run the video animation frame callbacks</a><span>, in §4.2</span>
    <li><a href="#dictdef-videoframemetadata">VideoFrameMetadata</a><span>, in §2</span>
    <li><a href="#callbackdef-videoframerequestcallback">VideoFrameRequestCallback</a><span>, in §3</span>
    <li><a href="#dom-videoframemetadata-width">width</a><span>, in §2.1</span>
@@ -1827,12 +1867,19 @@ would be the time at which the packet was received over the network.</p>
     <li><a href="#ref-for-htmlvideoelement">1. Introduction</a>
     <li><a href="#ref-for-htmlvideoelement①">4. HTMLVideoElement.requestAnimationFrame()</a>
     <li><a href="#ref-for-htmlvideoelement②">4.1. Methods</a> <a href="#ref-for-htmlvideoelement③">(2)</a> <a href="#ref-for-htmlvideoelement④">(3)</a>
+    <li><a href="#ref-for-htmlvideoelement⑤">4.2. Procedures</a> <a href="#ref-for-htmlvideoelement⑥">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-event-loop-processing-model">
    <a href="https://html.spec.whatwg.org/multipage/webappapis.html#event-loop-processing-model">https://html.spec.whatwg.org/multipage/webappapis.html#event-loop-processing-model</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-event-loop-processing-model">1. Introduction</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-report-the-exception">
+   <a href="https://html.spec.whatwg.org/multipage/webappapis.html#report-the-exception">https://html.spec.whatwg.org/multipage/webappapis.html#report-the-exception</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-report-the-exception">4.2. Procedures</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-update-the-rendering">
@@ -1846,6 +1893,12 @@ would be the time at which the packet was received over the network.</p>
    <ul>
     <li><a href="#ref-for-idl-double">2. VideoFrameMetadata</a> <a href="#ref-for-idl-double①">(2)</a>
     <li><a href="#ref-for-idl-double②">2.1. Attributes</a> <a href="#ref-for-idl-double③">(2)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-invoke-a-callback-function">
+   <a href="https://heycam.github.io/webidl/#invoke-a-callback-function">https://heycam.github.io/webidl/#invoke-a-callback-function</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-invoke-a-callback-function">4.2. Procedures</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-idl-unsigned-long">
@@ -1869,12 +1922,14 @@ would be the time at which the packet was received over the network.</p>
      <li><span class="dfn-paneled" id="term-for-animationframeprovider" style="color:initial">AnimationFrameProvider</span>
      <li><span class="dfn-paneled" id="term-for-htmlvideoelement" style="color:initial">HTMLVideoElement</span>
      <li><span class="dfn-paneled" id="term-for-event-loop-processing-model" style="color:initial">event loop processing model</span>
+     <li><span class="dfn-paneled" id="term-for-report-the-exception" style="color:initial">report the exception</span>
      <li><span class="dfn-paneled" id="term-for-update-the-rendering" style="color:initial">update the rendering</span>
     </ul>
    <li>
     <a data-link-type="biblio">[WebIDL]</a> defines the following terms:
     <ul>
      <li><span class="dfn-paneled" id="term-for-idl-double" style="color:initial">double</span>
+     <li><span class="dfn-paneled" id="term-for-invoke-a-callback-function" style="color:initial">invoke</span>
      <li><span class="dfn-paneled" id="term-for-idl-unsigned-long" style="color:initial">unsigned long</span>
     </ul>
   </ul>
@@ -1913,11 +1968,16 @@ would be the time at which the packet was received over the network.</p>
 };
 
 </pre>
+  <h2 class="no-num no-ref heading settled" id="issues-index"><span class="content">Issues Index</span><a class="self-link" href="#issues-index"></a></h2>
+  <div style="counter-reset:issue">
+   <div class="issue"> Describe how an <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement">HTMLVideoElement</a></code> should schedule the <a data-link-type="dfn" href="#run-the-video-animation-frame-callbacks">run the video animation frame callbacks</a> procedure when a new frame is presented.<a href="#issue-e25085c1"> ↵ </a></div>
+  </div>
   <aside class="dfn-panel" data-for="dictdef-videoframemetadata">
    <b><a href="#dictdef-videoframemetadata">#dictdef-videoframemetadata</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-dictdef-videoframemetadata">1. Introduction</a>
     <li><a href="#ref-for-dictdef-videoframemetadata①">3. VideoFrameRequestCallback</a>
+    <li><a href="#ref-for-dictdef-videoframemetadata②">4.2. Procedures</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dom-videoframemetadata-presentationtime">
@@ -1985,12 +2045,14 @@ would be the time at which the packet was received over the network.</p>
    <b><a href="#canceled">#canceled</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-canceled">4.1. Methods</a>
+    <li><a href="#ref-for-canceled①">4.2. Procedures</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="list-of-animation-frame-callbacks">
    <b><a href="#list-of-animation-frame-callbacks">#list-of-animation-frame-callbacks</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-list-of-animation-frame-callbacks">4.1. Methods</a> <a href="#ref-for-list-of-animation-frame-callbacks①">(2)</a> <a href="#ref-for-list-of-animation-frame-callbacks②">(3)</a>
+    <li><a href="#ref-for-list-of-animation-frame-callbacks③">4.2. Procedures</a> <a href="#ref-for-list-of-animation-frame-callbacks④">(2)</a> <a href="#ref-for-list-of-animation-frame-callbacks⑤">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="animation-frame-callback-identifier">
@@ -2011,6 +2073,96 @@ would be the time at which the packet was received over the network.</p>
     <li><a href="#ref-for-dom-htmlvideoelement-cancelanimationframe">4. HTMLVideoElement.requestAnimationFrame()</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="run-the-video-animation-frame-callbacks">
+   <b><a href="#run-the-video-animation-frame-callbacks">#run-the-video-animation-frame-callbacks</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-run-the-video-animation-frame-callbacks">4.2. Procedures</a>
+   </ul>
+  </aside>
+<script>/* script-var-click-highlighting */
+
+    document.addEventListener("click", e=>{
+        if(e.target.nodeName == "VAR") {
+            highlightSameAlgoVars(e.target);
+        }
+    });
+    {
+        const indexCounts = new Map();
+        const indexNames = new Map();
+        function highlightSameAlgoVars(v) {
+            // Find the algorithm container.
+            let algoContainer = null;
+            let searchEl = v;
+            while(algoContainer == null && searchEl != document.body) {
+                searchEl = searchEl.parentNode;
+                if(searchEl.hasAttribute("data-algorithm")) {
+                    algoContainer = searchEl;
+                }
+            }
+
+            // Not highlighting document-global vars,
+            // too likely to be unrelated.
+            if(algoContainer == null) return;
+
+            const algoName = algoContainer.getAttribute("data-algorithm");
+            const varName = getVarName(v);
+            const addClass = !v.classList.contains("selected");
+            let highlightClass = null;
+            if(addClass) {
+                const index = chooseHighlightIndex(algoName, varName);
+                indexCounts.get(algoName)[index] += 1;
+                indexNames.set(algoName+"///"+varName, index);
+                highlightClass = nameFromIndex(index);
+            } else {
+                const index = previousHighlightIndex(algoName, varName);
+                indexCounts.get(algoName)[index] -= 1;
+                highlightClass = nameFromIndex(index);
+            }
+
+            // Find all same-name vars, and toggle their class appropriately.
+            for(const el of algoContainer.querySelectorAll("var")) {
+                if(getVarName(el) == varName) {
+                    el.classList.toggle("selected", addClass);
+                    el.classList.toggle(highlightClass, addClass);
+                }
+            }
+        }
+        function getVarName(el) {
+            return el.textContent.replace(/(\s| )+/, " ").trim();
+        }
+        function chooseHighlightIndex(algoName, varName) {
+            let indexes = null;
+            if(indexCounts.has(algoName)) {
+                indexes = indexCounts.get(algoName);
+            } else {
+                // 7 classes right now
+                indexes = [0,0,0,0,0,0,0];
+                indexCounts.set(algoName, indexes);
+            }
+
+            // If the element was recently unclicked,
+            // *and* that color is still unclaimed,
+            // give it back the same color.
+            const lastIndex = previousHighlightIndex(algoName, varName);
+            if(indexes[lastIndex] === 0) return lastIndex;
+
+            // Find the earliest index with the lowest count.
+            const minCount = Math.min.apply(null, indexes);
+            let index = null;
+            for(var i = 0; i < indexes.length; i++) {
+                if(indexes[i] == minCount) {
+                    return i;
+                }
+            }
+        }
+        function previousHighlightIndex(algoName, varName) {
+            return indexNames.get(algoName+"///"+varName);
+        }
+        function nameFromIndex(index) {
+            return "selected" + index;
+        }
+    }
+    </script>
 <script>/* script-dfn-panel */
 
 document.body.addEventListener("click", function(e) {

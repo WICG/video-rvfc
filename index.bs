@@ -122,3 +122,21 @@ Each {{HTMLVideoElement}} has a <dfn>list of animation frame callbacks</dfn>, wh
   1. Find the entry in |video|'s [=list of animation frame callbacks=] that is associated with the value |handle|.
   1. If there is such an entry, set its [=canceled=] boolean to <code>true</code> and remove it from |video|'s [=list of animation frame callbacks=].
 
+## Procedures ## {#video-raf-procedures}
+
+Issue: Describe how an {{HTMLVideoElement}} should schedule the [=run the video animation frame callbacks=] procedure when a new frame is presented.
+
+<div algorithm="run the video animation frame callbacks">
+
+To <dfn>run the video animation frame callbacks</dfn> for a {{HTMLVideoElement}} |video| with a timestamp |now|, run the following steps:
+
+1. If |video|'s [=list of animation frame callbacks=] is empty, abort these steps.
+1. Let |metadata| be the {{VideoFrameMetadata}} dictionary built from |video|'s latest presented frame.
+1. Let |callbacks| be the [=list of animation frame callbacks=].
+1. Set |video|'s [=list of animation frame callbacks=] to be empty.
+1. For each entry in |callbacks|
+  1. If the entry's [=canceled=] boolean is <code>true</code>, continue to the next entry.
+  1. [=Invoke=] the callback, passing |now| and |metadata| as arguments
+  1. If an exception is thrown, [=report the exception=].
+
+</div>
