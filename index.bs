@@ -39,6 +39,7 @@ This method allows web authors to register a callback which will run the next ti
     double elapsedProcessingTime;
     unsigned long presentedFrames;
     DOMHighResTimeStamp captureTime;
+    DOMHighResTimeStamp receiveTime;
     unsigned long rtpTimestamp;
   };
 </pre>
@@ -75,10 +76,15 @@ This method allows web authors to register a callback which will run the next ti
 
 : <dfn for="VideoFrameMetadata" dict-member>captureTime</dfn>
 ::  For video frames coming from either a local or remote source, this is the
-  time the encoded packet with the same presentationTimestamp as this frame
-  was received by the platform. E.g., for a local camera, this is the time
-  at which the frame was captured by the camera. For a remote source, this
-  would be the time at which the packet was received over the network.
+  time at which the frame was captured by the camera. For a remote source, the
+  capture time is estimated using clock synchronization and RTCP sender reports
+  to convert RTP timestamps to capture time as specified in
+  [[RFC3550#section-6.4.1|RFC 3550 Section 6.4.1]]
+
+: <dfn for="VideoFrameMetadata" dict-member>receiveTime</dfn>
+::  For video frames coming from a remote source, this is the
+  time the encoded frame was received by the platform, i.e., the time at
+  which the last packet belonging to this frame was received over the network.
 
 : <dfn for="VideoFrameMetadata" dict-member>rtpTimestamp</dfn>
 ::  The RTP timestamp associated with this video frame.
