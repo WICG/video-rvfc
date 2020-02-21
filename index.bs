@@ -52,15 +52,23 @@ This method allows web authors to register a callback which will run the next ti
 : <dfn for="VideoFrameMetadata" dict-member>expectedPresentationTime</dfn>
 :: The time at which the user agent expects the frame to be visible.
 
+Note: <dfn>media pixels</dfn> refers to the raw media pixels, after internal
+cropping, but before aspect ratio adjustments. This differs from CSS pixels
+(used by {{HTMLVideoElement/videoWidth|videoWidth}} and
+{{HTMLVideoElement/videoHeight|videoHeight}}), which account for aspect ratio
+adjustments. The {{width}} and {{height}} in [=media pixels=] can be used as a
+texture's width and height when calling <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/texImage2D">`texImage2D()`</a>.
+
 : <dfn for="VideoFrameMetadata" dict-member>width</dfn>
-:: The width of the video frame.
+:: The width of the video frame, in [=media pixels=].
 
 : <dfn for="VideoFrameMetadata" dict-member>height</dfn>
-:: The height of the video frame.
+:: The height of the video frame, in [=media pixels=].
 
 : <dfn for="VideoFrameMetadata" dict-member>presentationTimestamp</dfn>
-::  The presentation timestamp in seconds of the frame presented. May not be known
-  to the compositor or exist in all cases.
+::  The media presentation timestamp in seconds of the frame presented (e.g. its
+  timestamp on the {{HTMLMediaElement/currentTime|video.currentTime}} timeline).
+  May not be known to the compositor or exist in all cases.
 
 : <dfn for="VideoFrameMetadata" dict-member>elapsedProcessingTime</dfn>
 ::  The elapsed time in seconds from submission of the encoded packet with
