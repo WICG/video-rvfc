@@ -1224,7 +1224,7 @@ Possible extra rowspan handling
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version 8bc2fccb49a45a0af18c5e75ce18049d75f824b6" name="generator">
   <link href="https://wicg.github.io/video-raf/" rel="canonical">
-  <meta content="890b8bbb44e550d198857a2966bada2d63c5ba0b" name="document-revision">
+  <meta content="c2e0c7605f3fbfa3f61e953b379fc22e3e2dda4e" name="document-revision">
 <style>/* style-md-lists */
 
 /* This is a weird hack for me not yet following the commonmark spec
@@ -1482,7 +1482,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">HTMLVideoElement.requestAnimationFrame()</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-02-20">20 February 2020</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-02-25">25 February 2020</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1536,6 +1536,7 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
       <li><a href="#video-raf-methods"><span class="secno">4.1</span> <span class="content">Methods</span></a>
       <li><a href="#video-raf-procedures"><span class="secno">4.2</span> <span class="content">Procedures</span></a>
      </ol>
+    <li><a href="#security-and-privacy"><span class="secno">5</span> <span class="content">Security and Privacy Considerations</span></a>
     <li><a href="#conformance"><span class="secno"></span> <span class="content"> Conformance</span></a>
     <li>
      <a href="#index"><span class="secno"></span> <span class="content">Index</span></a>
@@ -1547,6 +1548,7 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
      <a href="#references"><span class="secno"></span> <span class="content">References</span></a>
      <ol class="toc">
       <li><a href="#normative"><span class="secno"></span> <span class="content">Normative References</span></a>
+      <li><a href="#informative"><span class="secno"></span> <span class="content">Informative References</span></a>
      </ol>
     <li><a href="#idl-index"><span class="secno"></span> <span class="content">IDL Index</span></a>
     <li><a href="#issues-index"><span class="secno"></span> <span class="content">Issues Index</span></a>
@@ -1692,6 +1694,20 @@ which the last packet belonging to this frame was received over the network.</p>
       </ol>
     </ol>
    </div>
+   <h2 class="heading settled" data-level="5" id="security-and-privacy"><span class="secno">5. </span><span class="content">Security and Privacy Considerations</span><a class="self-link" href="#security-and-privacy"></a></h2>
+   <p>This specification does not expose any new privacy-sensitive information, and should not make it
+easier to fingerprint users. However, the location correlation opportunities outlined in the
+Privacy and Security section of <a data-link-type="biblio" href="#biblio-webrtc-stats">[webrtc-stats]</a> also hold true for this spec: <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-capturetime" id="ref-for-dom-videoframemetadata-capturetime①">captureTime</a></code>, <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-receivetime" id="ref-for-dom-videoframemetadata-receivetime①">receiveTime</a></code>, and <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-rtptimestamp" id="ref-for-dom-videoframemetadata-rtptimestamp①">rtpTimestamp</a></code> expose network-layer information which can correlated to location
+information. E.g., reusing the same example, <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-capturetime" id="ref-for-dom-videoframemetadata-capturetime②">captureTime</a></code> and <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-receivetime" id="ref-for-dom-videoframemetadata-receivetime②">receiveTime</a></code> can be used to estimate
+network end-to-end travel time, which can give indication as to how far the peers are located, and can
+give some location information about a peer if the location of the other peer is known. Since this
+information is already available via the <a data-link-type="biblio" href="#biblio-webrtc-stats">RTCStats</a>, this specification doesn’t introduce
+any novel privacy considerations.</p>
+   <p>This specification also introduces some new timing information. <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-presentationtime" id="ref-for-dom-videoframemetadata-presentationtime①">presentationTime</a></code>, <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-expectedpresentationtime" id="ref-for-dom-videoframemetadata-expectedpresentationtime①">expectedPresentationTime</a></code> and <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-elapsedprocessingtime" id="ref-for-dom-videoframemetadata-elapsedprocessingtime①">elapsedProcessingTime</a></code> expose timing information related to the
+under-the-hood performance of the video pipeline, which is otherwise inaccessible to web developpers.
+The <a data-link-type="dfn" href="https://w3c.github.io/hr-time/#clock-resolution" id="ref-for-clock-resolution">clock resolution</a> of these fields should be coarse enough to prevent new timing attacks.
+Similarly, <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-capturetime" id="ref-for-dom-videoframemetadata-capturetime③">captureTime</a></code> and <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-receivetime" id="ref-for-dom-videoframemetadata-receivetime③">receiveTime</a></code> expose network timing information, and should have an
+apporiate <a data-link-type="dfn" href="https://w3c.github.io/hr-time/#clock-resolution" id="ref-for-clock-resolution①">clock resolutions</a>.</p>
   </main>
   <div data-fill-with="conformance">
    <h2 class="no-ref no-num heading settled" id="conformance"><span class="content"> Conformance</span><a class="self-link" href="#conformance"></a></h2>
@@ -1870,6 +1886,12 @@ which the last packet belonging to this frame was received over the network.</p>
     <li><a href="#ref-for-dom-domhighrestimestamp⑧">3. VideoFrameRequestCallback</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-clock-resolution">
+   <a href="https://w3c.github.io/hr-time/#clock-resolution">https://w3c.github.io/hr-time/#clock-resolution</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-clock-resolution">5. Security and Privacy Considerations</a> <a href="#ref-for-clock-resolution①">(2)</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-animationframeprovider">
    <a href="https://html.spec.whatwg.org/multipage/imagebitmap-and-animations.html#animationframeprovider">https://html.spec.whatwg.org/multipage/imagebitmap-and-animations.html#animationframeprovider</a><b>Referenced in:</b>
    <ul>
@@ -1950,6 +1972,11 @@ which the last packet belonging to this frame was received over the network.</p>
      <li><span class="dfn-paneled" id="term-for-dom-domhighrestimestamp" style="color:initial">DOMHighResTimeStamp</span>
     </ul>
    <li>
+    <a data-link-type="biblio">[hr-timing]</a> defines the following terms:
+    <ul>
+     <li><span class="dfn-paneled" id="term-for-clock-resolution" style="color:initial">clock resolution</span>
+    </ul>
+   <li>
     <a data-link-type="biblio">[HTML]</a> defines the following terms:
     <ul>
      <li><span class="dfn-paneled" id="term-for-animationframeprovider" style="color:initial">AnimationFrameProvider</span>
@@ -1981,20 +2008,25 @@ which the last packet belonging to this frame was received over the network.</p>
    <dt id="biblio-webidl">[WebIDL]
    <dd>Boris Zbarsky. <a href="https://heycam.github.io/webidl/">Web IDL</a>. 15 December 2016. ED. URL: <a href="https://heycam.github.io/webidl/">https://heycam.github.io/webidl/</a>
   </dl>
+  <h3 class="no-num no-ref heading settled" id="informative"><span class="content">Informative References</span><a class="self-link" href="#informative"></a></h3>
+  <dl>
+   <dt id="biblio-webrtc-stats">[WEBRTC-STATS]
+   <dd>Harald Alvestrand; Varun Singh. <a href="https://www.w3.org/TR/webrtc-stats/">Identifiers for WebRTC's Statistics API</a>. 3 July 2018. CR. URL: <a href="https://www.w3.org/TR/webrtc-stats/">https://www.w3.org/TR/webrtc-stats/</a>
+  </dl>
   <h2 class="no-num no-ref heading settled" id="idl-index"><span class="content">IDL Index</span><a class="self-link" href="#idl-index"></a></h2>
 <pre class="idl highlight def"><c- b>dictionary</c-> <a href="#dictdef-videoframemetadata"><code><c- g>VideoFrameMetadata</c-></code></a> {
-  <c- b>required</c-> <a class="n" data-link-type="idl-name" href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp" id="ref-for-dom-domhighrestimestamp⑨"><c- n>DOMHighResTimeStamp</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="DOMHighResTimeStamp " href="#dom-videoframemetadata-presentationtime" id="ref-for-dom-videoframemetadata-presentationtime①"><c- g>presentationTime</c-></a>;
-  <c- b>required</c-> <a class="n" data-link-type="idl-name" href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp" id="ref-for-dom-domhighrestimestamp①①"><c- n>DOMHighResTimeStamp</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="DOMHighResTimeStamp " href="#dom-videoframemetadata-expectedpresentationtime" id="ref-for-dom-videoframemetadata-expectedpresentationtime①"><c- g>expectedPresentationTime</c-></a>;
+  <c- b>required</c-> <a class="n" data-link-type="idl-name" href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp" id="ref-for-dom-domhighrestimestamp⑨"><c- n>DOMHighResTimeStamp</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="DOMHighResTimeStamp " href="#dom-videoframemetadata-presentationtime" id="ref-for-dom-videoframemetadata-presentationtime②"><c- g>presentationTime</c-></a>;
+  <c- b>required</c-> <a class="n" data-link-type="idl-name" href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp" id="ref-for-dom-domhighrestimestamp①①"><c- n>DOMHighResTimeStamp</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="DOMHighResTimeStamp " href="#dom-videoframemetadata-expectedpresentationtime" id="ref-for-dom-videoframemetadata-expectedpresentationtime②"><c- g>expectedPresentationTime</c-></a>;
 
   <c- b>required</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long" id="ref-for-idl-unsigned-long①⓪"><c- b>unsigned</c-> <c- b>long</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="unsigned long " href="#dom-videoframemetadata-width" id="ref-for-dom-videoframemetadata-width②"><c- g>width</c-></a>;
   <c- b>required</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long" id="ref-for-idl-unsigned-long①①"><c- b>unsigned</c-> <c- b>long</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="unsigned long " href="#dom-videoframemetadata-height" id="ref-for-dom-videoframemetadata-height②"><c- g>height</c-></a>;
 
   <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-double" id="ref-for-idl-double④"><c- b>double</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="double " href="#dom-videoframemetadata-presentationtimestamp" id="ref-for-dom-videoframemetadata-presentationtimestamp①"><c- g>presentationTimestamp</c-></a>;
-  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-double" id="ref-for-idl-double①①"><c- b>double</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="double " href="#dom-videoframemetadata-elapsedprocessingtime" id="ref-for-dom-videoframemetadata-elapsedprocessingtime①"><c- g>elapsedProcessingTime</c-></a>;
+  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-double" id="ref-for-idl-double①①"><c- b>double</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="double " href="#dom-videoframemetadata-elapsedprocessingtime" id="ref-for-dom-videoframemetadata-elapsedprocessingtime②"><c- g>elapsedProcessingTime</c-></a>;
   <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long" id="ref-for-idl-unsigned-long②①"><c- b>unsigned</c-> <c- b>long</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="unsigned long " href="#dom-videoframemetadata-presentedframes" id="ref-for-dom-videoframemetadata-presentedframes①"><c- g>presentedFrames</c-></a>;
-  <a class="n" data-link-type="idl-name" href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp" id="ref-for-dom-domhighrestimestamp②①"><c- n>DOMHighResTimeStamp</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="DOMHighResTimeStamp " href="#dom-videoframemetadata-capturetime" id="ref-for-dom-videoframemetadata-capturetime①"><c- g>captureTime</c-></a>;
-  <a class="n" data-link-type="idl-name" href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp" id="ref-for-dom-domhighrestimestamp③①"><c- n>DOMHighResTimeStamp</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="DOMHighResTimeStamp " href="#dom-videoframemetadata-receivetime" id="ref-for-dom-videoframemetadata-receivetime①"><c- g>receiveTime</c-></a>;
-  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long" id="ref-for-idl-unsigned-long③①"><c- b>unsigned</c-> <c- b>long</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="unsigned long " href="#dom-videoframemetadata-rtptimestamp" id="ref-for-dom-videoframemetadata-rtptimestamp①"><c- g>rtpTimestamp</c-></a>;
+  <a class="n" data-link-type="idl-name" href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp" id="ref-for-dom-domhighrestimestamp②①"><c- n>DOMHighResTimeStamp</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="DOMHighResTimeStamp " href="#dom-videoframemetadata-capturetime" id="ref-for-dom-videoframemetadata-capturetime④"><c- g>captureTime</c-></a>;
+  <a class="n" data-link-type="idl-name" href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp" id="ref-for-dom-domhighrestimestamp③①"><c- n>DOMHighResTimeStamp</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="DOMHighResTimeStamp " href="#dom-videoframemetadata-receivetime" id="ref-for-dom-videoframemetadata-receivetime④"><c- g>receiveTime</c-></a>;
+  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long" id="ref-for-idl-unsigned-long③①"><c- b>unsigned</c-> <c- b>long</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="unsigned long " href="#dom-videoframemetadata-rtptimestamp" id="ref-for-dom-videoframemetadata-rtptimestamp②"><c- g>rtpTimestamp</c-></a>;
 };
 
 <c- b>callback</c-> <a href="#callbackdef-videoframerequestcallback"><code><c- g>VideoFrameRequestCallback</c-></code></a> = <c- b>void</c->(<a class="n" data-link-type="idl-name" href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp" id="ref-for-dom-domhighrestimestamp⑧①"><c- n>DOMHighResTimeStamp</c-></a> <a href="#dom-videoframerequestcallback-time"><code><c- g>time</c-></code></a>, <a class="n" data-link-type="idl-name" href="#dictdef-videoframemetadata" id="ref-for-dictdef-videoframemetadata①①"><c- n>VideoFrameMetadata</c-></a> <a href="#dom-videoframerequestcallback-metadata"><code><c- g>metadata</c-></code></a>);
@@ -2021,12 +2053,14 @@ which the last packet belonging to this frame was received over the network.</p>
    <b><a href="#dom-videoframemetadata-presentationtime">#dom-videoframemetadata-presentationtime</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-dom-videoframemetadata-presentationtime">2. VideoFrameMetadata</a>
+    <li><a href="#ref-for-dom-videoframemetadata-presentationtime①">5. Security and Privacy Considerations</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dom-videoframemetadata-expectedpresentationtime">
    <b><a href="#dom-videoframemetadata-expectedpresentationtime">#dom-videoframemetadata-expectedpresentationtime</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-dom-videoframemetadata-expectedpresentationtime">2. VideoFrameMetadata</a>
+    <li><a href="#ref-for-dom-videoframemetadata-expectedpresentationtime①">5. Security and Privacy Considerations</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="media-pixels">
@@ -2059,6 +2093,7 @@ which the last packet belonging to this frame was received over the network.</p>
    <b><a href="#dom-videoframemetadata-elapsedprocessingtime">#dom-videoframemetadata-elapsedprocessingtime</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-dom-videoframemetadata-elapsedprocessingtime">2. VideoFrameMetadata</a>
+    <li><a href="#ref-for-dom-videoframemetadata-elapsedprocessingtime①">5. Security and Privacy Considerations</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dom-videoframemetadata-presentedframes">
@@ -2071,18 +2106,21 @@ which the last packet belonging to this frame was received over the network.</p>
    <b><a href="#dom-videoframemetadata-capturetime">#dom-videoframemetadata-capturetime</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-dom-videoframemetadata-capturetime">2. VideoFrameMetadata</a>
+    <li><a href="#ref-for-dom-videoframemetadata-capturetime①">5. Security and Privacy Considerations</a> <a href="#ref-for-dom-videoframemetadata-capturetime②">(2)</a> <a href="#ref-for-dom-videoframemetadata-capturetime③">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dom-videoframemetadata-receivetime">
    <b><a href="#dom-videoframemetadata-receivetime">#dom-videoframemetadata-receivetime</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-dom-videoframemetadata-receivetime">2. VideoFrameMetadata</a>
+    <li><a href="#ref-for-dom-videoframemetadata-receivetime①">5. Security and Privacy Considerations</a> <a href="#ref-for-dom-videoframemetadata-receivetime②">(2)</a> <a href="#ref-for-dom-videoframemetadata-receivetime③">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dom-videoframemetadata-rtptimestamp">
    <b><a href="#dom-videoframemetadata-rtptimestamp">#dom-videoframemetadata-rtptimestamp</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-dom-videoframemetadata-rtptimestamp">2. VideoFrameMetadata</a>
+    <li><a href="#ref-for-dom-videoframemetadata-rtptimestamp①">5. Security and Privacy Considerations</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="callbackdef-videoframerequestcallback">
