@@ -15,6 +15,11 @@ Indent: 2
 Markup Shorthands: markdown yes
 </pre>
 
+<pre class='anchors'>
+  spec: hr-timing; urlPrefix: https://w3c.github.io/hr-time/
+    type: dfn
+      for: Clock resolution; text: clock resolution; url: #clock-resolution
+</pre>
 
 
 # Introduction #    {#introduction}
@@ -154,3 +159,22 @@ To <dfn>run the video animation frame callbacks</dfn> for a {{HTMLVideoElement}}
   1. If an exception is thrown, [=report the exception=].
 
 </div>
+
+# Security and Privacy Considerations # {#security-and-privacy}
+
+This specification does not expose any new privacy-sensitive information, and should not make it
+easier to fingerprint users. However, the location correlation opportunities outlined in the
+Privacy and Security section of [[webrtc-stats]] also hold true for this spec: {{captureTime}},
+{{receiveTime}}, and {{rtpTimestamp}} expose network-layer information which can correlated to location
+information. E.g., reusing the same example, {{captureTime}} and {{receiveTime}} can be used to estimate
+network end-to-end travel time, which can give indication as to how far the peers are located, and can
+give some location information about a peer if the location of the other peer is known. Since this
+information is already available via the [[webrtc-stats|RTCStats]], this specification doesn't introduce
+any novel privacy considerations.
+
+This specification also introduces some new timing information. {{presentationTime}},
+{{expectedPresentationTime}} and {{elapsedProcessingTime}} expose timing information related to the
+under-the-hood performance of the video pipeline, which is otherwise inaccessible to web developpers.
+The [=clock resolution=] of these fields should be coarse enough to prevent new timing attacks.
+Similarly, {{captureTime}} and {{receiveTime}} expose network timing information, and should have an
+apporiate [=clock resolutions=].
