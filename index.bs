@@ -19,6 +19,9 @@ Markup Shorthands: markdown yes
   spec: hr-timing; urlPrefix: https://w3c.github.io/hr-time/
     type: dfn
       for: Clock resolution; text: clock resolution; url: #clock-resolution
+  spec: html; urlPrefix: https://html.spec.whatwg.org/multipage/imagebitmap-and-animations.html
+    type: dfn
+      text: run the animation frame callbacks; url: #run-the-animation-frame-callbacks
 </pre>
 
 
@@ -120,7 +123,9 @@ Each {{VideoFrameRequestCallback}} object has a <dfn>canceled</dfn> boolean init
 
 ## Methods ## {#video-raf-methods}
 
-Each {{HTMLVideoElement}} has a <dfn>list of animation frame callbacks</dfn>, which is initially empty, and an <dfn>animation frame callback identifier</dfn>, which is a number which is initially zero.
+Each {{HTMLVideoElement}} has a <dfn>list of animation frame callbacks</dfn>, which is initially empty,
+an <dfn>animation frame callback identifier</dfn>, which is a number which is initially zero, and a
+<dfn>last presented frame indentifier</dfn>, which is a number which is initialy zero.
 
 : <dfn for="HTMLVideoElement" method>requestAnimationFrame(|callback|)</dfn>
 :: Registers a callback to be fired the next time a frame is presented to the compositor.
@@ -143,7 +148,23 @@ Each {{HTMLVideoElement}} has a <dfn>list of animation frame callbacks</dfn>, wh
 
 ## Procedures ## {#video-raf-procedures}
 
-Issue: Describe how an {{HTMLVideoElement}} should schedule the [=run the video animation frame callbacks=] procedure when a new frame is presented.
+An {{HTMLVideoElement}} is considered to be an <dfn>associated video element</dfn> of a {{Document}}
+|doc| if its {{ownerDocument}} attribute is the same as |doc|.
+
+<div algorithm="video-raf-rendering-step">
+
+When the [=update the rendering=] algorithm is invoked, run this new step:
+
++ For each [=fully active=] {{Document}} in |docs|, for each [=associated video element=] for that
+  {{Document}}, [=run the video animation frame callbacks=] passing |now| as the timestamp.
+
+immediately before this existing step:
+
++  "<i>For each [=fully active=] {{Document}} in |docs|, [=run the animation frame callbacks=] for that {{Document}}, passing in |now| as the timestamp</i>"
+
+using the definitions for |docs| and |now| described in the [=update the rendering=] algorithm.
+
+</div>
 
 <div algorithm="run the video animation frame callbacks">
 
@@ -151,6 +172,9 @@ To <dfn>run the video animation frame callbacks</dfn> for a {{HTMLVideoElement}}
 
 1. If |video|'s [=list of animation frame callbacks=] is empty, abort these steps.
 1. Let |metadata| be the {{VideoFrameMetadata}} dictionary built from |video|'s latest presented frame.
+1. Let |presentedFrames| be the value of |metadata|'s {{presentedFrames}} field.
+1. If the [=last presented frame indentifier=] is equal to |presentedFrames|, abort these steps.
+1. Set the [=last presented frame indentifier=] to |presentedFrames|.
 1. Let |callbacks| be the [=list of animation frame callbacks=].
 1. Set |video|'s [=list of animation frame callbacks=] to be empty.
 1. For each entry in |callbacks|

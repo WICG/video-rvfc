@@ -1224,7 +1224,7 @@ Possible extra rowspan handling
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version 8bc2fccb49a45a0af18c5e75ce18049d75f824b6" name="generator">
   <link href="https://wicg.github.io/video-raf/" rel="canonical">
-  <meta content="c2e0c7605f3fbfa3f61e953b379fc22e3e2dda4e" name="document-revision">
+  <meta content="fe7b32d9b9aeacc6946e3cd6f6cf7f40479618dc" name="document-revision">
 <style>/* style-md-lists */
 
 /* This is a weird hack for me not yet following the commonmark spec
@@ -1482,14 +1482,13 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">HTMLVideoElement.requestAnimationFrame()</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-02-25">25 February 2020</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-02-28">28 February 2020</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
      <dd><a class="u-url" href="https://wicg.github.io/video-raf/">https://wicg.github.io/video-raf/</a>
      <dt>Issue Tracking:
      <dd><a href="https://github.com/wicg/video-raf/issues/">GitHub</a>
-     <dd><a href="#issues-index">Inline In Spec</a>
      <dt class="editor">Editor:
      <dd class="editor p-author h-card vcard" data-editor-id="120583"><span class="p-name fn">Thomas Guilbert</span> (<a class="p-org org" href="https://google.com/">Google Inc.</a>)
      <dt>Participate:
@@ -1551,7 +1550,6 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
       <li><a href="#informative"><span class="secno"></span> <span class="content">Informative References</span></a>
      </ol>
     <li><a href="#idl-index"><span class="secno"></span> <span class="content">IDL Index</span></a>
-    <li><a href="#issues-index"><span class="secno"></span> <span class="content">Issues Index</span></a>
    </ol>
   </nav>
   <main>
@@ -1639,7 +1637,8 @@ which the last packet belonging to this frame was received over the network.</p>
 };
 </pre>
    <h3 class="heading settled" data-level="4.1" id="video-raf-methods"><span class="secno">4.1. </span><span class="content">Methods</span><a class="self-link" href="#video-raf-methods"></a></h3>
-   <p>Each <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement" id="ref-for-htmlvideoelement②">HTMLVideoElement</a></code> has a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="list-of-animation-frame-callbacks">list of animation frame callbacks</dfn>, which is initially empty, and an <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="animation-frame-callback-identifier">animation frame callback identifier</dfn>, which is a number which is initially zero.</p>
+   <p>Each <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement" id="ref-for-htmlvideoelement②">HTMLVideoElement</a></code> has a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="list-of-animation-frame-callbacks">list of animation frame callbacks</dfn>, which is initially empty,
+an <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="animation-frame-callback-identifier">animation frame callback identifier</dfn>, which is a number which is initially zero, and a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="last-presented-frame-indentifier">last presented frame indentifier</dfn>, which is a number which is initialy zero.</p>
    <dl>
     <dt data-md><dfn class="dfn-paneled idl-code" data-dfn-for="HTMLVideoElement" data-dfn-type="method" data-export id="dom-htmlvideoelement-requestanimationframe"><code>requestAnimationFrame(<var>callback</var>)</code></dfn>
     <dd data-md>
@@ -1670,7 +1669,20 @@ which the last packet belonging to this frame was received over the network.</p>
      </ol>
    </dl>
    <h3 class="heading settled" data-level="4.2" id="video-raf-procedures"><span class="secno">4.2. </span><span class="content">Procedures</span><a class="self-link" href="#video-raf-procedures"></a></h3>
-   <p class="issue" id="issue-e25085c1"><a class="self-link" href="#issue-e25085c1"></a> Describe how an <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement" id="ref-for-htmlvideoelement⑤">HTMLVideoElement</a></code> should schedule the <a data-link-type="dfn" href="#run-the-video-animation-frame-callbacks" id="ref-for-run-the-video-animation-frame-callbacks">run the video animation frame callbacks</a> procedure when a new frame is presented.</p>
+   <p>An <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement" id="ref-for-htmlvideoelement⑤">HTMLVideoElement</a></code> is considered to be an <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="associated-video-element">associated video element</dfn> of a <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#document" id="ref-for-document">Document</a></code> <var>doc</var> if its <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#dom-node-ownerdocument" id="ref-for-dom-node-ownerdocument">ownerDocument</a></code> attribute is the same as <var>doc</var>.</p>
+   <div class="algorithm" data-algorithm="video-raf-rendering-step">
+    <p>When the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#update-the-rendering" id="ref-for-update-the-rendering①">update the rendering</a> algorithm is invoked, run this new step:</p>
+    <ul>
+     <li data-md>
+      <p>For each <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsers.html#fully-active" id="ref-for-fully-active">fully active</a> <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#document" id="ref-for-document①">Document</a></code> in <var>docs</var>, for each <a data-link-type="dfn" href="#associated-video-element" id="ref-for-associated-video-element">associated video element</a> for that <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#document" id="ref-for-document②">Document</a></code>, <a data-link-type="dfn" href="#run-the-video-animation-frame-callbacks" id="ref-for-run-the-video-animation-frame-callbacks">run the video animation frame callbacks</a> passing <var>now</var> as the timestamp.</p>
+    </ul>
+    <p>immediately before this existing step:</p>
+    <ul>
+     <li data-md>
+      <p>"<i>For each <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsers.html#fully-active" id="ref-for-fully-active①">fully active</a> <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#document" id="ref-for-document③">Document</a></code> in <var>docs</var>, <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/imagebitmap-and-animations.html#run-the-animation-frame-callbacks" id="ref-for-run-the-animation-frame-callbacks">run the animation frame callbacks</a> for that <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#document" id="ref-for-document④">Document</a></code>, passing in <var>now</var> as the timestamp</i>"</p>
+    </ul>
+    <p>using the definitions for <var>docs</var> and <var>now</var> described in the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#update-the-rendering" id="ref-for-update-the-rendering②">update the rendering</a> algorithm.</p>
+   </div>
    <div class="algorithm" data-algorithm="run the video animation frame callbacks">
     <p>To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="run-the-video-animation-frame-callbacks">run the video animation frame callbacks</dfn> for a <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement" id="ref-for-htmlvideoelement⑥">HTMLVideoElement</a></code> <var>video</var> with a timestamp <var>now</var>, run the following steps:</p>
     <ol>
@@ -1678,6 +1690,12 @@ which the last packet belonging to this frame was received over the network.</p>
       <p>If <var>video</var>’s <a data-link-type="dfn" href="#list-of-animation-frame-callbacks" id="ref-for-list-of-animation-frame-callbacks③">list of animation frame callbacks</a> is empty, abort these steps.</p>
      <li data-md>
       <p>Let <var>metadata</var> be the <code class="idl"><a data-link-type="idl" href="#dictdef-videoframemetadata" id="ref-for-dictdef-videoframemetadata②">VideoFrameMetadata</a></code> dictionary built from <var>video</var>’s latest presented frame.</p>
+     <li data-md>
+      <p>Let <var>presentedFrames</var> be the value of <var>metadata</var>’s <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-presentedframes" id="ref-for-dom-videoframemetadata-presentedframes①">presentedFrames</a></code> field.</p>
+     <li data-md>
+      <p>If the <a data-link-type="dfn" href="#last-presented-frame-indentifier" id="ref-for-last-presented-frame-indentifier">last presented frame indentifier</a> is equal to <var>presentedFrames</var>, abort these steps.</p>
+     <li data-md>
+      <p>Set the <a data-link-type="dfn" href="#last-presented-frame-indentifier" id="ref-for-last-presented-frame-indentifier①">last presented frame indentifier</a> to <var>presentedFrames</var>.</p>
      <li data-md>
       <p>Let <var>callbacks</var> be the <a data-link-type="dfn" href="#list-of-animation-frame-callbacks" id="ref-for-list-of-animation-frame-callbacks④">list of animation frame callbacks</a>.</p>
      <li data-md>
@@ -1859,12 +1877,14 @@ apporiate <a data-link-type="dfn" href="https://w3c.github.io/hr-time/#clock-res
   <h3 class="no-num no-ref heading settled" id="index-defined-here"><span class="content">Terms defined by this specification</span><a class="self-link" href="#index-defined-here"></a></h3>
   <ul class="index">
    <li><a href="#animation-frame-callback-identifier">animation frame callback identifier</a><span>, in §4.1</span>
+   <li><a href="#associated-video-element">associated video element</a><span>, in §4.2</span>
    <li><a href="#dom-htmlvideoelement-cancelanimationframe">cancelAnimationFrame(handle)</a><span>, in §4.1</span>
    <li><a href="#canceled">canceled</a><span>, in §3</span>
    <li><a href="#dom-videoframemetadata-capturetime">captureTime</a><span>, in §2.1</span>
    <li><a href="#dom-videoframemetadata-elapsedprocessingtime">elapsedProcessingTime</a><span>, in §2.1</span>
    <li><a href="#dom-videoframemetadata-expectedpresentationtime">expectedPresentationTime</a><span>, in §2.1</span>
    <li><a href="#dom-videoframemetadata-height">height</a><span>, in §2.1</span>
+   <li><a href="#last-presented-frame-indentifier">last presented frame indentifier</a><span>, in §4.1</span>
    <li><a href="#list-of-animation-frame-callbacks">list of animation frame callbacks</a><span>, in §4.1</span>
    <li><a href="#media-pixels">media pixels</a><span>, in §2.1</span>
    <li><a href="#dom-videoframemetadata-presentationtime">presentationTime</a><span>, in §2.1</span>
@@ -1878,6 +1898,18 @@ apporiate <a data-link-type="dfn" href="https://w3c.github.io/hr-time/#clock-res
    <li><a href="#callbackdef-videoframerequestcallback">VideoFrameRequestCallback</a><span>, in §3</span>
    <li><a href="#dom-videoframemetadata-width">width</a><span>, in §2.1</span>
   </ul>
+  <aside class="dfn-panel" data-for="term-for-document">
+   <a href="https://dom.spec.whatwg.org/#document">https://dom.spec.whatwg.org/#document</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-document">4.2. Procedures</a> <a href="#ref-for-document①">(2)</a> <a href="#ref-for-document②">(3)</a> <a href="#ref-for-document③">(4)</a> <a href="#ref-for-document④">(5)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-dom-node-ownerdocument">
+   <a href="https://dom.spec.whatwg.org/#dom-node-ownerdocument">https://dom.spec.whatwg.org/#dom-node-ownerdocument</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dom-node-ownerdocument">4.2. Procedures</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-dom-domhighrestimestamp">
    <a href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp">https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp</a><b>Referenced in:</b>
    <ul>
@@ -1919,16 +1951,29 @@ apporiate <a data-link-type="dfn" href="https://w3c.github.io/hr-time/#clock-res
     <li><a href="#ref-for-event-loop-processing-model">1. Introduction</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-fully-active">
+   <a href="https://html.spec.whatwg.org/multipage/browsers.html#fully-active">https://html.spec.whatwg.org/multipage/browsers.html#fully-active</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-fully-active">4.2. Procedures</a> <a href="#ref-for-fully-active①">(2)</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-report-the-exception">
    <a href="https://html.spec.whatwg.org/multipage/webappapis.html#report-the-exception">https://html.spec.whatwg.org/multipage/webappapis.html#report-the-exception</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-report-the-exception">4.2. Procedures</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-run-the-animation-frame-callbacks">
+   <a href="https://html.spec.whatwg.org/multipage/imagebitmap-and-animations.html#run-the-animation-frame-callbacks">https://html.spec.whatwg.org/multipage/imagebitmap-and-animations.html#run-the-animation-frame-callbacks</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-run-the-animation-frame-callbacks">4.2. Procedures</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-update-the-rendering">
    <a href="https://html.spec.whatwg.org/multipage/webappapis.html#update-the-rendering">https://html.spec.whatwg.org/multipage/webappapis.html#update-the-rendering</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-update-the-rendering">1. Introduction</a>
+    <li><a href="#ref-for-update-the-rendering①">4.2. Procedures</a> <a href="#ref-for-update-the-rendering②">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-dom-video-videoheight">
@@ -1967,6 +2012,12 @@ apporiate <a data-link-type="dfn" href="https://w3c.github.io/hr-time/#clock-res
   <h3 class="no-num no-ref heading settled" id="index-defined-elsewhere"><span class="content">Terms defined by reference</span><a class="self-link" href="#index-defined-elsewhere"></a></h3>
   <ul class="index">
    <li>
+    <a data-link-type="biblio">[DOM]</a> defines the following terms:
+    <ul>
+     <li><span class="dfn-paneled" id="term-for-document" style="color:initial">Document</span>
+     <li><span class="dfn-paneled" id="term-for-dom-node-ownerdocument" style="color:initial">ownerDocument</span>
+    </ul>
+   <li>
     <a data-link-type="biblio">[hr-time-2]</a> defines the following terms:
     <ul>
      <li><span class="dfn-paneled" id="term-for-dom-domhighrestimestamp" style="color:initial">DOMHighResTimeStamp</span>
@@ -1983,7 +2034,9 @@ apporiate <a data-link-type="dfn" href="https://w3c.github.io/hr-time/#clock-res
      <li><span class="dfn-paneled" id="term-for-htmlvideoelement" style="color:initial">HTMLVideoElement</span>
      <li><span class="dfn-paneled" id="term-for-dom-media-currenttime" style="color:initial">currentTime</span>
      <li><span class="dfn-paneled" id="term-for-event-loop-processing-model" style="color:initial">event loop processing model</span>
+     <li><span class="dfn-paneled" id="term-for-fully-active" style="color:initial">fully active</span>
      <li><span class="dfn-paneled" id="term-for-report-the-exception" style="color:initial">report the exception</span>
+     <li><span class="dfn-paneled" id="term-for-run-the-animation-frame-callbacks" style="color:initial">run the animation frame callbacks</span>
      <li><span class="dfn-paneled" id="term-for-update-the-rendering" style="color:initial">update the rendering</span>
      <li><span class="dfn-paneled" id="term-for-dom-video-videoheight" style="color:initial">videoHeight</span>
      <li><span class="dfn-paneled" id="term-for-dom-video-videowidth" style="color:initial">videoWidth</span>
@@ -1999,6 +2052,8 @@ apporiate <a data-link-type="dfn" href="https://w3c.github.io/hr-time/#clock-res
   <h2 class="no-num no-ref heading settled" id="references"><span class="content">References</span><a class="self-link" href="#references"></a></h2>
   <h3 class="no-num no-ref heading settled" id="normative"><span class="content">Normative References</span><a class="self-link" href="#normative"></a></h3>
   <dl>
+   <dt id="biblio-dom">[DOM]
+   <dd>Anne van Kesteren. <a href="https://dom.spec.whatwg.org/">DOM Standard</a>. Living Standard. URL: <a href="https://dom.spec.whatwg.org/">https://dom.spec.whatwg.org/</a>
    <dt id="biblio-hr-time-2">[HR-TIME-2]
    <dd>Ilya Grigorik. <a href="https://www.w3.org/TR/hr-time-2/">High Resolution Time Level 2</a>. 21 November 2019. REC. URL: <a href="https://www.w3.org/TR/hr-time-2/">https://www.w3.org/TR/hr-time-2/</a>
    <dt id="biblio-html">[HTML]
@@ -2023,7 +2078,7 @@ apporiate <a data-link-type="dfn" href="https://w3c.github.io/hr-time/#clock-res
 
   <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-double" id="ref-for-idl-double④"><c- b>double</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="double " href="#dom-videoframemetadata-presentationtimestamp" id="ref-for-dom-videoframemetadata-presentationtimestamp①"><c- g>presentationTimestamp</c-></a>;
   <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-double" id="ref-for-idl-double①①"><c- b>double</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="double " href="#dom-videoframemetadata-elapsedprocessingtime" id="ref-for-dom-videoframemetadata-elapsedprocessingtime②"><c- g>elapsedProcessingTime</c-></a>;
-  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long" id="ref-for-idl-unsigned-long②①"><c- b>unsigned</c-> <c- b>long</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="unsigned long " href="#dom-videoframemetadata-presentedframes" id="ref-for-dom-videoframemetadata-presentedframes①"><c- g>presentedFrames</c-></a>;
+  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long" id="ref-for-idl-unsigned-long②①"><c- b>unsigned</c-> <c- b>long</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="unsigned long " href="#dom-videoframemetadata-presentedframes" id="ref-for-dom-videoframemetadata-presentedframes②"><c- g>presentedFrames</c-></a>;
   <a class="n" data-link-type="idl-name" href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp" id="ref-for-dom-domhighrestimestamp②①"><c- n>DOMHighResTimeStamp</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="DOMHighResTimeStamp " href="#dom-videoframemetadata-capturetime" id="ref-for-dom-videoframemetadata-capturetime④"><c- g>captureTime</c-></a>;
   <a class="n" data-link-type="idl-name" href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp" id="ref-for-dom-domhighrestimestamp③①"><c- n>DOMHighResTimeStamp</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="DOMHighResTimeStamp " href="#dom-videoframemetadata-receivetime" id="ref-for-dom-videoframemetadata-receivetime④"><c- g>receiveTime</c-></a>;
   <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long" id="ref-for-idl-unsigned-long③①"><c- b>unsigned</c-> <c- b>long</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="unsigned long " href="#dom-videoframemetadata-rtptimestamp" id="ref-for-dom-videoframemetadata-rtptimestamp②"><c- g>rtpTimestamp</c-></a>;
@@ -2037,10 +2092,6 @@ apporiate <a data-link-type="dfn" href="https://w3c.github.io/hr-time/#clock-res
 };
 
 </pre>
-  <h2 class="no-num no-ref heading settled" id="issues-index"><span class="content">Issues Index</span><a class="self-link" href="#issues-index"></a></h2>
-  <div style="counter-reset:issue">
-   <div class="issue"> Describe how an <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement">HTMLVideoElement</a></code> should schedule the <a data-link-type="dfn" href="#run-the-video-animation-frame-callbacks">run the video animation frame callbacks</a> procedure when a new frame is presented.<a href="#issue-e25085c1"> ↵ </a></div>
-  </div>
   <aside class="dfn-panel" data-for="dictdef-videoframemetadata">
    <b><a href="#dictdef-videoframemetadata">#dictdef-videoframemetadata</a></b><b>Referenced in:</b>
    <ul>
@@ -2100,6 +2151,7 @@ apporiate <a data-link-type="dfn" href="https://w3c.github.io/hr-time/#clock-res
    <b><a href="#dom-videoframemetadata-presentedframes">#dom-videoframemetadata-presentedframes</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-dom-videoframemetadata-presentedframes">2. VideoFrameMetadata</a>
+    <li><a href="#ref-for-dom-videoframemetadata-presentedframes①">4.2. Procedures</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dom-videoframemetadata-capturetime">
@@ -2150,6 +2202,12 @@ apporiate <a data-link-type="dfn" href="https://w3c.github.io/hr-time/#clock-res
     <li><a href="#ref-for-animation-frame-callback-identifier">4.1. Methods</a> <a href="#ref-for-animation-frame-callback-identifier①">(2)</a> <a href="#ref-for-animation-frame-callback-identifier②">(3)</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="last-presented-frame-indentifier">
+   <b><a href="#last-presented-frame-indentifier">#last-presented-frame-indentifier</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-last-presented-frame-indentifier">4.2. Procedures</a> <a href="#ref-for-last-presented-frame-indentifier①">(2)</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="dom-htmlvideoelement-requestanimationframe">
    <b><a href="#dom-htmlvideoelement-requestanimationframe">#dom-htmlvideoelement-requestanimationframe</a></b><b>Referenced in:</b>
    <ul>
@@ -2160,6 +2218,12 @@ apporiate <a data-link-type="dfn" href="https://w3c.github.io/hr-time/#clock-res
    <b><a href="#dom-htmlvideoelement-cancelanimationframe">#dom-htmlvideoelement-cancelanimationframe</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-dom-htmlvideoelement-cancelanimationframe">4. HTMLVideoElement.requestAnimationFrame()</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="associated-video-element">
+   <b><a href="#associated-video-element">#associated-video-element</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-associated-video-element">4.2. Procedures</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="run-the-video-animation-frame-callbacks">
