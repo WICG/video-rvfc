@@ -22,6 +22,9 @@ Markup Shorthands: markdown yes
   spec: html; urlPrefix: https://html.spec.whatwg.org/multipage/imagebitmap-and-animations.html
     type: dfn
       text: run the animation frame callbacks; url: #run-the-animation-frame-callbacks
+  spec: css-values; urlPrefix: https://drafts.csswg.org/css-values/
+    type: dfn
+      text: CSS pixels; url: #px
 </pre>
 
 
@@ -60,18 +63,20 @@ This method allows web authors to register a callback which will run the next ti
 : <dfn for="VideoFrameMetadata" dict-member>expectedPresentationTime</dfn>
 :: The time at which the user agent expects the frame to be visible.
 
-Note: <dfn>media pixels</dfn> refers to the raw media pixels, after internal
-cropping, but before aspect ratio adjustments. This differs from CSS pixels
-(used by {{HTMLVideoElement/videoWidth|videoWidth}} and
-{{HTMLVideoElement/videoHeight|videoHeight}}), which account for aspect ratio
-adjustments. The {{width}} and {{height}} in [=media pixels=] can be used as a
-texture's width and height when calling <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/texImage2D">`texImage2D()`</a>.
-
 : <dfn for="VideoFrameMetadata" dict-member>width</dfn>
 :: The width of the video frame, in [=media pixels=].
 
 : <dfn for="VideoFrameMetadata" dict-member>height</dfn>
 :: The height of the video frame, in [=media pixels=].
+
+<dfn>media pixels</dfn> are defined as a media resources' visible decoded pixels. They are different
+from [=CSS pixels=] in that they do not take into account aspect ratio adjustments.
+
+Note: {{width}} and {{height}} might differ from {{HTMLVideoElement/videoWidth|videoWidth}} and
+{{HTMLVideoElement/videoHeight|videoHeight}}. When a call to
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/texImage2D">
+`texImage2D()`</a> is made using a {{HTMLVideoElement|video}} as a pixel source, {{width}} and
+{{height}} should be the resulting texture's dimension.
 
 : <dfn for="VideoFrameMetadata" dict-member>presentationTimestamp</dfn>
 ::  The media presentation timestamp in seconds of the frame presented (e.g. its
