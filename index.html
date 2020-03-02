@@ -1224,7 +1224,7 @@ Possible extra rowspan handling
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version 8bc2fccb49a45a0af18c5e75ce18049d75f824b6" name="generator">
   <link href="https://wicg.github.io/video-raf/" rel="canonical">
-  <meta content="8eb9e30771f29c627f272eb3f950f5c0bbdea3c9" name="document-revision">
+  <meta content="4ae196aecdaec02c2688f8534f9dea2eb2604b8c" name="document-revision">
 <style>/* style-md-lists */
 
 /* This is a weird hack for me not yet following the commonmark spec
@@ -1715,19 +1715,23 @@ an <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="animation-fram
     </ol>
    </div>
    <h2 class="heading settled" data-level="5" id="security-and-privacy"><span class="secno">5. </span><span class="content">Security and Privacy Considerations</span><a class="self-link" href="#security-and-privacy"></a></h2>
-   <p>This specification does not expose any new privacy-sensitive information, and should not make it
-easier to fingerprint users. However, the location correlation opportunities outlined in the
-Privacy and Security section of <a data-link-type="biblio" href="#biblio-webrtc-stats">[webrtc-stats]</a> also hold true for this spec: <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-capturetime" id="ref-for-dom-videoframemetadata-capturetime①">captureTime</a></code>, <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-receivetime" id="ref-for-dom-videoframemetadata-receivetime①">receiveTime</a></code>, and <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-rtptimestamp" id="ref-for-dom-videoframemetadata-rtptimestamp①">rtpTimestamp</a></code> expose network-layer information which can correlated to location
-information. E.g., reusing the same example, <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-capturetime" id="ref-for-dom-videoframemetadata-capturetime②">captureTime</a></code> and <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-receivetime" id="ref-for-dom-videoframemetadata-receivetime②">receiveTime</a></code> can be used to estimate
-network end-to-end travel time, which can give indication as to how far the peers are located, and can
-give some location information about a peer if the location of the other peer is known. Since this
-information is already available via the <a data-link-type="biblio" href="#biblio-webrtc-stats">RTCStats</a>, this specification doesn’t introduce
-any novel privacy considerations.</p>
-   <p>This specification also introduces some new timing information. <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-presentationtime" id="ref-for-dom-videoframemetadata-presentationtime①">presentationTime</a></code>, <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-expectedpresentationtime" id="ref-for-dom-videoframemetadata-expectedpresentationtime①">expectedPresentationTime</a></code> and <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-elapsedprocessingtime" id="ref-for-dom-videoframemetadata-elapsedprocessingtime①">elapsedProcessingTime</a></code> expose timing information related to the
-under-the-hood performance of the video pipeline, which is otherwise inaccessible to web developpers.
-The <a data-link-type="dfn" href="https://w3c.github.io/hr-time/#clock-resolution" id="ref-for-clock-resolution">clock resolution</a> of these fields should be coarse enough to prevent new timing attacks.
-Similarly, <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-capturetime" id="ref-for-dom-videoframemetadata-capturetime③">captureTime</a></code> and <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-receivetime" id="ref-for-dom-videoframemetadata-receivetime③">receiveTime</a></code> expose network timing information, and should have an
-apporiate <a data-link-type="dfn" href="https://w3c.github.io/hr-time/#clock-resolution" id="ref-for-clock-resolution①">clock resolutions</a>.</p>
+   <p>This specification does not expose any new privacy-sensitive information. However, the location
+correlation opportunities outlined in the Privacy and Security section of <a data-link-type="biblio" href="#biblio-webrtc-stats">[webrtc-stats]</a> also hold
+true for this spec: <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-capturetime" id="ref-for-dom-videoframemetadata-capturetime①">captureTime</a></code>, <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-receivetime" id="ref-for-dom-videoframemetadata-receivetime①">receiveTime</a></code>, and <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-rtptimestamp" id="ref-for-dom-videoframemetadata-rtptimestamp①">rtpTimestamp</a></code> expose network-layer
+information which can correlated to location information. E.g., reusing the same example, <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-capturetime" id="ref-for-dom-videoframemetadata-capturetime②">captureTime</a></code> and <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-receivetime" id="ref-for-dom-videoframemetadata-receivetime②">receiveTime</a></code> can be used to estimate network end-to-end travel time, which can
+give indication as to how far the peers are located, and can give some location information about a peer
+if the location of the other peer is known. Since this information is already available via the <a data-link-type="biblio" href="#biblio-webrtc-stats">RTCStats</a>, this specification doesn’t introduce any novel privacy considerations.</p>
+   <p>This specification might introduce some new GPU fingerprinting opportunities. <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-elapsedprocessingtime" id="ref-for-dom-videoframemetadata-elapsedprocessingtime①">elapsedProcessingTime</a></code> exposes some under-the-hood performance information about the video pipeline, which is otherwise
+inaccessible to web developpers. Using this information, one could correlate the performance of various
+codecs and video sizes to a known GPU’s profile. We therefore propose a resolution of 100μs, which is
+still useful for automated quality analysis, but doesn’t offer any new sources of high resolution
+information. Still, despite a coarse clock, one could exploit the significant performance differences
+between hardware and software decoders to infer information about a GPU’s features. For example, this
+would make it easier to fingerprint the newest GPUs, which have hardware decoders for the latests
+codecs, which don’t yet have widespread hardware decoding support. However, rather than measuring the
+profiles themselves, one could directly get equivalent information from getting the <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/media-capabilities#dictdef-mediacapabilitiesinfo" id="ref-for-dictdef-mediacapabilitiesinfo">MediaCapabilitiesInfo</a></code>.</p>
+   <p>This specification also introduces some new timing information. <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-presentationtime" id="ref-for-dom-videoframemetadata-presentationtime①">presentationTime</a></code> and <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-expectedpresentationtime" id="ref-for-dom-videoframemetadata-expectedpresentationtime①">expectedPresentationTime</a></code> expose compositor timing information; <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-capturetime" id="ref-for-dom-videoframemetadata-capturetime③">captureTime</a></code> and <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-receivetime" id="ref-for-dom-videoframemetadata-receivetime③">receiveTime</a></code> expose network timing information. The <a data-link-type="dfn" href="https://w3c.github.io/hr-time/#clock-resolution" id="ref-for-clock-resolution">clock resolution</a> of these fields should
+therefore be coarse enough not to facilitate timing attacks.</p>
   </main>
   <div data-fill-with="conformance">
    <h2 class="no-ref no-num heading settled" id="conformance"><span class="content"> Conformance</span><a class="self-link" href="#conformance"></a></h2>
@@ -1929,7 +1933,7 @@ apporiate <a data-link-type="dfn" href="https://w3c.github.io/hr-time/#clock-res
   <aside class="dfn-panel" data-for="term-for-clock-resolution">
    <a href="https://w3c.github.io/hr-time/#clock-resolution">https://w3c.github.io/hr-time/#clock-resolution</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-clock-resolution">5. Security and Privacy Considerations</a> <a href="#ref-for-clock-resolution①">(2)</a>
+    <li><a href="#ref-for-clock-resolution">5. Security and Privacy Considerations</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-animationframeprovider">
@@ -1996,6 +2000,12 @@ apporiate <a data-link-type="dfn" href="https://w3c.github.io/hr-time/#clock-res
     <li><a href="#ref-for-dom-video-videowidth">2.2. Attributes</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-dictdef-mediacapabilitiesinfo">
+   <a href="https://w3c.github.io/media-capabilities#dictdef-mediacapabilitiesinfo">https://w3c.github.io/media-capabilities#dictdef-mediacapabilitiesinfo</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dictdef-mediacapabilitiesinfo">5. Security and Privacy Considerations</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-idl-double">
    <a href="https://heycam.github.io/webidl/#idl-double">https://heycam.github.io/webidl/#idl-double</a><b>Referenced in:</b>
    <ul>
@@ -2055,6 +2065,11 @@ apporiate <a data-link-type="dfn" href="https://w3c.github.io/hr-time/#clock-res
      <li><span class="dfn-paneled" id="term-for-dom-video-videowidth" style="color:initial">videoWidth</span>
     </ul>
    <li>
+    <a data-link-type="biblio">[media-capabilities]</a> defines the following terms:
+    <ul>
+     <li><span class="dfn-paneled" id="term-for-dictdef-mediacapabilitiesinfo" style="color:initial">MediaCapabilitiesInfo</span>
+    </ul>
+   <li>
     <a data-link-type="biblio">[WebIDL]</a> defines the following terms:
     <ul>
      <li><span class="dfn-paneled" id="term-for-idl-double" style="color:initial">double</span>
@@ -2073,6 +2088,8 @@ apporiate <a data-link-type="dfn" href="https://w3c.github.io/hr-time/#clock-res
    <dd>Ilya Grigorik. <a href="https://www.w3.org/TR/hr-time-2/">High Resolution Time Level 2</a>. 21 November 2019. REC. URL: <a href="https://www.w3.org/TR/hr-time-2/">https://www.w3.org/TR/hr-time-2/</a>
    <dt id="biblio-html">[HTML]
    <dd>Anne van Kesteren; et al. <a href="https://html.spec.whatwg.org/multipage/">HTML Standard</a>. Living Standard. URL: <a href="https://html.spec.whatwg.org/multipage/">https://html.spec.whatwg.org/multipage/</a>
+   <dt id="biblio-media-capabilities">[MEDIA-CAPABILITIES]
+   <dd>Mounir Lamouri. <a href="https://w3c.github.io/media-capabilities/">Media Capabilities</a>. ED. URL: <a href="https://w3c.github.io/media-capabilities/">https://w3c.github.io/media-capabilities/</a>
    <dt id="biblio-rfc2119">[RFC2119]
    <dd>S. Bradner. <a href="https://tools.ietf.org/html/rfc2119">Key words for use in RFCs to Indicate Requirement Levels</a>. March 1997. Best Current Practice. URL: <a href="https://tools.ietf.org/html/rfc2119">https://tools.ietf.org/html/rfc2119</a>
    <dt id="biblio-webidl">[WebIDL]
