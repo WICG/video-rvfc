@@ -55,6 +55,12 @@ This method allows web authors to register a callback which will run the next ti
   };
 </pre>
 
+## Definitions ## {#video-frame-metadata-definitions}
+
+<dfn>media pixels</dfn> are defined as a media resources' visible decoded pixels, without pixel aspect
+ratio adjustments. They are different from [=CSS pixels=], which account for pixel aspect ratio
+adjustments.
+
 ## Attributes ## {#video-frame-metadata-attributes}
 
 : <dfn for="VideoFrameMetadata" dict-member>presentationTime</dfn>
@@ -69,14 +75,11 @@ This method allows web authors to register a callback which will run the next ti
 : <dfn for="VideoFrameMetadata" dict-member>height</dfn>
 :: The height of the video frame, in [=media pixels=].
 
-<dfn>media pixels</dfn> are defined as a media resources' visible decoded pixels. They are different
-from [=CSS pixels=] in that they do not take into account aspect ratio adjustments.
-
 Note: {{width}} and {{height}} might differ from {{HTMLVideoElement/videoWidth|videoWidth}} and
-{{HTMLVideoElement/videoHeight|videoHeight}}. When a call to
-<a href="https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/texImage2D">
-`texImage2D()`</a> is made using a {{HTMLVideoElement|video}} as a pixel source, {{width}} and
-{{height}} should be the resulting texture's dimension.
+{{HTMLVideoElement/videoHeight|videoHeight}} in certain cases (e.g, an anamorphic video might
+have rectangular pixels). When a calling
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/texImage2D">`texImage2D()`</a>,
+{{width}} and {{height}} are the dimensions used to copy the video's [=media pixels=] to the texture.
 
 : <dfn for="VideoFrameMetadata" dict-member>presentationTimestamp</dfn>
 ::  The media presentation timestamp in seconds of the frame presented (e.g. its
