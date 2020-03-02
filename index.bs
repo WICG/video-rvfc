@@ -40,7 +40,7 @@ Markup Shorthands: markdown yes
 
 This is a proposal to add a {{AnimationFrameProvider|requestAnimationFrame()}} method to the {{HTMLVideoElement}}.
 
-This method allows web authors to register a callback which will run the next time a video frame has been presented for composition. The callback provides {{VideoFrameMetadata|metadata}} about the frame that was presented, and is executed during the "[=update the rendering=]" portion of the [=event loop processing model=].
+This method allows web authors to register a {{VideoFrameRequestCallback}} which will run when a new frame is presented for composition. The {{VideoFrameRequestCallback|callbacks}} are executed immediately before {{FrameRequestCallback|FrameRequestCallbacks}} registered through {{AnimationFrameProvider|window.requestAnimationFrame()}}, during the "[=update the rendering=]" portion of the [=event loop processing model=]. The {{VideoFrameRequestCallback}} also provide useful {{VideoFrameMetadata|metadata}} about the video frame that was most recently presented for composition.
 
 # VideoFrameMetadata #    {#video-frame-metadata}
 
