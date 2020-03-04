@@ -167,6 +167,10 @@ An {{HTMLVideoElement}} is considered to be an <dfn>associated video element</df
 
 <div algorithm="video-raf-rendering-step">
 
+Issue: This spec should eventually be merged into the HTML spec, and we should directly call [=run the
+video animation frame callbacks=] from the [=update the rendering=] steps. This procedure describes
+where and how to invoke the algorithm in the meantime.
+
 When the [=update the rendering=] algorithm is invoked, run this new step:
 
 + For each [=fully active=] {{Document}} in |docs|, for each [=associated video element=] for that

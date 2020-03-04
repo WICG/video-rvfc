@@ -1224,7 +1224,7 @@ Possible extra rowspan handling
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version 8bc2fccb49a45a0af18c5e75ce18049d75f824b6" name="generator">
   <link href="https://wicg.github.io/video-raf/" rel="canonical">
-  <meta content="0fbf33f5aff0e880b68fa9fceaad96e05afd1fd7" name="document-revision">
+  <meta content="5fede920c90f08c7b2c1b23476e3eedaf7235b40" name="document-revision">
 <style>/* style-md-lists */
 
 /* This is a weird hack for me not yet following the commonmark spec
@@ -1482,13 +1482,14 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">HTMLVideoElement.requestAnimationFrame()</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-03-02">2 March 2020</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-03-04">4 March 2020</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
      <dd><a class="u-url" href="https://wicg.github.io/video-raf/">https://wicg.github.io/video-raf/</a>
      <dt>Issue Tracking:
      <dd><a href="https://github.com/wicg/video-raf/issues/">GitHub</a>
+     <dd><a href="#issues-index">Inline In Spec</a>
      <dt class="editor">Editor:
      <dd class="editor p-author h-card vcard" data-editor-id="120583"><span class="p-name fn">Thomas Guilbert</span> (<a class="p-org org" href="https://google.com/">Google Inc.</a>)
      <dt>Participate:
@@ -1551,6 +1552,7 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
       <li><a href="#informative"><span class="secno"></span> <span class="content">Informative References</span></a>
      </ol>
     <li><a href="#idl-index"><span class="secno"></span> <span class="content">IDL Index</span></a>
+    <li><a href="#issues-index"><span class="secno"></span> <span class="content">Issues Index</span></a>
    </ol>
   </nav>
   <main>
@@ -1673,17 +1675,20 @@ an <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="animation-fram
    <h3 class="heading settled" data-level="4.2" id="video-raf-procedures"><span class="secno">4.2. </span><span class="content">Procedures</span><a class="self-link" href="#video-raf-procedures"></a></h3>
    <p>An <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement" id="ref-for-htmlvideoelement⑤">HTMLVideoElement</a></code> is considered to be an <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="associated-video-element">associated video element</dfn> of a <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#document" id="ref-for-document">Document</a></code> <var>doc</var> if its <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#dom-node-ownerdocument" id="ref-for-dom-node-ownerdocument">ownerDocument</a></code> attribute is the same as <var>doc</var>.</p>
    <div class="algorithm" data-algorithm="video-raf-rendering-step">
-    <p>When the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#update-the-rendering" id="ref-for-update-the-rendering①">update the rendering</a> algorithm is invoked, run this new step:</p>
+    <p class="issue" id="issue-1bc5c126"><a class="self-link" href="#issue-1bc5c126"></a> This spec should eventually be merged into the HTML spec, and we should directly call <a data-link-type="dfn" href="#run-the-video-animation-frame-callbacks" id="ref-for-run-the-video-animation-frame-callbacks">run the
+video animation frame callbacks</a> from the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#update-the-rendering" id="ref-for-update-the-rendering①">update the rendering</a> steps. This procedure describes
+where and how to invoke the algorithm in the meantime.</p>
+    <p>When the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#update-the-rendering" id="ref-for-update-the-rendering②">update the rendering</a> algorithm is invoked, run this new step:</p>
     <ul>
      <li data-md>
-      <p>For each <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsers.html#fully-active" id="ref-for-fully-active">fully active</a> <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#document" id="ref-for-document①">Document</a></code> in <var>docs</var>, for each <a data-link-type="dfn" href="#associated-video-element" id="ref-for-associated-video-element">associated video element</a> for that <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#document" id="ref-for-document②">Document</a></code>, <a data-link-type="dfn" href="#run-the-video-animation-frame-callbacks" id="ref-for-run-the-video-animation-frame-callbacks">run the video animation frame callbacks</a> passing <var>now</var> as the timestamp.</p>
+      <p>For each <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsers.html#fully-active" id="ref-for-fully-active">fully active</a> <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#document" id="ref-for-document①">Document</a></code> in <var>docs</var>, for each <a data-link-type="dfn" href="#associated-video-element" id="ref-for-associated-video-element">associated video element</a> for that <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#document" id="ref-for-document②">Document</a></code>, <a data-link-type="dfn" href="#run-the-video-animation-frame-callbacks" id="ref-for-run-the-video-animation-frame-callbacks①">run the video animation frame callbacks</a> passing <var>now</var> as the timestamp.</p>
     </ul>
     <p>immediately before this existing step:</p>
     <ul>
      <li data-md>
       <p>"<i>For each <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsers.html#fully-active" id="ref-for-fully-active①">fully active</a> <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#document" id="ref-for-document③">Document</a></code> in <var>docs</var>, <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/imagebitmap-and-animations.html#run-the-animation-frame-callbacks" id="ref-for-run-the-animation-frame-callbacks">run the animation frame callbacks</a> for that <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#document" id="ref-for-document④">Document</a></code>, passing in <var>now</var> as the timestamp</i>"</p>
     </ul>
-    <p>using the definitions for <var>docs</var> and <var>now</var> described in the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#update-the-rendering" id="ref-for-update-the-rendering②">update the rendering</a> algorithm.</p>
+    <p>using the definitions for <var>docs</var> and <var>now</var> described in the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#update-the-rendering" id="ref-for-update-the-rendering③">update the rendering</a> algorithm.</p>
    </div>
    <div class="algorithm" data-algorithm="run the video animation frame callbacks">
     <p>To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="run-the-video-animation-frame-callbacks">run the video animation frame callbacks</dfn> for a <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement" id="ref-for-htmlvideoelement⑥">HTMLVideoElement</a></code> <var>video</var> with a timestamp <var>now</var>, run the following steps:</p>
@@ -1991,7 +1996,7 @@ therefore be coarse enough not to facilitate timing attacks.</p>
    <a href="https://html.spec.whatwg.org/multipage/webappapis.html#update-the-rendering">https://html.spec.whatwg.org/multipage/webappapis.html#update-the-rendering</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-update-the-rendering">1. Introduction</a>
-    <li><a href="#ref-for-update-the-rendering①">4.2. Procedures</a> <a href="#ref-for-update-the-rendering②">(2)</a>
+    <li><a href="#ref-for-update-the-rendering①">4.2. Procedures</a> <a href="#ref-for-update-the-rendering②">(2)</a> <a href="#ref-for-update-the-rendering③">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-dom-video-videoheight">
@@ -2131,6 +2136,12 @@ therefore be coarse enough not to facilitate timing attacks.</p>
 };
 
 </pre>
+  <h2 class="no-num no-ref heading settled" id="issues-index"><span class="content">Issues Index</span><a class="self-link" href="#issues-index"></a></h2>
+  <div style="counter-reset:issue">
+   <div class="issue"> This spec should eventually be merged into the HTML spec, and we should directly call <a data-link-type="dfn" href="#run-the-video-animation-frame-callbacks">run the
+video animation frame callbacks</a> from the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#update-the-rendering">update the rendering</a> steps. This procedure describes
+where and how to invoke the algorithm in the meantime.<a href="#issue-1bc5c126"> ↵ </a></div>
+  </div>
   <aside class="dfn-panel" data-for="dictdef-videoframemetadata">
    <b><a href="#dictdef-videoframemetadata">#dictdef-videoframemetadata</a></b><b>Referenced in:</b>
    <ul>
@@ -2269,7 +2280,7 @@ therefore be coarse enough not to facilitate timing attacks.</p>
   <aside class="dfn-panel" data-for="run-the-video-animation-frame-callbacks">
    <b><a href="#run-the-video-animation-frame-callbacks">#run-the-video-animation-frame-callbacks</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-run-the-video-animation-frame-callbacks">4.2. Procedures</a>
+    <li><a href="#ref-for-run-the-video-animation-frame-callbacks">4.2. Procedures</a> <a href="#ref-for-run-the-video-animation-frame-callbacks①">(2)</a>
    </ul>
   </aside>
 <script>/* script-var-click-highlighting */
