@@ -40,7 +40,7 @@ Markup Shorthands: markdown yes
 
 This is a proposal to add a {{AnimationFrameProvider|requestAnimationFrame()}} method to the {{HTMLVideoElement}}.
 
-This method allows web authors to register a {{VideoFrameRequestCallback}} which will run when a new frame is presented for composition. The {{VideoFrameRequestCallback|callbacks}} are executed immediately before {{FrameRequestCallback|FrameRequestCallbacks}} registered through {{AnimationFrameProvider|window.requestAnimationFrame()}}, during the "[=update the rendering=]" portion of the [=event loop processing model=]. The {{VideoFrameRequestCallback}} also provide useful {{VideoFrameMetadata|metadata}} about the video frame that was most recently presented for composition.
+This method allows web authors to register a {{VideoFrameRequestCallback}} which will run when a new frame is presented for composition. The {{VideoFrameRequestCallback|callbacks}} are executed immediately before {{FrameRequestCallback|FrameRequestCallbacks}} registered through {{AnimationFrameProvider|window.requestAnimationFrame()}}, during the "[=update the rendering=]" portion of the [=event loop processing model=]. The {{VideoFrameRequestCallback}} also provides useful {{VideoFrameMetadata|metadata}} about the video frame that was most recently presented for composition.
 
 # VideoFrameMetadata #    {#video-frame-metadata}
 
@@ -63,7 +63,7 @@ This method allows web authors to register a {{VideoFrameRequestCallback}} which
 
 ## Definitions ## {#video-frame-metadata-definitions}
 
-<dfn>media pixels</dfn> are defined as a media resources' visible decoded pixels, without pixel aspect
+<dfn>media pixels</dfn> are defined as a media resource's visible decoded pixels, without pixel aspect
 ratio adjustments. They are different from [=CSS pixels=], which account for pixel aspect ratio
 adjustments.
 
@@ -102,7 +102,7 @@ have rectangular pixels). When a calling
 
 : <dfn for="VideoFrameMetadata" dict-member>presentedFrames</dfn>
 ::  A count of the number of frames submitted for composition. Allows clients
-  to determine if frames were missed between VideoFrameRequestCallbacks.
+  to determine if frames were missed between {{VideoFrameRequestCallback}}s.
 
 : <dfn for="VideoFrameMetadata" dict-member>captureTime</dfn>
 ::  For video frames coming from either a local or remote source, this is the
@@ -156,7 +156,7 @@ an <dfn>animation frame callback identifier</dfn>, which is a number which is in
 
   When `cancelAnimationFrame` is called, the user agent MUST run the following steps:
 
-  1. Let |video| be the target {{HTMLVideoElement}} object on which `requestAnimationFrame` is invoked.
+  1. Let |video| be the target {{HTMLVideoElement}} object on which `cancelAnimationFrame` is invoked.
   1. Find the entry in |video|'s [=list of animation frame callbacks=] that is associated with the value |handle|.
   1. If there is such an entry, set its [=canceled=] boolean to <code>true</code> and remove it from |video|'s [=list of animation frame callbacks=].
 
@@ -207,7 +207,7 @@ To <dfn>run the video animation frame callbacks</dfn> for a {{HTMLVideoElement}}
 This specification does not expose any new privacy-sensitive information. However, the location
 correlation opportunities outlined in the Privacy and Security section of [[webrtc-stats]] also hold
 true for this spec: {{captureTime}}, {{receiveTime}}, and {{rtpTimestamp}} expose network-layer
-information which can correlated to location information. E.g., reusing the same example,
+information which can be correlated to location information. E.g., reusing the same example,
 {{captureTime}} and {{receiveTime}} can be used to estimate network end-to-end travel time, which can
 give indication as to how far the peers are located, and can give some location information about a peer
 if the location of the other peer is known. Since this information is already available via the
@@ -215,12 +215,12 @@ if the location of the other peer is known. Since this information is already av
 
 This specification might introduce some new GPU fingerprinting opportunities. {{elapsedProcessingTime}}
 exposes some under-the-hood performance information about the video pipeline, which is otherwise
-inaccessible to web developpers. Using this information, one could correlate the performance of various
+inaccessible to web developers. Using this information, one could correlate the performance of various
 codecs and video sizes to a known GPU's profile. We therefore propose a resolution of 100μs, which is
 still useful for automated quality analysis, but doesn't offer any new sources of high resolution
 information. Still, despite a coarse clock, one could exploit the significant performance differences
 between hardware and software decoders to infer information about a GPU's features. For example, this
-would make it easier to fingerprint the newest GPUs, which have hardware decoders for the latests
+would make it easier to fingerprint the newest GPUs, which have hardware decoders for the latest
 codecs, which don't yet have widespread hardware decoding support. However, rather than measuring the
 profiles themselves, one could directly get equivalent information from getting the
 {{MediaCapabilitiesInfo}}.
