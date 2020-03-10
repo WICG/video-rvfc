@@ -7,7 +7,7 @@ Shortname: video-raf
 Level: 1
 Group: wicg
 Editor: Thomas Guilbert, w3cid 120583, Google Inc. https://google.com/
-Abstract: &lt;video&gt;.requestAnimationFrame() allows web authors to be notified when a frame has been presented for composition.
+Abstract: &lt;video&gt;.requestAnimationFrame() allows web authors to be notified after a frame has been presented for composition.
 !Participate: <a href="https://github.com/wicg/video-raf">Git Repository.</a>
 !Participate: <a href="https://github.com/wicg/video-raf/issues/new">File an issue.</a>
 !Version History: <a href="https://github.com/wicg/video-raf/commits">https://github.com/wicg/video-raf/commits</a>
@@ -40,14 +40,14 @@ Markup Shorthands: markdown yes
 
 This is a proposal to add a {{AnimationFrameProvider|requestAnimationFrame()}} method to the {{HTMLVideoElement}}.
 
-This method allows web authors to register a {{VideoFrameRequestCallback}} which will run when a new frame is presented for composition. The {{VideoFrameRequestCallback|callbacks}} are executed immediately before {{FrameRequestCallback|FrameRequestCallbacks}} registered through {{AnimationFrameProvider|window.requestAnimationFrame()}}, during the "[=update the rendering=]" portion of the [=event loop processing model=]. The {{VideoFrameRequestCallback}} also provides useful {{VideoFrameMetadata|metadata}} about the video frame that was most recently presented for composition.
+This method allows web authors to register a {{VideoFrameRequestCallback}} which runs after a new frame is presented for composition. The {{VideoFrameRequestCallback|callbacks}} are executed immediately before {{FrameRequestCallback|FrameRequestCallbacks}} registered through {{AnimationFrameProvider|window.requestAnimationFrame()}}, during the "[=update the rendering=]" portion of the [=event loop processing model=]. The {{VideoFrameRequestCallback}} also provides useful {{VideoFrameMetadata|metadata}} about the video frame that was most recently presented for composition.
 
 # VideoFrameMetadata #    {#video-frame-metadata}
 
 <pre class='idl'>
   dictionary VideoFrameMetadata {
-    required DOMHighResTimeStamp presentationTime;
-    required DOMHighResTimeStamp expectedPresentationTime;
+    required DOMHighResTimeStamp timePresented;
+    required DOMHighResTimeStamp expectedDisplayTime;
 
     required unsigned long width;
     required unsigned long height;
@@ -69,10 +69,10 @@ adjustments.
 
 ## Attributes ## {#video-frame-metadata-attributes}
 
-: <dfn for="VideoFrameMetadata" dict-member>presentationTime</dfn>
+: <dfn for="VideoFrameMetadata" dict-member>timePresented</dfn>
 :: The time at which the user agent submitted the frame for composition.
 
-: <dfn for="VideoFrameMetadata" dict-member>expectedPresentationTime</dfn>
+: <dfn for="VideoFrameMetadata" dict-member>expectedDisplayTime</dfn>
 :: The time at which the user agent expects the frame to be visible.
 
 : <dfn for="VideoFrameMetadata" dict-member>width</dfn>
@@ -138,8 +138,9 @@ Each {{VideoFrameRequestCallback}} object has a <dfn>canceled</dfn> boolean init
 ## Methods ## {#video-raf-methods}
 
 Each {{HTMLVideoElement}} has a <dfn>list of animation frame callbacks</dfn>, which is initially empty,
-an <dfn>animation frame callback identifier</dfn>, which is a number which is initially zero, and a
-<dfn>last presented frame indentifier</dfn>, which is a number which is initialy zero.
+and a <dfn>last presented frame indentifier</dfn>, which is a number which is initialy zero.
+The {{HTMLVideoElement}}'s {{ownerDocument}} also has a <dfn>animation frame
+callback identifier</dfn>, which is a number which is initially zero.
 
 : <dfn for="HTMLVideoElement" method>requestAnimationFrame(|callback|)</dfn>
 :: Registers a callback to be fired the next time a frame is presented to the compositor.
@@ -147,9 +148,10 @@ an <dfn>animation frame callback identifier</dfn>, which is a number which is in
    When `requestAnimationFrame` is called, the user agent MUST run the following steps:
      1. Let |video| be the {{HTMLVideoElement}} on which `requestAnimationFrame` is
         invoked.
-     1. Increment |video|'s [=animation frame callback identifier=] by one.
-     1. Append |callback| to |video|'s [=list of animation frame callbacks=], associated with |video|'s [=animation frame callback identifier=]’s current value.
-     1. Return |video|'s [=animation frame callback identifier=]’s current value.
+     1. Increment |video|'s {{ownerDocument}}'s [=animation frame callback identifier=] by one.
+     1. Let |callbackId| be |video|'s {{ownerDocument}}'s [=animation frame callback identifier=]
+     1. Append |callback| to |video|'s [=list of animation frame callbacks=], associated with |callbackId|.
+     1. Return |callbackId|.
 
 : <dfn for="HTMLVideoElement" method>cancelAnimationFrame(|handle|)</dfn>
 :: Cancels an existing video frame request callback given its handle.
@@ -225,7 +227,7 @@ codecs, which don't yet have widespread hardware decoding support. However, rath
 profiles themselves, one could directly get equivalent information from getting the
 {{MediaCapabilitiesInfo}}.
 
-This specification also introduces some new timing information. {{presentationTime}} and
-{{expectedPresentationTime}} expose compositor timing information; {{captureTime}} and
+This specification also introduces some new timing information. {{timePresented}} and
+{{expectedDisplayTime}} expose compositor timing information; {{captureTime}} and
 {{receiveTime}} expose network timing information. The [=clock resolution=] of these fields should
 therefore be coarse enough not to facilitate timing attacks.
