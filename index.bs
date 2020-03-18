@@ -44,7 +44,9 @@ This is a proposal to add a {{AnimationFrameProvider|requestAnimationFrame()}} m
 This method allows web authors to register a {{VideoFrameRequestCallback|callback}} which runs in the
 [=update the rendering|rendering steps=], when a new video frame is sent to the compositor. The
 new {{VideoFrameRequestCallback|callbacks}} are executed immediately before existing
-{{AnimationFrameProvider|window.requestAnimationFrame()}} callbacks. Changes made from within both callback types within the same [=event loop processing model|turn of the event loop=] will be visible on screen at the same time, with the next v-sync.
+{{AnimationFrameProvider|window.requestAnimationFrame()}} callbacks. Changes made from within both
+callback types within the same [=event loop processing model|turn of the event loop=] will be visible on
+screen at the same time, with the next v-sync.
 
 Drawing operations (e.g. drawing a video frame to a {{canvas}} via {{drawImage()}}) made through this
 API will be synchronized as a *best effort* with the video playing on screen. *Best effort* in this case
