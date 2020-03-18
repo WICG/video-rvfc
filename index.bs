@@ -22,6 +22,7 @@ Markup Shorthands: markdown yes
   spec: html; urlPrefix: https://html.spec.whatwg.org/multipage/imagebitmap-and-animations.html
     type: dfn
       text: run the animation frame callbacks; url: #run-the-animation-frame-callbacks
+    type:attribute; for:CanvasRenderingContext2D; text:canvas
   spec: css-values; urlPrefix: https://drafts.csswg.org/css-values/
     type: dfn
       text: CSS pixels; url: #px
@@ -40,7 +41,24 @@ Markup Shorthands: markdown yes
 
 This is a proposal to add a {{AnimationFrameProvider|requestAnimationFrame()}} method to the {{HTMLVideoElement}}.
 
-This method allows web authors to register a {{VideoFrameRequestCallback}} which runs after a new frame is presented for composition. The {{VideoFrameRequestCallback|callbacks}} are executed immediately before {{FrameRequestCallback|FrameRequestCallbacks}} registered through {{AnimationFrameProvider|window.requestAnimationFrame()}}, during the "[=update the rendering=]" portion of the [=event loop processing model=]. The {{VideoFrameRequestCallback}} also provides useful {{VideoFrameMetadata|metadata}} about the video frame that was most recently presented for composition.
+This method allows web authors to register a {{VideoFrameRequestCallback|callback}} which runs in the
+[=update the rendering|rendering steps=], when a new video frame is sent to the compositor. The
+new {{VideoFrameRequestCallback|callbacks}} are executed immediately before existing
+{{AnimationFrameProvider|window.requestAnimationFrame()}} callbacks. Changes made from within both callback types within the same [=event loop processing model|turn of the event loop=] will be visible on screen at the same time, with the next v-sync.
+
+Drawing operations (e.g. drawing a video frame to a {{canvas}} via {{drawImage()}}) made through this
+API will be synchronized as a *best effort* with the video playing on screen. *Best effort* in this case
+means that, even with a normal work load, a {{VideoFrameRequestCallback|callback}} can occasionally be
+fired one v-sync late, relative to when the new video frame was presented. This means that drawing
+operations might occasionally appear on screen one v-sync after the video frame does. Additionally, if
+there is a heavy load on the main thread, we might not get a callback for every frame (as measured by a
+discontinuity in the {{presentedFrames}}).
+
+Note: A web author could know if a callback is late by checking whether {{expectedDisplayTime}} is equal
+to *now*, as opposed to roughly one v-sync in the future.
+
+The {{VideoFrameRequestCallback}} also provides useful {{VideoFrameMetadata|metadata}} about the video
+frame that was most recently presented for composition, which can be used for automated metrics analysis.
 
 # VideoFrameMetadata #    {#video-frame-metadata}
 
@@ -122,7 +140,7 @@ have rectangular pixels). When a calling
 # VideoFrameRequestCallback #    {#video-frame-request-callback}
 
 <pre class='idl'>
-  callback VideoFrameRequestCallback = void(DOMHighResTimeStamp time, VideoFrameMetadata metadata);
+  callback VideoFrameRequestCallback = void(DOMHighResTimeStamp now, VideoFrameMetadata metadata);
 </pre>
 
 Each {{VideoFrameRequestCallback}} object has a <dfn>canceled</dfn> boolean initially set to false.
@@ -201,6 +219,18 @@ To <dfn>run the video animation frame callbacks</dfn> for a {{HTMLVideoElement}}
   1. If the entry's [=canceled=] boolean is <code>true</code>, continue to the next entry.
   1. [=Invoke=] the callback, passing |now| and |metadata| as arguments
   1. If an exception is thrown, [=report the exception=].
+
+Note: There are **no strict timing guarantees** when it comes to how soon
+{{VideoFrameRequestCallback|callbacks}} are run after a new video frame has been presented.
+Consider the following scenario: a new frame is presented on the compositor thread, just as the user
+agent aborts the [=run the video animation frame callbacks|algorithm=] above, when it confirms that
+there are no new frames. We therefore won't run the {{VideoFrameRequestCallback|callbacks}} in the
+*current* [=update the rendering|rendering steps=], and have to wait until the *next* [=update the
+rendering|rendering steps=], one v-sync later. In that case, visual changes to a web page made from
+within the delayed {{VideoFrameRequestCallback|callbacks}} will appear on-screen one v-sync after the
+video frame does.<br/>
+<br/>
+Offering stricter guarantees would likely force implementers to add cross-thread synchronization, which might be detrimental to video playback performance.
 
 </div>
 
