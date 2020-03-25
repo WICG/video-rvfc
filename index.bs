@@ -105,7 +105,9 @@ Note: {{width}} and {{height}} might differ from {{HTMLVideoElement/videoWidth|v
 {{HTMLVideoElement/videoHeight|videoHeight}} in certain cases (e.g, an anamorphic video might
 have rectangular pixels). When a calling
 <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/texImage2D">`texImage2D()`</a>,
-{{width}} and {{height}} are the dimensions used to copy the video's [=media pixels=] to the texture.
+{{width}} and {{height}} are the dimensions used to copy the video's [=media pixels=] to the texture,
+while {{HTMLVideoElement/videoWidth|videoWidth}} and {{HTMLVideoElement/videoHeight|videoHeight}} can
+be used to determine the aspect ratio to use, when using the texture.
 
 : <dfn for="VideoFrameMetadata" dict-member>presentationTimestamp</dfn>
 ::  The media presentation timestamp in seconds of the frame presented (e.g. its
