@@ -1224,7 +1224,7 @@ Possible extra rowspan handling
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version 8bc2fccb49a45a0af18c5e75ce18049d75f824b6" name="generator">
   <link href="https://wicg.github.io/video-raf/" rel="canonical">
-  <meta content="a0c6f1c1f4f43b09c7544027373bce3bbaa16df4" name="document-revision">
+  <meta content="244aebd22705618c477e1cf7751d4885099a29bf" name="document-revision">
 <style>/* style-md-lists */
 
 /* This is a weird hack for me not yet following the commonmark spec
@@ -1615,7 +1615,9 @@ adjustments.</p>
      <p>The height of the video frame, in <a data-link-type="dfn" href="#media-pixels" id="ref-for-media-pixels①">media pixels</a>.</p>
    </dl>
    <p class="note" role="note"><span>Note:</span> <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-width" id="ref-for-dom-videoframemetadata-width①">width</a></code> and <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-height" id="ref-for-dom-videoframemetadata-height①">height</a></code> might differ from <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#dom-video-videowidth" id="ref-for-dom-video-videowidth">videoWidth</a></code> and <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#dom-video-videoheight" id="ref-for-dom-video-videoheight">videoHeight</a></code> in certain cases (e.g, an anamorphic video might
-have rectangular pixels). When a calling <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/texImage2D"><code>texImage2D()</code></a>, <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-width" id="ref-for-dom-videoframemetadata-width②">width</a></code> and <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-height" id="ref-for-dom-videoframemetadata-height②">height</a></code> are the dimensions used to copy the video’s <a data-link-type="dfn" href="#media-pixels" id="ref-for-media-pixels②">media pixels</a> to the texture.</p>
+have rectangular pixels). When a calling <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/texImage2D"><code>texImage2D()</code></a>, <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-width" id="ref-for-dom-videoframemetadata-width②">width</a></code> and <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-height" id="ref-for-dom-videoframemetadata-height②">height</a></code> are the dimensions used to copy the video’s <a data-link-type="dfn" href="#media-pixels" id="ref-for-media-pixels②">media pixels</a> to the texture,
+while <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#dom-video-videowidth" id="ref-for-dom-video-videowidth①">videoWidth</a></code> and <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#dom-video-videoheight" id="ref-for-dom-video-videoheight①">videoHeight</a></code> can
+be used to determine the aspect ratio to use, when using the texture.</p>
    <dl>
     <dt data-md><dfn class="dfn-paneled idl-code" data-dfn-for="VideoFrameMetadata" data-dfn-type="dict-member" data-export id="dom-videoframemetadata-presentationtimestamp"><code>presentationTimestamp</code></dfn>, <span> of type <a data-link-type="idl-name" href="https://heycam.github.io/webidl/#idl-double" id="ref-for-idl-double②">double</a></span>
     <dd data-md>
@@ -2080,13 +2082,13 @@ can be done by using <code class="idl"><a data-link-type="idl" href="#dom-htmlvi
   <aside class="dfn-panel" data-for="term-for-dom-video-videoheight">
    <a href="https://html.spec.whatwg.org/multipage/media.html#dom-video-videoheight">https://html.spec.whatwg.org/multipage/media.html#dom-video-videoheight</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-video-videoheight">2.2. Attributes</a>
+    <li><a href="#ref-for-dom-video-videoheight">2.2. Attributes</a> <a href="#ref-for-dom-video-videoheight①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-dom-video-videowidth">
    <a href="https://html.spec.whatwg.org/multipage/media.html#dom-video-videowidth">https://html.spec.whatwg.org/multipage/media.html#dom-video-videowidth</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-video-videowidth">2.2. Attributes</a>
+    <li><a href="#ref-for-dom-video-videowidth">2.2. Attributes</a> <a href="#ref-for-dom-video-videowidth①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-dictdef-mediacapabilitiesinfo">
