@@ -263,3 +263,50 @@ This specification also introduces some new timing information. {{timePresented}
 {{expectedDisplayTime}} expose compositor timing information; {{captureTime}} and
 {{receiveTime}} expose network timing information. The [=clock resolution=] of these fields should
 therefore be coarse enough not to facilitate timing attacks.
+
+# Examples # {#examples}
+
+## Drawing frames at the video rate ## {#example-drawing}
+
+*This section is non-normative*
+
+Drawing video frames onto a {{canvas}} at the video rate (instead of the browser's animation rate)
+can be done by using {{requestAnimationFrame()|video.requestAnimationFrame()}} instead of
+{{AnimationFrameProvider|window.requestAnimationFrame()}}.
+
+<pre class="example" highlight="js">
+  &lt;body>
+    &lt;video controls>&lt;/video>
+    &lt;canvas width="640" height="360">&lt;/canvas>
+    &lt;span id="fps_text"/>
+  &lt;/body>
+
+  &lt;script>
+    function startDrawing() {
+      var video = document.querySelector('video');
+      var canvas = document.querySelector('canvas');
+      var ctx = canvas.getContext('2d');
+
+      var paint_count = 0;
+      var start_time = 0.0;
+
+      var updateCanvas = function(now) {
+        if(start_time == 0.0)
+          start_time = now;
+
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        var elapsed = (now - start_time) / 1000.0;
+        var fps = (++paint_count / elapsed).toFixed(3);
+        document.querySelector('#fps_text').innerText = 'video fps: ' + fps;
+
+        video.requestAnimationFrame(updateCanvas);
+      }
+
+      video.requestAnimationFrame(updateCanvas);
+
+      video.src = "http://example.com/foo.webm"
+      video.play()
+    }
+  &lt;/script>
+</pre>
