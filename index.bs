@@ -66,14 +66,14 @@ frame that was most recently presented for composition, which can be used for au
 
 <pre class='idl'>
   dictionary VideoFrameMetadata {
-    required DOMHighResTimeStamp timePresented;
+    required DOMHighResTimeStamp presentedTime;
     required DOMHighResTimeStamp expectedDisplayTime;
 
     required unsigned long width;
     required unsigned long height;
 
     double presentationTimestamp;
-    double elapsedProcessingTime;
+    double processingDuration;
     unsigned long presentedFrames;
     DOMHighResTimeStamp captureTime;
     DOMHighResTimeStamp receiveTime;
@@ -89,7 +89,7 @@ adjustments.
 
 ## Attributes ## {#video-frame-metadata-attributes}
 
-: <dfn for="VideoFrameMetadata" dict-member>timePresented</dfn>
+: <dfn for="VideoFrameMetadata" dict-member>presentedTime</dfn>
 :: The time at which the user agent submitted the frame for composition.
 
 : <dfn for="VideoFrameMetadata" dict-member>expectedDisplayTime</dfn>
@@ -114,8 +114,8 @@ be used to determine the aspect ratio to use, when using the texture.
   timestamp on the {{HTMLMediaElement/currentTime|video.currentTime}} timeline).
   May not be known to the compositor or exist in all cases.
 
-: <dfn for="VideoFrameMetadata" dict-member>elapsedProcessingTime</dfn>
-::  The elapsed time in seconds from submission of the encoded packet with
+: <dfn for="VideoFrameMetadata" dict-member>processingDuration</dfn>
+::  The elapsed duration in seconds from submission of the encoded packet with
   the same presentationTimestamp as this frame to the decoder until the
   decoded frame was ready for presentation.
 
@@ -249,7 +249,7 @@ give indication as to how far the peers are located, and can give some location 
 if the location of the other peer is known. Since this information is already available via the
 [[webrtc-stats|RTCStats]], this specification doesn't introduce any novel privacy considerations.
 
-This specification might introduce some new GPU fingerprinting opportunities. {{elapsedProcessingTime}}
+This specification might introduce some new GPU fingerprinting opportunities. {{processingDuration}}
 exposes some under-the-hood performance information about the video pipeline, which is otherwise
 inaccessible to web developers. Using this information, one could correlate the performance of various
 codecs and video sizes to a known GPU's profile. We therefore propose a resolution of 100μs, which is
@@ -261,7 +261,7 @@ codecs, which don't yet have widespread hardware decoding support. However, rath
 profiles themselves, one could directly get equivalent information from getting the
 {{MediaCapabilitiesInfo}}.
 
-This specification also introduces some new timing information. {{timePresented}} and
+This specification also introduces some new timing information. {{presentedTime}} and
 {{expectedDisplayTime}} expose compositor timing information; {{captureTime}} and
 {{receiveTime}} expose network timing information. The [=clock resolution=] of these fields should
 therefore be coarse enough not to facilitate timing attacks.
