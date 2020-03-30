@@ -27,15 +27,15 @@ dictionary VideoFrameMetadata {
     required DOMHighResTimeStamp presentationTime;
 
     // The time at which the user agent expects the frame to be visible.
-    required DOMHighResTimeStamp expectedPresentationTime;
+    required DOMHighResTimeStamp expectedDisplayTime;
 
     // The width and height of the presented video frame.
     required unsigned long width;
     required unsigned long height;
 
-    // The presentation timestamp in seconds of the frame presented. May not be
-    // known to the compositor or exist in all cases.
-    double presentationTimestamp;  // optional
+    // The media presentation timestamp in seconds of the frame presented. This
+    // should match the value of `video.currentTime` when the frame is displayed
+    double mediaTime;
 
     // The elapsed time in seconds from submission of the encoded packet with
     // the same presentationTimestamp as this frame to the decoder until the
@@ -43,7 +43,7 @@ dictionary VideoFrameMetadata {
     //
     // In addition to decoding time, may include processing time. E.g., YUV
     // conversion and/or staging into GPU backed memory.
-    double elapsedProcessingTime;  // optional
+    double processingDuration;  // optional
 
     // A count of the number of frames submitted for composition. Allows clients
     // to determine if frames were missed between VideoFrameRequestCallbacks.
@@ -51,22 +51,22 @@ dictionary VideoFrameMetadata {
     // https://wiki.whatwg.org/wiki/Video_Metrics#presentedFrames
     unsigned long presentedFrames;  // optional
 
-    // For video frames coming from either a local or remote source, this is the
-    // time the encoded packet with the same presentationTimestamp as this frame
-    // was received by the platform. E.g., for a local camera, this is the time
-    // at which the frame was captured by the camera. For a remote source, this
-    // would be the time at which the packet was received over the network.
-    //
-    // TODO: For remote sources should this instead be an estimate of the
-    // capture time on the remote endpoint?
+    // For video frames coming from either a local or remote source, this is
+    // the time at which the frame was captured by the camera. For a remote
+    // source, the capture time is estimated using clock synchronization and
+    // RTCP sender reports to convert RTP timestamps to capture time as
+    // specified in RFC 3550 Section 6.4.1.
     DOMHighResTimeStamp captureTime;  // optional
+
+    // For video frames coming from a remote source, this is the time the
+    // encoded frame was received by the platform, i.e., the time at which the
+    // last packet belonging to this frame was received over the network.
+    DOMHighResTimeStamp receiveTime; // optional
 
     // The RTP timestamp associated with this video frame.
     //
     // https://w3c.github.io/webrtc-pc/#dom-rtcrtpcontributingsource
     unsigned long rtpTimestamp;  // optional
-
-    // Potentially other useful properties?
 };
 
 callback VideoFrameRequestCallback = void(DOMHighResTimeStamp time, VideoFrameMetadata);
