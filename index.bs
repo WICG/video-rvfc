@@ -66,15 +66,16 @@ frame that was most recently presented for composition, which can be used for au
 
 <pre class='idl'>
   dictionary VideoFrameMetadata {
-    required DOMHighResTimeStamp presentedTime;
+    required DOMHighResTimeStamp presentationTime;
     required DOMHighResTimeStamp expectedDisplayTime;
 
     required unsigned long width;
     required unsigned long height;
+    required double mediaTime;
 
-    double presentationTimestamp;
+    required unsigned long presentedFrames;
     double processingDuration;
-    unsigned long presentedFrames;
+
     DOMHighResTimeStamp captureTime;
     DOMHighResTimeStamp receiveTime;
     unsigned long rtpTimestamp;
@@ -89,7 +90,7 @@ adjustments.
 
 ## Attributes ## {#video-frame-metadata-attributes}
 
-: <dfn for="VideoFrameMetadata" dict-member>presentedTime</dfn>
+: <dfn for="VideoFrameMetadata" dict-member>presentationTime</dfn>
 :: The time at which the user agent submitted the frame for composition.
 
 : <dfn for="VideoFrameMetadata" dict-member>expectedDisplayTime</dfn>
@@ -109,37 +110,48 @@ have rectangular pixels). When a calling
 while {{HTMLVideoElement/videoWidth|videoWidth}} and {{HTMLVideoElement/videoHeight|videoHeight}} can
 be used to determine the aspect ratio to use, when using the texture.
 
-: <dfn for="VideoFrameMetadata" dict-member>presentationTimestamp</dfn>
-::  The media presentation timestamp in seconds of the frame presented (e.g. its
-  timestamp on the {{HTMLMediaElement/currentTime|video.currentTime}} timeline).
-  May not be known to the compositor or exist in all cases.
+: <dfn for="VideoFrameMetadata" dict-member>mediaTime</dfn>
+::  The media presentation timestamp (PTS) in seconds of the frame presented (e.g.
+  its timestamp on the {{HTMLMediaElement/currentTime|video.currentTime}} timeline).
+  MAY have a zero value for live-streams or WebRTC application.
+
+: <dfn for="VideoFrameMetadata" dict-member>presentedFrames</dfn>
+::  A count of the number of frames submitted for composition. Allows clients
+  to determine if frames were missed between {{VideoFrameRequestCallback}}s. MUST be monotonically
+  increasing.
 
 : <dfn for="VideoFrameMetadata" dict-member>processingDuration</dfn>
-::  The elapsed duration in seconds from submission of the encoded packet with
-  the same presentationTimestamp as this frame to the decoder until the
-  decoded frame was ready for presentation.
+::  The elapsed duration in seconds from submission of the encoded packet with the same
+  presentation timestamp (PTS) as this frame (e.g. same as the {{mediaTime}}) to the decoder
+  until the decoded frame was ready for presentation.
 
 :: In addition to decoding time, may include processing time. E.g., YUV
   conversion and/or staging into GPU backed memory.
 
-: <dfn for="VideoFrameMetadata" dict-member>presentedFrames</dfn>
-::  A count of the number of frames submitted for composition. Allows clients
-  to determine if frames were missed between {{VideoFrameRequestCallback}}s.
+:: SHOULD be present. In some cases, user-agents might not be able to surface this information since
+  portions of the media pipeline might be owned by the OS.
 
 : <dfn for="VideoFrameMetadata" dict-member>captureTime</dfn>
 ::  For video frames coming from either a local or remote source, this is the
   time at which the frame was captured by the camera. For a remote source, the
   capture time is estimated using clock synchronization and RTCP sender reports
   to convert RTP timestamps to capture time as specified in
-  [[RFC3550#section-6.4.1|RFC 3550 Section 6.4.1]]
+  [[RFC3550#section-6.4.1|RFC 3550 Section 6.4.1]].
+
+:: SHOULD be present for WebRTC applications, and absent otherwise.
 
 : <dfn for="VideoFrameMetadata" dict-member>receiveTime</dfn>
 ::  For video frames coming from a remote source, this is the
   time the encoded frame was received by the platform, i.e., the time at
   which the last packet belonging to this frame was received over the network.
 
+:: SHOULD be present for WebRTC applications that receive data from a remote source,
+  and absent otherwise.
+
 : <dfn for="VideoFrameMetadata" dict-member>rtpTimestamp</dfn>
 ::  The RTP timestamp associated with this video frame.
+
+:: SHOULD be present for WebRTC applications, and absent otherwise.
 
 # VideoFrameRequestCallback #    {#video-frame-request-callback}
 
@@ -261,7 +273,7 @@ codecs, which don't yet have widespread hardware decoding support. However, rath
 profiles themselves, one could directly get equivalent information from getting the
 {{MediaCapabilitiesInfo}}.
 
-This specification also introduces some new timing information. {{presentedTime}} and
+This specification also introduces some new timing information. {{presentationTime}} and
 {{expectedDisplayTime}} expose compositor timing information; {{captureTime}} and
 {{receiveTime}} expose network timing information. The [=clock resolution=] of these fields should
 therefore be coarse enough not to facilitate timing attacks.
