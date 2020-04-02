@@ -222,6 +222,14 @@ using the definitions for |docs| and |now| described in the [=update the renderi
 
 <div algorithm="run the video animation frame callbacks">
 
+Note: The effective rate at which {{VideoFrameRequestCallback|callbacks}} are run is the lesser rate
+between the video's rate and the browser's rate. When the video rate is lower than the browser rate, the
+{{VideoFrameRequestCallback|callbacks}}' rate is limited by the frequency at which new frames are
+presented. When the video rate is greater than the browser rate, the
+{{VideoFrameRequestCallback|callbacks}}' rate is limited by the frequency of the [=update the
+rendering=] steps. This means, a 25fps video playing in a browser that paints at 60hz would fire
+callbacks at 25hz; a 120fps video in that same 60hz browser would fire callbacks at 60hz.
+
 To <dfn>run the video animation frame callbacks</dfn> for a {{HTMLVideoElement}} |video| with a timestamp |now|, run the following steps:
 
 1. If |video|'s [=list of animation frame callbacks=] is empty, abort these steps.

@@ -124,6 +124,15 @@ Presented frame 0s (1280x720) at 1000ms for display at 1016ms.
     });
   });
 ```
+* The rate at which `VideoFrameRequestCallbacks` are run is the minimum between the video rate and
+browser rate. This is because they don't fire more than once per new frame, and more than once per
+rendering steps. For example:
+| Video rate | Browser rate | VideoFrameRequestCallback rate|
+| --- | --- | --- |
+| 25fps | 60fps | 25fps |
+| 60fps | 30fps | 30fps |
+| 60fps | 60fps | 60fps |
+| 120fps | 60fps | 60fps |
 
 
 # Open Questions / Notes / Links
