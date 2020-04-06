@@ -33,9 +33,9 @@ dictionary VideoFrameMetadata {
     required unsigned long width;
     required unsigned long height;
 
-    // The media presentation timestamp in seconds of the frame presented. This
-    // should match the value of `video.currentTime` when the frame is displayed
-    double mediaTime;
+    // The media presentation time in seconds of the frame presented. This
+    // should match the value of `video.currentTime` when the frame is displayed.
+    required double mediaTime;
 
     // The elapsed time in seconds from submission of the encoded packet with
     // the same presentationTimestamp as this frame to the decoder until the
@@ -49,7 +49,7 @@ dictionary VideoFrameMetadata {
     // to determine if frames were missed between VideoFrameRequestCallbacks.
     //
     // https://wiki.whatwg.org/wiki/Video_Metrics#presentedFrames
-    unsigned long presentedFrames;  // optional
+    required unsigned long presentedFrames;
 
     // For video frames coming from either a local or remote source, this is
     // the time at which the frame was captured by the camera. For a remote
