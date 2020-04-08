@@ -1,5 +1,5 @@
 <pre class='metadata'>
-Title: HTMLVideoElement.requestAnimationFrame()
+Title: HTMLVideoElement.requestVideoFrameCallback()
 Repository: wicg/video-raf
 Status: CG-DRAFT
 ED: https://wicg.github.io/video-raf/
@@ -7,7 +7,7 @@ Shortname: video-raf
 Level: 1
 Group: wicg
 Editor: Thomas Guilbert, w3cid 120583, Google Inc. https://google.com/
-Abstract: &lt;video&gt;.requestAnimationFrame() allows web authors to be notified after a frame has been presented for composition.
+Abstract: &lt;video&gt;.requestVideoFrameCallback() allows web authors to be notified when a frame has been presented for composition.
 !Participate: <a href="https://github.com/wicg/video-raf">Git Repository.</a>
 !Participate: <a href="https://github.com/wicg/video-raf/issues/new">File an issue.</a>
 !Version History: <a href="https://github.com/wicg/video-raf/commits">https://github.com/wicg/video-raf/commits</a>
@@ -39,7 +39,7 @@ Markup Shorthands: markdown yes
 
 *This section is non-normative*
 
-This is a proposal to add a {{AnimationFrameProvider|requestAnimationFrame()}} method to the {{HTMLVideoElement}}.
+This is a proposal to add a {{requestVideoFrameCallback()}} method to the {{HTMLVideoElement}}.
 
 This method allows web authors to register a {{VideoFrameRequestCallback|callback}} which runs in the
 [=update the rendering|rendering steps=], when a new video frame is sent to the compositor. The
@@ -161,40 +161,40 @@ be used to determine the aspect ratio to use, when using the texture.
 
 Each {{VideoFrameRequestCallback}} object has a <dfn>canceled</dfn> boolean initially set to false.
 
-# HTMLVideoElement.requestAnimationFrame() #  {#video-raf}
+# HTMLVideoElement.requestVideoFrameCallback() #  {#video-raf}
 <pre class='idl'>
   partial interface HTMLVideoElement {
-      unsigned long requestAnimationFrame(VideoFrameRequestCallback callback);
-      void cancelAnimationFrame(unsigned long handle);
+      unsigned long requestVideoFrameCallback(VideoFrameRequestCallback callback);
+      void cancelVideoFrameCallback(unsigned long handle);
   };
 </pre>
 
 ## Methods ## {#video-raf-methods}
 
-Each {{HTMLVideoElement}} has a <dfn>list of animation frame callbacks</dfn>, which is initially empty,
-and a <dfn>last presented frame indentifier</dfn>, which is a number which is initialy zero.
-The {{HTMLVideoElement}}'s {{ownerDocument}} also has a <dfn>animation frame
+Each {{HTMLVideoElement}} has a <dfn>list of video frame request callbacks</dfn>, which is initially
+empty, and a <dfn>last presented frame indentifier</dfn>, which is a number which is initialy zero.
+The {{HTMLVideoElement}}'s {{ownerDocument}} also has a <dfn>video frame request
 callback identifier</dfn>, which is a number which is initially zero.
 
-: <dfn for="HTMLVideoElement" method>requestAnimationFrame(|callback|)</dfn>
+: <dfn for="HTMLVideoElement" method>requestVideoFrameCallback(|callback|)</dfn>
 :: Registers a callback to be fired the next time a frame is presented to the compositor.
 
-   When `requestAnimationFrame` is called, the user agent MUST run the following steps:
-     1. Let |video| be the {{HTMLVideoElement}} on which `requestAnimationFrame` is
+   When `requestVideoFrameCallback` is called, the user agent MUST run the following steps:
+     1. Let |video| be the {{HTMLVideoElement}} on which `requestVideoFrameCallback` is
         invoked.
-     1. Increment |video|'s {{ownerDocument}}'s [=animation frame callback identifier=] by one.
-     1. Let |callbackId| be |video|'s {{ownerDocument}}'s [=animation frame callback identifier=]
-     1. Append |callback| to |video|'s [=list of animation frame callbacks=], associated with |callbackId|.
+     1. Increment |video|'s {{ownerDocument}}'s [=video frame request callback identifier=] by one.
+     1. Let |callbackId| be |video|'s {{ownerDocument}}'s [=video frame request callback identifier=]
+     1. Append |callback| to |video|'s [=list of video frame request callbacks=], associated with |callbackId|.
      1. Return |callbackId|.
 
-: <dfn for="HTMLVideoElement" method>cancelAnimationFrame(|handle|)</dfn>
+: <dfn for="HTMLVideoElement" method>cancelVideoFrameCallback(|handle|)</dfn>
 :: Cancels an existing video frame request callback given its handle.
 
-  When `cancelAnimationFrame` is called, the user agent MUST run the following steps:
+  When `cancelVideoFrameCallback` is called, the user agent MUST run the following steps:
 
-  1. Let |video| be the target {{HTMLVideoElement}} object on which `cancelAnimationFrame` is invoked.
-  1. Find the entry in |video|'s [=list of animation frame callbacks=] that is associated with the value |handle|.
-  1. If there is such an entry, set its [=canceled=] boolean to <code>true</code> and remove it from |video|'s [=list of animation frame callbacks=].
+  1. Let |video| be the target {{HTMLVideoElement}} object on which `cancelVideoFrameCallback` is invoked.
+  1. Find the entry in |video|'s [=list of video frame request callbacks=] that is associated with the value |handle|.
+  1. If there is such an entry, set its [=canceled=] boolean to <code>true</code> and remove it from |video|'s [=list of video frame request callbacks=].
 
 ## Procedures ## {#video-raf-procedures}
 
@@ -204,13 +204,13 @@ An {{HTMLVideoElement}} is considered to be an <dfn>associated video element</df
 <div algorithm="video-raf-rendering-step">
 
 Issue: This spec should eventually be merged into the HTML spec, and we should directly call [=run the
-video animation frame callbacks=] from the [=update the rendering=] steps. This procedure describes
+video frame request callbacks=] from the [=update the rendering=] steps. This procedure describes
 where and how to invoke the algorithm in the meantime.
 
 When the [=update the rendering=] algorithm is invoked, run this new step:
 
 + For each [=fully active=] {{Document}} in |docs|, for each [=associated video element=] for that
-  {{Document}}, [=run the video animation frame callbacks=] passing |now| as the timestamp.
+  {{Document}}, [=run the video frame request callbacks=] passing |now| as the timestamp.
 
 immediately before this existing step:
 
@@ -220,25 +220,25 @@ using the definitions for |docs| and |now| described in the [=update the renderi
 
 </div>
 
-<div algorithm="run the video animation frame callbacks">
+<div algorithm="run the video frame request callbacks">
 
 Note: The effective rate at which {{VideoFrameRequestCallback|callbacks}} are run is the lesser rate
-between the video's rate and the browser's rate. When the video rate is lower than the browser rate, the
-{{VideoFrameRequestCallback|callbacks}}' rate is limited by the frequency at which new frames are
+between the video's rate and the browser's rate. When the video rate is lower than the browser rate,
+the {{VideoFrameRequestCallback|callbacks}}' rate is limited by the frequency at which new frames are
 presented. When the video rate is greater than the browser rate, the
 {{VideoFrameRequestCallback|callbacks}}' rate is limited by the frequency of the [=update the
 rendering=] steps. This means, a 25fps video playing in a browser that paints at 60hz would fire
 callbacks at 25hz; a 120fps video in that same 60hz browser would fire callbacks at 60hz.
 
-To <dfn>run the video animation frame callbacks</dfn> for a {{HTMLVideoElement}} |video| with a timestamp |now|, run the following steps:
+To <dfn>run the video frame request callbacks</dfn> for a {{HTMLVideoElement}} |video| with a timestamp |now|, run the following steps:
 
-1. If |video|'s [=list of animation frame callbacks=] is empty, abort these steps.
+1. If |video|'s [=list of video frame request callbacks=] is empty, abort these steps.
 1. Let |metadata| be the {{VideoFrameMetadata}} dictionary built from |video|'s latest presented frame.
 1. Let |presentedFrames| be the value of |metadata|'s {{presentedFrames}} field.
 1. If the [=last presented frame indentifier=] is equal to |presentedFrames|, abort these steps.
 1. Set the [=last presented frame indentifier=] to |presentedFrames|.
-1. Let |callbacks| be the [=list of animation frame callbacks=].
-1. Set |video|'s [=list of animation frame callbacks=] to be empty.
+1. Let |callbacks| be the [=list of video frame request callbacks=].
+1. Set |video|'s [=list of video frame request callbacks=] to be empty.
 1. For each entry in |callbacks|
   1. If the entry's [=canceled=] boolean is <code>true</code>, continue to the next entry.
   1. [=Invoke=] the callback, passing |now| and |metadata| as arguments
@@ -247,7 +247,7 @@ To <dfn>run the video animation frame callbacks</dfn> for a {{HTMLVideoElement}}
 Note: There are **no strict timing guarantees** when it comes to how soon
 {{VideoFrameRequestCallback|callbacks}} are run after a new video frame has been presented.
 Consider the following scenario: a new frame is presented on the compositor thread, just as the user
-agent aborts the [=run the video animation frame callbacks|algorithm=] above, when it confirms that
+agent aborts the [=run the video frame request callbacks|algorithm=] above, when it confirms that
 there are no new frames. We therefore won't run the {{VideoFrameRequestCallback|callbacks}} in the
 *current* [=update the rendering|rendering steps=], and have to wait until the *next* [=update the
 rendering|rendering steps=], one v-sync later. In that case, visual changes to a web page made from
@@ -293,7 +293,7 @@ therefore be coarse enough not to facilitate timing attacks.
 *This section is non-normative*
 
 Drawing video frames onto a {{canvas}} at the video rate (instead of the browser's animation rate)
-can be done by using {{requestAnimationFrame()|video.requestAnimationFrame()}} instead of
+can be done by using {{requestVideoFrameCallback()|video.requestVideoFrameCallback()}} instead of
 {{AnimationFrameProvider|window.requestAnimationFrame()}}.
 
 <pre class="example" highlight="js">
@@ -322,10 +322,10 @@ can be done by using {{requestAnimationFrame()|video.requestAnimationFrame()}} i
         var fps = (++paint_count / elapsed).toFixed(3);
         document.querySelector('#fps_text').innerText = 'video fps: ' + fps;
 
-        video.requestAnimationFrame(updateCanvas);
+        video.requestVideoFrameCallback(updateCanvas);
       }
 
-      video.requestAnimationFrame(updateCanvas);
+      video.requestVideoFrameCallback(updateCanvas);
 
       video.src = "http://example.com/foo.webm"
       video.play()
