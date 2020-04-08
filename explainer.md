@@ -3,7 +3,7 @@
 # Introduction
 Today [`<video>`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLVideoElement) elements have no means by which to signal when a video frame has been presented for composition nor any means to provide metadata about that frame.
 
-We propose a new HTMLVideoElement.requestVideoFrameCallback() method with an associated VideoFrameRequestCallback to allow web authors to identify when and which frame has been presented for composition.
+We propose a new `HTMLVideoElement.requestVideoFrameCallback()` method with an associated VideoFrameRequestCallback to allow web authors to identify when and which frame has been presented for composition.
 
 
 # Use cases
