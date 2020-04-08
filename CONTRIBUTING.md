@@ -1,4 +1,4 @@
-# video-raf
+# video-requestVideoFrameCallback
 
 Contributions to this repository are intended to become part of Recommendation-track documents
 governed by the [W3C Patent Policy](http://www.w3.org/Consortium/Patent-Policy-20040205/) and

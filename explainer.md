@@ -1,9 +1,9 @@
-# video.requestAnimationFrame() Explainer
+# video.requestVideoFrameCallback() Explainer
 
 # Introduction
 Today [`<video>`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLVideoElement) elements have no means by which to signal when a video frame has been presented for composition nor any means to provide metadata about that frame.
 
-We propose a new HTMLVideoElement.requestAnimationFrame() method with an associated VideoFrameRequestCallback to allow web authors to identify when and which frame has been presented for composition.
+We propose a new `HTMLVideoElement.requestVideoFrameCallback()` method with an associated VideoFrameRequestCallback to allow web authors to identify when and which frame has been presented for composition.
 
 
 # Use cases
@@ -72,12 +72,8 @@ dictionary VideoFrameMetadata {
 callback VideoFrameRequestCallback = void(DOMHighResTimeStamp time, VideoFrameMetadata);
 
 partial interface HTMLVideoElement {
-    // Extends the AnimationFrameProvider mixin with the addition of an
-    // VideoFrameMetadata parameter on the FrameRequestCallback.
-    //
-    // https://html.spec.whatwg.org/multipage/imagebitmap-and-animations.html#animation-frames
-    unsigned long requestAnimationFrame(VideoFrameRequestCallback callback);
-    void cancelAnimationFrame(unsigned long handle);
+    unsigned long requestVideoFrameCallback(VideoFrameRequestCallback callback);
+    void cancelVideoFrameCallback(unsigned long handle);
 };
 ```
 
@@ -97,10 +93,10 @@ partial interface HTMLVideoElement {
       `${expectedPresentationTime}ms`);
 
     canvasContext.drawImage(video, 0, 0, metadata.width, metadata.height);
-    video.requestAnimationFrame(frameInfoCallback);
+    video.requestVideoFrameCallback(frameInfoCallback);
   };
 
-  video.requestAnimationFrame(frameInfoCallback);
+  video.requestVideoFrameCallback(frameInfoCallback);
   video.src = 'foo.mp4';
 ```
 
@@ -111,13 +107,13 @@ Presented frame 0s (1280x720) at 1000ms for display at 1016ms.
 
 
 # Implementation Details
-* Just like `window.requestAnimationFrame()`, callbacks are one-shot. `video.requestAnimationFrame()` must be called again to get the next frame.
-* Since `VideoFrameRequestCallback` will only occur on new frames, error states may never satisfy the requestAnimationFrame.
-* In cases where `VideoFrameMetadata` can't be surfaced (e.g., [encrypted media](https://w3c.github.io/encrypted-media/#media-element-restrictions)) implementations may never satisfy the requestAnimationFrame.
+* `video.requestVideoFrameCallback()` callbacks are one-shot, and must be called again to get the next frame.
+* Since `VideoFrameRequestCallback` will only occur on new frames, error states may never satisfy calls to `requestVideoFrameCallback`.
+* In cases where `VideoFrameMetadata` can't be surfaced (e.g., [encrypted media](https://w3c.github.io/encrypted-media/#media-element-restrictions)) implementations may never satisfy calls to `requestVideoFrameCallback`.
 * `VideoFrameRequestCallbacks` are run before `window.requestAnimationFrame()` callbacks, during the "[update the rendering](https://html.spec.whatwg.org/multipage/webappapis.html#update-the-rendering)" steps.
-* `window.requestAnimationFrame()` callbacks registered from within a `video.requestAnimationFrame()` callback will be run in the same turn of the event loop. E.g:
+* `window.requestAnimationFrame()` callbacks registered from within a `video.requestVideoFrameCallback()` callback will be run in the same turn of the event loop. E.g:
 ```Javascript
-  video.requestAnimationFrame(vid_now => {
+  video.requestVideoFrameCallback(vid_now => {
     window.requestAnimationFrame(win_now => {
         if (vid_now != win_now)
             throw "This should never throw";

@@ -1,7 +1,7 @@
 <!doctype html><html lang="en">
  <head>
   <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-  <title>HTMLVideoElement.requestAnimationFrame()</title>
+  <title>HTMLVideoElement.requestVideoFrameCallback()</title>
   <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
 <style data-fill-with="stylesheet">/******************************************************************************
  *                   Style sheet for the W3C specifications                   *
@@ -1224,7 +1224,7 @@ Possible extra rowspan handling
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version 8bc2fccb49a45a0af18c5e75ce18049d75f824b6" name="generator">
   <link href="https://wicg.github.io/video-raf/" rel="canonical">
-  <meta content="f4dded1bcb4587cd6cac40629788a853ded8b6f7" name="document-revision">
+  <meta content="98ca6c4c6ff75ec512dfb2cc6eb7b56272139c90" name="document-revision">
 <style>/* style-md-lists */
 
 /* This is a weird hack for me not yet following the commonmark spec
@@ -1481,8 +1481,8 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
  <body class="h-entry">
   <div class="head">
    <p data-fill-with="logo"></p>
-   <h1 class="p-name no-ref" id="title">HTMLVideoElement.requestAnimationFrame()</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-04-02">2 April 2020</time></span></h2>
+   <h1 class="p-name no-ref" id="title">HTMLVideoElement.requestVideoFrameCallback()</h1>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-04-08">8 April 2020</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1500,13 +1500,13 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     </dl>
    </div>
    <div data-fill-with="warning"></div>
-   <p class="copyright" data-fill-with="copyright"><a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> © 2020 the Contributors to the HTMLVideoElement.requestAnimationFrame() Specification, published by the <a href="https://www.w3.org/community/wicg/">Web Platform Incubator Community Group</a> under the <a href="https://www.w3.org/community/about/agreements/cla/">W3C Community Contributor License Agreement (CLA)</a>.
+   <p class="copyright" data-fill-with="copyright"><a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> © 2020 the Contributors to the HTMLVideoElement.requestVideoFrameCallback() Specification, published by the <a href="https://www.w3.org/community/wicg/">Web Platform Incubator Community Group</a> under the <a href="https://www.w3.org/community/about/agreements/cla/">W3C Community Contributor License Agreement (CLA)</a>.
 A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/">summary</a> is available. </p>
    <hr title="Separator for header">
   </div>
   <div class="p-summary" data-fill-with="abstract">
    <h2 class="no-num no-toc no-ref heading settled" id="abstract"><span class="content">Abstract</span></h2>
-   <p>&lt;video>.requestAnimationFrame() allows web authors to be notified after a frame has been presented for composition.</p>
+   <p>&lt;video>.requestVideoFrameCallback() allows web authors to be notified when a frame has been presented for composition.</p>
   </div>
   <div data-fill-with="at-risk"></div>
   <h2 class="no-num no-toc no-ref heading settled" id="status"><span class="content">Status of this document</span></h2>
@@ -1532,7 +1532,7 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
      </ol>
     <li><a href="#video-frame-request-callback"><span class="secno">3</span> <span class="content">VideoFrameRequestCallback</span></a>
     <li>
-     <a href="#video-raf"><span class="secno">4</span> <span class="content">HTMLVideoElement.requestAnimationFrame()</span></a>
+     <a href="#video-raf"><span class="secno">4</span> <span class="content">HTMLVideoElement.requestVideoFrameCallback()</span></a>
      <ol class="toc">
       <li><a href="#video-raf-methods"><span class="secno">4.1</span> <span class="content">Methods</span></a>
       <li><a href="#video-raf-procedures"><span class="secno">4.2</span> <span class="content">Procedures</span></a>
@@ -1563,9 +1563,9 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
   <main>
    <h2 class="heading settled" data-level="1" id="introduction"><span class="secno">1. </span><span class="content">Introduction</span><a class="self-link" href="#introduction"></a></h2>
    <p><em>This section is non-normative</em></p>
-   <p>This is a proposal to add a <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/imagebitmap-and-animations.html#animationframeprovider" id="ref-for-animationframeprovider">requestAnimationFrame()</a></code> method to the <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement" id="ref-for-htmlvideoelement">HTMLVideoElement</a></code>.</p>
+   <p>This is a proposal to add a <code class="idl"><a data-link-type="idl" href="#dom-htmlvideoelement-requestvideoframecallback" id="ref-for-dom-htmlvideoelement-requestvideoframecallback">requestVideoFrameCallback()</a></code> method to the <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement" id="ref-for-htmlvideoelement">HTMLVideoElement</a></code>.</p>
    <p>This method allows web authors to register a <code class="idl"><a data-link-type="idl" href="#callbackdef-videoframerequestcallback" id="ref-for-callbackdef-videoframerequestcallback">callback</a></code> which runs in the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#update-the-rendering" id="ref-for-update-the-rendering">rendering steps</a>, when a new video frame is sent to the compositor. The
-new <code class="idl"><a data-link-type="idl" href="#callbackdef-videoframerequestcallback" id="ref-for-callbackdef-videoframerequestcallback①">callbacks</a></code> are executed immediately before existing <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/imagebitmap-and-animations.html#animationframeprovider" id="ref-for-animationframeprovider①">window.requestAnimationFrame()</a></code> callbacks. Changes made from within both
+new <code class="idl"><a data-link-type="idl" href="#callbackdef-videoframerequestcallback" id="ref-for-callbackdef-videoframerequestcallback①">callbacks</a></code> are executed immediately before existing <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/imagebitmap-and-animations.html#animationframeprovider" id="ref-for-animationframeprovider">window.requestAnimationFrame()</a></code> callbacks. Changes made from within both
 callback types within the same <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#event-loop-processing-model" id="ref-for-event-loop-processing-model">turn of the event loop</a> will be visible on
 screen at the same time, with the next v-sync.</p>
    <p>Drawing operations (e.g. drawing a video frame to a <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/imagebitmap-and-animations.html#canvas" id="ref-for-canvas">canvas</a></code> via <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/canvas.html#dom-context-2d-drawimage" id="ref-for-dom-context-2d-drawimage">drawImage()</a></code>) made through this
@@ -1667,58 +1667,58 @@ and absent otherwise.</p>
 <pre class="idl highlight def"><c- b>callback</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="callback" data-export id="callbackdef-videoframerequestcallback"><code><c- g>VideoFrameRequestCallback</c-></code></dfn> = <c- b>void</c->(<a class="n" data-link-type="idl-name" href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp" id="ref-for-dom-domhighrestimestamp⑧"><c- n>DOMHighResTimeStamp</c-></a> <dfn class="idl-code" data-dfn-for="VideoFrameRequestCallback" data-dfn-type="argument" data-export id="dom-videoframerequestcallback-now"><code><c- g>now</c-></code><a class="self-link" href="#dom-videoframerequestcallback-now"></a></dfn>, <a class="n" data-link-type="idl-name" href="#dictdef-videoframemetadata" id="ref-for-dictdef-videoframemetadata①"><c- n>VideoFrameMetadata</c-></a> <dfn class="idl-code" data-dfn-for="VideoFrameRequestCallback" data-dfn-type="argument" data-export id="dom-videoframerequestcallback-metadata"><code><c- g>metadata</c-></code><a class="self-link" href="#dom-videoframerequestcallback-metadata"></a></dfn>);
 </pre>
    <p>Each <code class="idl"><a data-link-type="idl" href="#callbackdef-videoframerequestcallback" id="ref-for-callbackdef-videoframerequestcallback⑤">VideoFrameRequestCallback</a></code> object has a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="canceled">canceled</dfn> boolean initially set to false.</p>
-   <h2 class="heading settled" data-level="4" id="video-raf"><span class="secno">4. </span><span class="content">HTMLVideoElement.requestAnimationFrame()</span><a class="self-link" href="#video-raf"></a></h2>
+   <h2 class="heading settled" data-level="4" id="video-raf"><span class="secno">4. </span><span class="content">HTMLVideoElement.requestVideoFrameCallback()</span><a class="self-link" href="#video-raf"></a></h2>
 <pre class="idl highlight def"><c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement" id="ref-for-htmlvideoelement①"><c- g>HTMLVideoElement</c-></a> {
-    <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long" id="ref-for-idl-unsigned-long⑧"><c- b>unsigned</c-> <c- b>long</c-></a> <a class="idl-code" data-link-type="method" href="#dom-htmlvideoelement-requestanimationframe" id="ref-for-dom-htmlvideoelement-requestanimationframe"><c- g>requestAnimationFrame</c-></a>(<a class="n" data-link-type="idl-name" href="#callbackdef-videoframerequestcallback" id="ref-for-callbackdef-videoframerequestcallback⑥"><c- n>VideoFrameRequestCallback</c-></a> <dfn class="idl-code" data-dfn-for="HTMLVideoElement/requestAnimationFrame(callback)" data-dfn-type="argument" data-export id="dom-htmlvideoelement-requestanimationframe-callback-callback"><code><c- g>callback</c-></code><a class="self-link" href="#dom-htmlvideoelement-requestanimationframe-callback-callback"></a></dfn>);
-    <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-htmlvideoelement-cancelanimationframe" id="ref-for-dom-htmlvideoelement-cancelanimationframe"><c- g>cancelAnimationFrame</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long" id="ref-for-idl-unsigned-long⑨"><c- b>unsigned</c-> <c- b>long</c-></a> <dfn class="idl-code" data-dfn-for="HTMLVideoElement/cancelAnimationFrame(handle)" data-dfn-type="argument" data-export id="dom-htmlvideoelement-cancelanimationframe-handle-handle"><code><c- g>handle</c-></code><a class="self-link" href="#dom-htmlvideoelement-cancelanimationframe-handle-handle"></a></dfn>);
+    <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long" id="ref-for-idl-unsigned-long⑧"><c- b>unsigned</c-> <c- b>long</c-></a> <a class="idl-code" data-link-type="method" href="#dom-htmlvideoelement-requestvideoframecallback" id="ref-for-dom-htmlvideoelement-requestvideoframecallback①"><c- g>requestVideoFrameCallback</c-></a>(<a class="n" data-link-type="idl-name" href="#callbackdef-videoframerequestcallback" id="ref-for-callbackdef-videoframerequestcallback⑥"><c- n>VideoFrameRequestCallback</c-></a> <dfn class="idl-code" data-dfn-for="HTMLVideoElement/requestVideoFrameCallback(callback)" data-dfn-type="argument" data-export id="dom-htmlvideoelement-requestvideoframecallback-callback-callback"><code><c- g>callback</c-></code><a class="self-link" href="#dom-htmlvideoelement-requestvideoframecallback-callback-callback"></a></dfn>);
+    <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-htmlvideoelement-cancelvideoframecallback" id="ref-for-dom-htmlvideoelement-cancelvideoframecallback"><c- g>cancelVideoFrameCallback</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long" id="ref-for-idl-unsigned-long⑨"><c- b>unsigned</c-> <c- b>long</c-></a> <dfn class="idl-code" data-dfn-for="HTMLVideoElement/cancelVideoFrameCallback(handle)" data-dfn-type="argument" data-export id="dom-htmlvideoelement-cancelvideoframecallback-handle-handle"><code><c- g>handle</c-></code><a class="self-link" href="#dom-htmlvideoelement-cancelvideoframecallback-handle-handle"></a></dfn>);
 };
 </pre>
    <h3 class="heading settled" data-level="4.1" id="video-raf-methods"><span class="secno">4.1. </span><span class="content">Methods</span><a class="self-link" href="#video-raf-methods"></a></h3>
-   <p>Each <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement" id="ref-for-htmlvideoelement②">HTMLVideoElement</a></code> has a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="list-of-animation-frame-callbacks">list of animation frame callbacks</dfn>, which is initially empty,
-and a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="last-presented-frame-indentifier">last presented frame indentifier</dfn>, which is a number which is initialy zero.
-The <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement" id="ref-for-htmlvideoelement③">HTMLVideoElement</a></code>'s <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#dom-node-ownerdocument" id="ref-for-dom-node-ownerdocument">ownerDocument</a></code> also has a <dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="animation frame callback identifier" data-noexport id="animation-frame-callback-identifier">animation frame
+   <p>Each <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement" id="ref-for-htmlvideoelement②">HTMLVideoElement</a></code> has a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="list-of-video-frame-request-callbacks">list of video frame request callbacks</dfn>, which is initially
+empty, and a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="last-presented-frame-indentifier">last presented frame indentifier</dfn>, which is a number which is initialy zero.
+The <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement" id="ref-for-htmlvideoelement③">HTMLVideoElement</a></code>'s <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#dom-node-ownerdocument" id="ref-for-dom-node-ownerdocument">ownerDocument</a></code> also has a <dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="video frame request callback identifier" data-noexport id="video-frame-request-callback-identifier">video frame request
 callback identifier</dfn>, which is a number which is initially zero.</p>
    <dl>
-    <dt data-md><dfn class="dfn-paneled idl-code" data-dfn-for="HTMLVideoElement" data-dfn-type="method" data-export id="dom-htmlvideoelement-requestanimationframe"><code>requestAnimationFrame(<var>callback</var>)</code></dfn>
+    <dt data-md><dfn class="dfn-paneled idl-code" data-dfn-for="HTMLVideoElement" data-dfn-type="method" data-export id="dom-htmlvideoelement-requestvideoframecallback"><code>requestVideoFrameCallback(<var>callback</var>)</code></dfn>
     <dd data-md>
      <p>Registers a callback to be fired the next time a frame is presented to the compositor.</p>
-     <p>When <code>requestAnimationFrame</code> is called, the user agent MUST run the following steps:</p>
+     <p>When <code>requestVideoFrameCallback</code> is called, the user agent MUST run the following steps:</p>
      <ol>
       <li data-md>
-       <p>Let <var>video</var> be the <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement" id="ref-for-htmlvideoelement④">HTMLVideoElement</a></code> on which <code>requestAnimationFrame</code> is
+       <p>Let <var>video</var> be the <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement" id="ref-for-htmlvideoelement④">HTMLVideoElement</a></code> on which <code>requestVideoFrameCallback</code> is
   invoked.</p>
       <li data-md>
-       <p>Increment <var>video</var>’s <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#dom-node-ownerdocument" id="ref-for-dom-node-ownerdocument①">ownerDocument</a></code>'s <a data-link-type="dfn" href="#animation-frame-callback-identifier" id="ref-for-animation-frame-callback-identifier">animation frame callback identifier</a> by one.</p>
+       <p>Increment <var>video</var>’s <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#dom-node-ownerdocument" id="ref-for-dom-node-ownerdocument①">ownerDocument</a></code>'s <a data-link-type="dfn" href="#video-frame-request-callback-identifier" id="ref-for-video-frame-request-callback-identifier">video frame request callback identifier</a> by one.</p>
       <li data-md>
-       <p>Let <var>callbackId</var> be <var>video</var>’s <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#dom-node-ownerdocument" id="ref-for-dom-node-ownerdocument②">ownerDocument</a></code>'s <a data-link-type="dfn" href="#animation-frame-callback-identifier" id="ref-for-animation-frame-callback-identifier①">animation frame callback identifier</a></p>
+       <p>Let <var>callbackId</var> be <var>video</var>’s <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#dom-node-ownerdocument" id="ref-for-dom-node-ownerdocument②">ownerDocument</a></code>'s <a data-link-type="dfn" href="#video-frame-request-callback-identifier" id="ref-for-video-frame-request-callback-identifier①">video frame request callback identifier</a></p>
       <li data-md>
-       <p>Append <var>callback</var> to <var>video</var>’s <a data-link-type="dfn" href="#list-of-animation-frame-callbacks" id="ref-for-list-of-animation-frame-callbacks">list of animation frame callbacks</a>, associated with <var>callbackId</var>.</p>
+       <p>Append <var>callback</var> to <var>video</var>’s <a data-link-type="dfn" href="#list-of-video-frame-request-callbacks" id="ref-for-list-of-video-frame-request-callbacks">list of video frame request callbacks</a>, associated with <var>callbackId</var>.</p>
       <li data-md>
        <p>Return <var>callbackId</var>.</p>
      </ol>
-    <dt data-md><dfn class="dfn-paneled idl-code" data-dfn-for="HTMLVideoElement" data-dfn-type="method" data-export id="dom-htmlvideoelement-cancelanimationframe"><code>cancelAnimationFrame(<var>handle</var>)</code></dfn>
+    <dt data-md><dfn class="dfn-paneled idl-code" data-dfn-for="HTMLVideoElement" data-dfn-type="method" data-export id="dom-htmlvideoelement-cancelvideoframecallback"><code>cancelVideoFrameCallback(<var>handle</var>)</code></dfn>
     <dd data-md>
      <p>Cancels an existing video frame request callback given its handle.</p>
-     <p>When <code>cancelAnimationFrame</code> is called, the user agent MUST run the following steps:</p>
+     <p>When <code>cancelVideoFrameCallback</code> is called, the user agent MUST run the following steps:</p>
      <ol>
       <li data-md>
-       <p>Let <var>video</var> be the target <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement" id="ref-for-htmlvideoelement⑤">HTMLVideoElement</a></code> object on which <code>cancelAnimationFrame</code> is invoked.</p>
+       <p>Let <var>video</var> be the target <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement" id="ref-for-htmlvideoelement⑤">HTMLVideoElement</a></code> object on which <code>cancelVideoFrameCallback</code> is invoked.</p>
       <li data-md>
-       <p>Find the entry in <var>video</var>’s <a data-link-type="dfn" href="#list-of-animation-frame-callbacks" id="ref-for-list-of-animation-frame-callbacks①">list of animation frame callbacks</a> that is associated with the value <var>handle</var>.</p>
+       <p>Find the entry in <var>video</var>’s <a data-link-type="dfn" href="#list-of-video-frame-request-callbacks" id="ref-for-list-of-video-frame-request-callbacks①">list of video frame request callbacks</a> that is associated with the value <var>handle</var>.</p>
       <li data-md>
-       <p>If there is such an entry, set its <a data-link-type="dfn" href="#canceled" id="ref-for-canceled">canceled</a> boolean to <code>true</code> and remove it from <var>video</var>’s <a data-link-type="dfn" href="#list-of-animation-frame-callbacks" id="ref-for-list-of-animation-frame-callbacks②">list of animation frame callbacks</a>.</p>
+       <p>If there is such an entry, set its <a data-link-type="dfn" href="#canceled" id="ref-for-canceled">canceled</a> boolean to <code>true</code> and remove it from <var>video</var>’s <a data-link-type="dfn" href="#list-of-video-frame-request-callbacks" id="ref-for-list-of-video-frame-request-callbacks②">list of video frame request callbacks</a>.</p>
      </ol>
    </dl>
    <h3 class="heading settled" data-level="4.2" id="video-raf-procedures"><span class="secno">4.2. </span><span class="content">Procedures</span><a class="self-link" href="#video-raf-procedures"></a></h3>
    <p>An <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement" id="ref-for-htmlvideoelement⑥">HTMLVideoElement</a></code> is considered to be an <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="associated-video-element">associated video element</dfn> of a <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#document" id="ref-for-document">Document</a></code> <var>doc</var> if its <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#dom-node-ownerdocument" id="ref-for-dom-node-ownerdocument③">ownerDocument</a></code> attribute is the same as <var>doc</var>.</p>
    <div class="algorithm" data-algorithm="video-raf-rendering-step">
-    <p class="issue" id="issue-1bc5c126"><a class="self-link" href="#issue-1bc5c126"></a> This spec should eventually be merged into the HTML spec, and we should directly call <a data-link-type="dfn" href="#run-the-video-animation-frame-callbacks" id="ref-for-run-the-video-animation-frame-callbacks">run the
-video animation frame callbacks</a> from the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#update-the-rendering" id="ref-for-update-the-rendering①">update the rendering</a> steps. This procedure describes
+    <p class="issue" id="issue-9a108000"><a class="self-link" href="#issue-9a108000"></a> This spec should eventually be merged into the HTML spec, and we should directly call <a data-link-type="dfn" href="#run-the-video-frame-request-callbacks" id="ref-for-run-the-video-frame-request-callbacks">run the
+video frame request callbacks</a> from the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#update-the-rendering" id="ref-for-update-the-rendering①">update the rendering</a> steps. This procedure describes
 where and how to invoke the algorithm in the meantime.</p>
     <p>When the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#update-the-rendering" id="ref-for-update-the-rendering②">update the rendering</a> algorithm is invoked, run this new step:</p>
     <ul>
      <li data-md>
-      <p>For each <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsers.html#fully-active" id="ref-for-fully-active">fully active</a> <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#document" id="ref-for-document①">Document</a></code> in <var>docs</var>, for each <a data-link-type="dfn" href="#associated-video-element" id="ref-for-associated-video-element">associated video element</a> for that <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#document" id="ref-for-document②">Document</a></code>, <a data-link-type="dfn" href="#run-the-video-animation-frame-callbacks" id="ref-for-run-the-video-animation-frame-callbacks①">run the video animation frame callbacks</a> passing <var>now</var> as the timestamp.</p>
+      <p>For each <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsers.html#fully-active" id="ref-for-fully-active">fully active</a> <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#document" id="ref-for-document①">Document</a></code> in <var>docs</var>, for each <a data-link-type="dfn" href="#associated-video-element" id="ref-for-associated-video-element">associated video element</a> for that <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#document" id="ref-for-document②">Document</a></code>, <a data-link-type="dfn" href="#run-the-video-frame-request-callbacks" id="ref-for-run-the-video-frame-request-callbacks①">run the video frame request callbacks</a> passing <var>now</var> as the timestamp.</p>
     </ul>
     <p>immediately before this existing step:</p>
     <ul>
@@ -1727,16 +1727,17 @@ where and how to invoke the algorithm in the meantime.</p>
     </ul>
     <p>using the definitions for <var>docs</var> and <var>now</var> described in the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#update-the-rendering" id="ref-for-update-the-rendering③">update the rendering</a> algorithm.</p>
    </div>
-   <div class="algorithm" data-algorithm="run the video animation frame callbacks">
+   <div class="algorithm" data-algorithm="run the video frame request callbacks">
     <p class="note" role="note"><span>Note:</span> The effective rate at which <code class="idl"><a data-link-type="idl" href="#callbackdef-videoframerequestcallback" id="ref-for-callbackdef-videoframerequestcallback⑦">callbacks</a></code> are run is the lesser rate
-between the video’s rate and the browser’s rate. When the video rate is lower than the browser rate, the <code class="idl"><a data-link-type="idl" href="#callbackdef-videoframerequestcallback" id="ref-for-callbackdef-videoframerequestcallback⑧">callbacks</a></code>' rate is limited by the frequency at which new frames are
+between the video’s rate and the browser’s rate. When the video rate is lower than the browser rate,
+the <code class="idl"><a data-link-type="idl" href="#callbackdef-videoframerequestcallback" id="ref-for-callbackdef-videoframerequestcallback⑧">callbacks</a></code>' rate is limited by the frequency at which new frames are
 presented. When the video rate is greater than the browser rate, the <code class="idl"><a data-link-type="idl" href="#callbackdef-videoframerequestcallback" id="ref-for-callbackdef-videoframerequestcallback⑨">callbacks</a></code>' rate is limited by the frequency of the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#update-the-rendering" id="ref-for-update-the-rendering④">update the
 rendering</a> steps. This means, a 25fps video playing in a browser that paints at 60hz would fire
 callbacks at 25hz; a 120fps video in that same 60hz browser would fire callbacks at 60hz.</p>
-    <p>To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="run-the-video-animation-frame-callbacks">run the video animation frame callbacks</dfn> for a <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement" id="ref-for-htmlvideoelement⑦">HTMLVideoElement</a></code> <var>video</var> with a timestamp <var>now</var>, run the following steps:</p>
+    <p>To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="run-the-video-frame-request-callbacks">run the video frame request callbacks</dfn> for a <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement" id="ref-for-htmlvideoelement⑦">HTMLVideoElement</a></code> <var>video</var> with a timestamp <var>now</var>, run the following steps:</p>
     <ol>
      <li data-md>
-      <p>If <var>video</var>’s <a data-link-type="dfn" href="#list-of-animation-frame-callbacks" id="ref-for-list-of-animation-frame-callbacks③">list of animation frame callbacks</a> is empty, abort these steps.</p>
+      <p>If <var>video</var>’s <a data-link-type="dfn" href="#list-of-video-frame-request-callbacks" id="ref-for-list-of-video-frame-request-callbacks③">list of video frame request callbacks</a> is empty, abort these steps.</p>
      <li data-md>
       <p>Let <var>metadata</var> be the <code class="idl"><a data-link-type="idl" href="#dictdef-videoframemetadata" id="ref-for-dictdef-videoframemetadata②">VideoFrameMetadata</a></code> dictionary built from <var>video</var>’s latest presented frame.</p>
      <li data-md>
@@ -1746,9 +1747,9 @@ callbacks at 25hz; a 120fps video in that same 60hz browser would fire callbacks
      <li data-md>
       <p>Set the <a data-link-type="dfn" href="#last-presented-frame-indentifier" id="ref-for-last-presented-frame-indentifier①">last presented frame indentifier</a> to <var>presentedFrames</var>.</p>
      <li data-md>
-      <p>Let <var>callbacks</var> be the <a data-link-type="dfn" href="#list-of-animation-frame-callbacks" id="ref-for-list-of-animation-frame-callbacks④">list of animation frame callbacks</a>.</p>
+      <p>Let <var>callbacks</var> be the <a data-link-type="dfn" href="#list-of-video-frame-request-callbacks" id="ref-for-list-of-video-frame-request-callbacks④">list of video frame request callbacks</a>.</p>
      <li data-md>
-      <p>Set <var>video</var>’s <a data-link-type="dfn" href="#list-of-animation-frame-callbacks" id="ref-for-list-of-animation-frame-callbacks⑤">list of animation frame callbacks</a> to be empty.</p>
+      <p>Set <var>video</var>’s <a data-link-type="dfn" href="#list-of-video-frame-request-callbacks" id="ref-for-list-of-video-frame-request-callbacks⑤">list of video frame request callbacks</a> to be empty.</p>
      <li data-md>
       <p>For each entry in <var>callbacks</var></p>
       <ol>
@@ -1762,7 +1763,7 @@ callbacks at 25hz; a 120fps video in that same 60hz browser would fire callbacks
     </ol>
     <p class="note" role="note"><span>Note:</span> There are <strong>no strict timing guarantees</strong> when it comes to how soon <code class="idl"><a data-link-type="idl" href="#callbackdef-videoframerequestcallback" id="ref-for-callbackdef-videoframerequestcallback①⓪">callbacks</a></code> are run after a new video frame has been presented.
 Consider the following scenario: a new frame is presented on the compositor thread, just as the user
-agent aborts the <a data-link-type="dfn" href="#run-the-video-animation-frame-callbacks" id="ref-for-run-the-video-animation-frame-callbacks②">algorithm</a> above, when it confirms that
+agent aborts the <a data-link-type="dfn" href="#run-the-video-frame-request-callbacks" id="ref-for-run-the-video-frame-request-callbacks②">algorithm</a> above, when it confirms that
 there are no new frames. We therefore won’t run the <code class="idl"><a data-link-type="idl" href="#callbackdef-videoframerequestcallback" id="ref-for-callbackdef-videoframerequestcallback①①">callbacks</a></code> in the <em>current</em> <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#update-the-rendering" id="ref-for-update-the-rendering⑤">rendering steps</a>, and have to wait until the <em>next</em> <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#update-the-rendering" id="ref-for-update-the-rendering⑥">rendering steps</a>, one v-sync later. In that case, visual changes to a web page made from
 within the delayed <code class="idl"><a data-link-type="idl" href="#callbackdef-videoframerequestcallback" id="ref-for-callbackdef-videoframerequestcallback①②">callbacks</a></code> will appear on-screen one v-sync after the
 video frame does.<br> <br> Offering stricter guarantees would likely force implementers to add cross-thread synchronization, which might be detrimental to video playback performance.</p>
@@ -1789,8 +1790,8 @@ therefore be coarse enough not to facilitate timing attacks.</p>
    <h3 class="heading settled" data-level="6.1" id="example-drawing"><span class="secno">6.1. </span><span class="content">Drawing frames at the video rate</span><a class="self-link" href="#example-drawing"></a></h3>
    <p><em>This section is non-normative</em></p>
    <p>Drawing video frames onto a <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/imagebitmap-and-animations.html#canvas" id="ref-for-canvas①">canvas</a></code> at the video rate (instead of the browser’s animation rate)
-can be done by using <code class="idl"><a data-link-type="idl" href="#dom-htmlvideoelement-requestanimationframe" id="ref-for-dom-htmlvideoelement-requestanimationframe①">video.requestAnimationFrame()</a></code> instead of <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/imagebitmap-and-animations.html#animationframeprovider" id="ref-for-animationframeprovider②">window.requestAnimationFrame()</a></code>.</p>
-<pre class="example highlight" id="example-c6f87f52"><a class="self-link" href="#example-c6f87f52"></a><c- o>&lt;</c->body<c- o>></c->
+can be done by using <code class="idl"><a data-link-type="idl" href="#dom-htmlvideoelement-requestvideoframecallback" id="ref-for-dom-htmlvideoelement-requestvideoframecallback②">video.requestVideoFrameCallback()</a></code> instead of <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/imagebitmap-and-animations.html#animationframeprovider" id="ref-for-animationframeprovider①">window.requestAnimationFrame()</a></code>.</p>
+<pre class="example highlight" id="example-0c9aa274"><a class="self-link" href="#example-0c9aa274"></a><c- o>&lt;</c->body<c- o>></c->
   <c- o>&lt;</c->video controls<c- o>>&lt;</c->/video>
   <c- o>&lt;</c->canvas width<c- o>=</c-><c- u>"640"</c-> height<c- o>=</c-><c- u>"360"</c-><c- o>>&lt;</c->/canvas>
   <c- o>&lt;</c->span id<c- o>=</c-><c- u>"fps_text"</c-><c- o>/></c->
@@ -1815,10 +1816,10 @@ can be done by using <code class="idl"><a data-link-type="idl" href="#dom-htmlvi
       <c- a>var</c-> fps <c- o>=</c-> <c- p>(</c-><c- o>++</c->paint_count <c- o>/</c-> elapsed<c- p>).</c->toFixed<c- p>(</c-><c- mi>3</c-><c- p>);</c->
       document<c- p>.</c->querySelector<c- p>(</c-><c- t>'#fps_text'</c-><c- p>).</c->innerText <c- o>=</c-> <c- t>'video fps: '</c-> <c- o>+</c-> fps<c- p>;</c->
 
-      video<c- p>.</c->requestAnimationFrame<c- p>(</c->updateCanvas<c- p>);</c->
+      video<c- p>.</c->requestVideoFrameCallback<c- p>(</c->updateCanvas<c- p>);</c->
     <c- p>}</c->
 
-    video<c- p>.</c->requestAnimationFrame<c- p>(</c->updateCanvas<c- p>);</c->
+    video<c- p>.</c->requestVideoFrameCallback<c- p>(</c->updateCanvas<c- p>);</c->
 
     video<c- p>.</c->src <c- o>=</c-> <c- u>"http://example.com/foo.webm"</c->
     video<c- p>.</c->play<c- p>()</c->
@@ -1975,26 +1976,26 @@ can be done by using <code class="idl"><a data-link-type="idl" href="#dom-htmlvi
   <h2 class="no-num no-ref heading settled" id="index"><span class="content">Index</span><a class="self-link" href="#index"></a></h2>
   <h3 class="no-num no-ref heading settled" id="index-defined-here"><span class="content">Terms defined by this specification</span><a class="self-link" href="#index-defined-here"></a></h3>
   <ul class="index">
-   <li><a href="#animation-frame-callback-identifier">animation frame callback identifier</a><span>, in §4.1</span>
    <li><a href="#associated-video-element">associated video element</a><span>, in §4.2</span>
-   <li><a href="#dom-htmlvideoelement-cancelanimationframe">cancelAnimationFrame(handle)</a><span>, in §4.1</span>
    <li><a href="#canceled">canceled</a><span>, in §3</span>
+   <li><a href="#dom-htmlvideoelement-cancelvideoframecallback">cancelVideoFrameCallback(handle)</a><span>, in §4.1</span>
    <li><a href="#dom-videoframemetadata-capturetime">captureTime</a><span>, in §2.2</span>
    <li><a href="#dom-videoframemetadata-expecteddisplaytime">expectedDisplayTime</a><span>, in §2.2</span>
    <li><a href="#dom-videoframemetadata-height">height</a><span>, in §2.2</span>
    <li><a href="#last-presented-frame-indentifier">last presented frame indentifier</a><span>, in §4.1</span>
-   <li><a href="#list-of-animation-frame-callbacks">list of animation frame callbacks</a><span>, in §4.1</span>
+   <li><a href="#list-of-video-frame-request-callbacks">list of video frame request callbacks</a><span>, in §4.1</span>
    <li><a href="#media-pixels">media pixels</a><span>, in §2.1</span>
    <li><a href="#dom-videoframemetadata-mediatime">mediaTime</a><span>, in §2.2</span>
    <li><a href="#dom-videoframemetadata-presentationtime">presentationTime</a><span>, in §2.2</span>
    <li><a href="#dom-videoframemetadata-presentedframes">presentedFrames</a><span>, in §2.2</span>
    <li><a href="#dom-videoframemetadata-processingduration">processingDuration</a><span>, in §2.2</span>
    <li><a href="#dom-videoframemetadata-receivetime">receiveTime</a><span>, in §2.2</span>
-   <li><a href="#dom-htmlvideoelement-requestanimationframe">requestAnimationFrame(callback)</a><span>, in §4.1</span>
+   <li><a href="#dom-htmlvideoelement-requestvideoframecallback">requestVideoFrameCallback(callback)</a><span>, in §4.1</span>
    <li><a href="#dom-videoframemetadata-rtptimestamp">rtpTimestamp</a><span>, in §2.2</span>
-   <li><a href="#run-the-video-animation-frame-callbacks">run the video animation frame callbacks</a><span>, in §4.2</span>
+   <li><a href="#run-the-video-frame-request-callbacks">run the video frame request callbacks</a><span>, in §4.2</span>
    <li><a href="#dictdef-videoframemetadata">VideoFrameMetadata</a><span>, in §2</span>
    <li><a href="#callbackdef-videoframerequestcallback">VideoFrameRequestCallback</a><span>, in §3</span>
+   <li><a href="#video-frame-request-callback-identifier">video frame request callback identifier</a><span>, in §4.1</span>
    <li><a href="#dom-videoframemetadata-width">width</a><span>, in §2.2</span>
   </ul>
   <aside class="dfn-panel" data-for="term-for-px">
@@ -2033,15 +2034,15 @@ can be done by using <code class="idl"><a data-link-type="idl" href="#dom-htmlvi
   <aside class="dfn-panel" data-for="term-for-animationframeprovider">
    <a href="https://html.spec.whatwg.org/multipage/imagebitmap-and-animations.html#animationframeprovider">https://html.spec.whatwg.org/multipage/imagebitmap-and-animations.html#animationframeprovider</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-animationframeprovider">1. Introduction</a> <a href="#ref-for-animationframeprovider①">(2)</a>
-    <li><a href="#ref-for-animationframeprovider②">6.1. Drawing frames at the video rate</a>
+    <li><a href="#ref-for-animationframeprovider">1. Introduction</a>
+    <li><a href="#ref-for-animationframeprovider①">6.1. Drawing frames at the video rate</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-htmlvideoelement">
    <a href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement">https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-htmlvideoelement">1. Introduction</a>
-    <li><a href="#ref-for-htmlvideoelement①">4. HTMLVideoElement.requestAnimationFrame()</a>
+    <li><a href="#ref-for-htmlvideoelement①">4. HTMLVideoElement.requestVideoFrameCallback()</a>
     <li><a href="#ref-for-htmlvideoelement②">4.1. Methods</a> <a href="#ref-for-htmlvideoelement③">(2)</a> <a href="#ref-for-htmlvideoelement④">(3)</a> <a href="#ref-for-htmlvideoelement⑤">(4)</a>
     <li><a href="#ref-for-htmlvideoelement⑥">4.2. Procedures</a> <a href="#ref-for-htmlvideoelement⑦">(2)</a>
    </ul>
@@ -2132,7 +2133,7 @@ can be done by using <code class="idl"><a data-link-type="idl" href="#dom-htmlvi
    <ul>
     <li><a href="#ref-for-idl-unsigned-long">2. VideoFrameMetadata</a> <a href="#ref-for-idl-unsigned-long①">(2)</a> <a href="#ref-for-idl-unsigned-long②">(3)</a> <a href="#ref-for-idl-unsigned-long③">(4)</a>
     <li><a href="#ref-for-idl-unsigned-long④">2.2. Attributes</a> <a href="#ref-for-idl-unsigned-long⑤">(2)</a> <a href="#ref-for-idl-unsigned-long⑥">(3)</a> <a href="#ref-for-idl-unsigned-long⑦">(4)</a>
-    <li><a href="#ref-for-idl-unsigned-long⑧">4. HTMLVideoElement.requestAnimationFrame()</a> <a href="#ref-for-idl-unsigned-long⑨">(2)</a>
+    <li><a href="#ref-for-idl-unsigned-long⑧">4. HTMLVideoElement.requestVideoFrameCallback()</a> <a href="#ref-for-idl-unsigned-long⑨">(2)</a>
    </ul>
   </aside>
   <h3 class="no-num no-ref heading settled" id="index-defined-elsewhere"><span class="content">Terms defined by reference</span><a class="self-link" href="#index-defined-elsewhere"></a></h3>
@@ -2230,16 +2231,16 @@ can be done by using <code class="idl"><a data-link-type="idl" href="#dom-htmlvi
 <c- b>callback</c-> <a href="#callbackdef-videoframerequestcallback"><code><c- g>VideoFrameRequestCallback</c-></code></a> = <c- b>void</c->(<a class="n" data-link-type="idl-name" href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp" id="ref-for-dom-domhighrestimestamp⑧①"><c- n>DOMHighResTimeStamp</c-></a> <a href="#dom-videoframerequestcallback-now"><code><c- g>now</c-></code></a>, <a class="n" data-link-type="idl-name" href="#dictdef-videoframemetadata" id="ref-for-dictdef-videoframemetadata①①"><c- n>VideoFrameMetadata</c-></a> <a href="#dom-videoframerequestcallback-metadata"><code><c- g>metadata</c-></code></a>);
 
 <c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement" id="ref-for-htmlvideoelement①①"><c- g>HTMLVideoElement</c-></a> {
-    <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long" id="ref-for-idl-unsigned-long⑧①"><c- b>unsigned</c-> <c- b>long</c-></a> <a class="idl-code" data-link-type="method" href="#dom-htmlvideoelement-requestanimationframe" id="ref-for-dom-htmlvideoelement-requestanimationframe②"><c- g>requestAnimationFrame</c-></a>(<a class="n" data-link-type="idl-name" href="#callbackdef-videoframerequestcallback" id="ref-for-callbackdef-videoframerequestcallback⑥①"><c- n>VideoFrameRequestCallback</c-></a> <a href="#dom-htmlvideoelement-requestanimationframe-callback-callback"><code><c- g>callback</c-></code></a>);
-    <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-htmlvideoelement-cancelanimationframe" id="ref-for-dom-htmlvideoelement-cancelanimationframe①"><c- g>cancelAnimationFrame</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long" id="ref-for-idl-unsigned-long⑨①"><c- b>unsigned</c-> <c- b>long</c-></a> <a href="#dom-htmlvideoelement-cancelanimationframe-handle-handle"><code><c- g>handle</c-></code></a>);
+    <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long" id="ref-for-idl-unsigned-long⑧①"><c- b>unsigned</c-> <c- b>long</c-></a> <a class="idl-code" data-link-type="method" href="#dom-htmlvideoelement-requestvideoframecallback" id="ref-for-dom-htmlvideoelement-requestvideoframecallback①①"><c- g>requestVideoFrameCallback</c-></a>(<a class="n" data-link-type="idl-name" href="#callbackdef-videoframerequestcallback" id="ref-for-callbackdef-videoframerequestcallback⑥①"><c- n>VideoFrameRequestCallback</c-></a> <a href="#dom-htmlvideoelement-requestvideoframecallback-callback-callback"><code><c- g>callback</c-></code></a>);
+    <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-htmlvideoelement-cancelvideoframecallback" id="ref-for-dom-htmlvideoelement-cancelvideoframecallback①"><c- g>cancelVideoFrameCallback</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long" id="ref-for-idl-unsigned-long⑨①"><c- b>unsigned</c-> <c- b>long</c-></a> <a href="#dom-htmlvideoelement-cancelvideoframecallback-handle-handle"><code><c- g>handle</c-></code></a>);
 };
 
 </pre>
   <h2 class="no-num no-ref heading settled" id="issues-index"><span class="content">Issues Index</span><a class="self-link" href="#issues-index"></a></h2>
   <div style="counter-reset:issue">
-   <div class="issue"> This spec should eventually be merged into the HTML spec, and we should directly call <a data-link-type="dfn" href="#run-the-video-animation-frame-callbacks">run the
-video animation frame callbacks</a> from the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#update-the-rendering">update the rendering</a> steps. This procedure describes
-where and how to invoke the algorithm in the meantime.<a href="#issue-1bc5c126"> ↵ </a></div>
+   <div class="issue"> This spec should eventually be merged into the HTML spec, and we should directly call <a data-link-type="dfn" href="#run-the-video-frame-request-callbacks">run the
+video frame request callbacks</a> from the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#update-the-rendering">update the rendering</a> steps. This procedure describes
+where and how to invoke the algorithm in the meantime.<a href="#issue-9a108000"> ↵ </a></div>
   </div>
   <aside class="dfn-panel" data-for="dictdef-videoframemetadata">
    <b><a href="#dictdef-videoframemetadata">#dictdef-videoframemetadata</a></b><b>Referenced in:</b>
@@ -2333,7 +2334,7 @@ where and how to invoke the algorithm in the meantime.<a href="#issue-1bc5c126">
     <li><a href="#ref-for-callbackdef-videoframerequestcallback">1. Introduction</a> <a href="#ref-for-callbackdef-videoframerequestcallback①">(2)</a> <a href="#ref-for-callbackdef-videoframerequestcallback②">(3)</a> <a href="#ref-for-callbackdef-videoframerequestcallback③">(4)</a>
     <li><a href="#ref-for-callbackdef-videoframerequestcallback④">2.2. Attributes</a>
     <li><a href="#ref-for-callbackdef-videoframerequestcallback⑤">3. VideoFrameRequestCallback</a>
-    <li><a href="#ref-for-callbackdef-videoframerequestcallback⑥">4. HTMLVideoElement.requestAnimationFrame()</a>
+    <li><a href="#ref-for-callbackdef-videoframerequestcallback⑥">4. HTMLVideoElement.requestVideoFrameCallback()</a>
     <li><a href="#ref-for-callbackdef-videoframerequestcallback⑦">4.2. Procedures</a> <a href="#ref-for-callbackdef-videoframerequestcallback⑧">(2)</a> <a href="#ref-for-callbackdef-videoframerequestcallback⑨">(3)</a> <a href="#ref-for-callbackdef-videoframerequestcallback①⓪">(4)</a> <a href="#ref-for-callbackdef-videoframerequestcallback①①">(5)</a> <a href="#ref-for-callbackdef-videoframerequestcallback①②">(6)</a>
    </ul>
   </aside>
@@ -2344,11 +2345,11 @@ where and how to invoke the algorithm in the meantime.<a href="#issue-1bc5c126">
     <li><a href="#ref-for-canceled①">4.2. Procedures</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="list-of-animation-frame-callbacks">
-   <b><a href="#list-of-animation-frame-callbacks">#list-of-animation-frame-callbacks</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="list-of-video-frame-request-callbacks">
+   <b><a href="#list-of-video-frame-request-callbacks">#list-of-video-frame-request-callbacks</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-list-of-animation-frame-callbacks">4.1. Methods</a> <a href="#ref-for-list-of-animation-frame-callbacks①">(2)</a> <a href="#ref-for-list-of-animation-frame-callbacks②">(3)</a>
-    <li><a href="#ref-for-list-of-animation-frame-callbacks③">4.2. Procedures</a> <a href="#ref-for-list-of-animation-frame-callbacks④">(2)</a> <a href="#ref-for-list-of-animation-frame-callbacks⑤">(3)</a>
+    <li><a href="#ref-for-list-of-video-frame-request-callbacks">4.1. Methods</a> <a href="#ref-for-list-of-video-frame-request-callbacks①">(2)</a> <a href="#ref-for-list-of-video-frame-request-callbacks②">(3)</a>
+    <li><a href="#ref-for-list-of-video-frame-request-callbacks③">4.2. Procedures</a> <a href="#ref-for-list-of-video-frame-request-callbacks④">(2)</a> <a href="#ref-for-list-of-video-frame-request-callbacks⑤">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="last-presented-frame-indentifier">
@@ -2357,23 +2358,24 @@ where and how to invoke the algorithm in the meantime.<a href="#issue-1bc5c126">
     <li><a href="#ref-for-last-presented-frame-indentifier">4.2. Procedures</a> <a href="#ref-for-last-presented-frame-indentifier①">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="animation-frame-callback-identifier">
-   <b><a href="#animation-frame-callback-identifier">#animation-frame-callback-identifier</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="video-frame-request-callback-identifier">
+   <b><a href="#video-frame-request-callback-identifier">#video-frame-request-callback-identifier</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-animation-frame-callback-identifier">4.1. Methods</a> <a href="#ref-for-animation-frame-callback-identifier①">(2)</a>
+    <li><a href="#ref-for-video-frame-request-callback-identifier">4.1. Methods</a> <a href="#ref-for-video-frame-request-callback-identifier①">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="dom-htmlvideoelement-requestanimationframe">
-   <b><a href="#dom-htmlvideoelement-requestanimationframe">#dom-htmlvideoelement-requestanimationframe</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="dom-htmlvideoelement-requestvideoframecallback">
+   <b><a href="#dom-htmlvideoelement-requestvideoframecallback">#dom-htmlvideoelement-requestvideoframecallback</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-htmlvideoelement-requestanimationframe">4. HTMLVideoElement.requestAnimationFrame()</a>
-    <li><a href="#ref-for-dom-htmlvideoelement-requestanimationframe①">6.1. Drawing frames at the video rate</a>
+    <li><a href="#ref-for-dom-htmlvideoelement-requestvideoframecallback">1. Introduction</a>
+    <li><a href="#ref-for-dom-htmlvideoelement-requestvideoframecallback①">4. HTMLVideoElement.requestVideoFrameCallback()</a>
+    <li><a href="#ref-for-dom-htmlvideoelement-requestvideoframecallback②">6.1. Drawing frames at the video rate</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="dom-htmlvideoelement-cancelanimationframe">
-   <b><a href="#dom-htmlvideoelement-cancelanimationframe">#dom-htmlvideoelement-cancelanimationframe</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="dom-htmlvideoelement-cancelvideoframecallback">
+   <b><a href="#dom-htmlvideoelement-cancelvideoframecallback">#dom-htmlvideoelement-cancelvideoframecallback</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-htmlvideoelement-cancelanimationframe">4. HTMLVideoElement.requestAnimationFrame()</a>
+    <li><a href="#ref-for-dom-htmlvideoelement-cancelvideoframecallback">4. HTMLVideoElement.requestVideoFrameCallback()</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="associated-video-element">
@@ -2382,10 +2384,10 @@ where and how to invoke the algorithm in the meantime.<a href="#issue-1bc5c126">
     <li><a href="#ref-for-associated-video-element">4.2. Procedures</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="run-the-video-animation-frame-callbacks">
-   <b><a href="#run-the-video-animation-frame-callbacks">#run-the-video-animation-frame-callbacks</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="run-the-video-frame-request-callbacks">
+   <b><a href="#run-the-video-frame-request-callbacks">#run-the-video-frame-request-callbacks</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-run-the-video-animation-frame-callbacks">4.2. Procedures</a> <a href="#ref-for-run-the-video-animation-frame-callbacks①">(2)</a> <a href="#ref-for-run-the-video-animation-frame-callbacks②">(3)</a>
+    <li><a href="#ref-for-run-the-video-frame-request-callbacks">4.2. Procedures</a> <a href="#ref-for-run-the-video-frame-request-callbacks①">(2)</a> <a href="#ref-for-run-the-video-frame-request-callbacks②">(3)</a>
    </ul>
   </aside>
 <script>/* script-var-click-highlighting */
