@@ -1223,8 +1223,8 @@ Possible extra rowspan handling
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version 8bc2fccb49a45a0af18c5e75ce18049d75f824b6" name="generator">
-  <link href="https://wicg.github.io/video-raf/" rel="canonical">
-  <meta content="98ca6c4c6ff75ec512dfb2cc6eb7b56272139c90" name="document-revision">
+  <link href="https://wicg.github.io/video-rvfc/" rel="canonical">
+  <meta content="7ead0fa025d85d2a821c0f66e4b9021415bd2ed9" name="document-revision">
 <style>/* style-md-lists */
 
 /* This is a weird hack for me not yet following the commonmark spec
@@ -1482,21 +1482,21 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">HTMLVideoElement.requestVideoFrameCallback()</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-04-08">8 April 2020</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-04-10">10 April 2020</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
-     <dd><a class="u-url" href="https://wicg.github.io/video-raf/">https://wicg.github.io/video-raf/</a>
+     <dd><a class="u-url" href="https://wicg.github.io/video-rvfc/">https://wicg.github.io/video-rvfc/</a>
      <dt>Issue Tracking:
-     <dd><a href="https://github.com/wicg/video-raf/issues/">GitHub</a>
+     <dd><a href="https://github.com/wicg/video-rvfc/issues/">GitHub</a>
      <dd><a href="#issues-index">Inline In Spec</a>
      <dt class="editor">Editor:
      <dd class="editor p-author h-card vcard" data-editor-id="120583"><span class="p-name fn">Thomas Guilbert</span> (<a class="p-org org" href="https://google.com/">Google Inc.</a>)
      <dt>Participate:
-     <dd><a href="https://github.com/wicg/video-raf">Git Repository.</a>
-     <dd><a href="https://github.com/wicg/video-raf/issues/new">File an issue.</a>
+     <dd><a href="https://github.com/wicg/video-rvfc">Git Repository.</a>
+     <dd><a href="https://github.com/wicg/video-rvfc/issues/new">File an issue.</a>
      <dt>Version History:
-     <dd><a href="https://github.com/wicg/video-raf/commits">https://github.com/wicg/video-raf/commits</a>
+     <dd><a href="https://github.com/wicg/video-rvfc/commits">https://github.com/wicg/video-rvfc/commits</a>
     </dl>
    </div>
    <div data-fill-with="warning"></div>
@@ -1532,10 +1532,10 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
      </ol>
     <li><a href="#video-frame-request-callback"><span class="secno">3</span> <span class="content">VideoFrameRequestCallback</span></a>
     <li>
-     <a href="#video-raf"><span class="secno">4</span> <span class="content">HTMLVideoElement.requestVideoFrameCallback()</span></a>
+     <a href="#video-rvfc"><span class="secno">4</span> <span class="content">HTMLVideoElement.requestVideoFrameCallback()</span></a>
      <ol class="toc">
-      <li><a href="#video-raf-methods"><span class="secno">4.1</span> <span class="content">Methods</span></a>
-      <li><a href="#video-raf-procedures"><span class="secno">4.2</span> <span class="content">Procedures</span></a>
+      <li><a href="#video-rvfc-methods"><span class="secno">4.1</span> <span class="content">Methods</span></a>
+      <li><a href="#video-rvfc-procedures"><span class="secno">4.2</span> <span class="content">Procedures</span></a>
      </ol>
     <li><a href="#security-and-privacy"><span class="secno">5</span> <span class="content">Security and Privacy Considerations</span></a>
     <li>
@@ -1667,13 +1667,13 @@ and absent otherwise.</p>
 <pre class="idl highlight def"><c- b>callback</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="callback" data-export id="callbackdef-videoframerequestcallback"><code><c- g>VideoFrameRequestCallback</c-></code></dfn> = <c- b>void</c->(<a class="n" data-link-type="idl-name" href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp" id="ref-for-dom-domhighrestimestamp⑧"><c- n>DOMHighResTimeStamp</c-></a> <dfn class="idl-code" data-dfn-for="VideoFrameRequestCallback" data-dfn-type="argument" data-export id="dom-videoframerequestcallback-now"><code><c- g>now</c-></code><a class="self-link" href="#dom-videoframerequestcallback-now"></a></dfn>, <a class="n" data-link-type="idl-name" href="#dictdef-videoframemetadata" id="ref-for-dictdef-videoframemetadata①"><c- n>VideoFrameMetadata</c-></a> <dfn class="idl-code" data-dfn-for="VideoFrameRequestCallback" data-dfn-type="argument" data-export id="dom-videoframerequestcallback-metadata"><code><c- g>metadata</c-></code><a class="self-link" href="#dom-videoframerequestcallback-metadata"></a></dfn>);
 </pre>
    <p>Each <code class="idl"><a data-link-type="idl" href="#callbackdef-videoframerequestcallback" id="ref-for-callbackdef-videoframerequestcallback⑤">VideoFrameRequestCallback</a></code> object has a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="canceled">canceled</dfn> boolean initially set to false.</p>
-   <h2 class="heading settled" data-level="4" id="video-raf"><span class="secno">4. </span><span class="content">HTMLVideoElement.requestVideoFrameCallback()</span><a class="self-link" href="#video-raf"></a></h2>
+   <h2 class="heading settled" data-level="4" id="video-rvfc"><span class="secno">4. </span><span class="content">HTMLVideoElement.requestVideoFrameCallback()</span><a class="self-link" href="#video-rvfc"></a></h2>
 <pre class="idl highlight def"><c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement" id="ref-for-htmlvideoelement①"><c- g>HTMLVideoElement</c-></a> {
     <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long" id="ref-for-idl-unsigned-long⑧"><c- b>unsigned</c-> <c- b>long</c-></a> <a class="idl-code" data-link-type="method" href="#dom-htmlvideoelement-requestvideoframecallback" id="ref-for-dom-htmlvideoelement-requestvideoframecallback①"><c- g>requestVideoFrameCallback</c-></a>(<a class="n" data-link-type="idl-name" href="#callbackdef-videoframerequestcallback" id="ref-for-callbackdef-videoframerequestcallback⑥"><c- n>VideoFrameRequestCallback</c-></a> <dfn class="idl-code" data-dfn-for="HTMLVideoElement/requestVideoFrameCallback(callback)" data-dfn-type="argument" data-export id="dom-htmlvideoelement-requestvideoframecallback-callback-callback"><code><c- g>callback</c-></code><a class="self-link" href="#dom-htmlvideoelement-requestvideoframecallback-callback-callback"></a></dfn>);
     <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-htmlvideoelement-cancelvideoframecallback" id="ref-for-dom-htmlvideoelement-cancelvideoframecallback"><c- g>cancelVideoFrameCallback</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long" id="ref-for-idl-unsigned-long⑨"><c- b>unsigned</c-> <c- b>long</c-></a> <dfn class="idl-code" data-dfn-for="HTMLVideoElement/cancelVideoFrameCallback(handle)" data-dfn-type="argument" data-export id="dom-htmlvideoelement-cancelvideoframecallback-handle-handle"><code><c- g>handle</c-></code><a class="self-link" href="#dom-htmlvideoelement-cancelvideoframecallback-handle-handle"></a></dfn>);
 };
 </pre>
-   <h3 class="heading settled" data-level="4.1" id="video-raf-methods"><span class="secno">4.1. </span><span class="content">Methods</span><a class="self-link" href="#video-raf-methods"></a></h3>
+   <h3 class="heading settled" data-level="4.1" id="video-rvfc-methods"><span class="secno">4.1. </span><span class="content">Methods</span><a class="self-link" href="#video-rvfc-methods"></a></h3>
    <p>Each <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement" id="ref-for-htmlvideoelement②">HTMLVideoElement</a></code> has a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="list-of-video-frame-request-callbacks">list of video frame request callbacks</dfn>, which is initially
 empty, and a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="last-presented-frame-indentifier">last presented frame indentifier</dfn>, which is a number which is initialy zero.
 The <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement" id="ref-for-htmlvideoelement③">HTMLVideoElement</a></code>'s <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#dom-node-ownerdocument" id="ref-for-dom-node-ownerdocument">ownerDocument</a></code> also has a <dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="video frame request callback identifier" data-noexport id="video-frame-request-callback-identifier">video frame request
@@ -1709,9 +1709,9 @@ callback identifier</dfn>, which is a number which is initially zero.</p>
        <p>If there is such an entry, set its <a data-link-type="dfn" href="#canceled" id="ref-for-canceled">canceled</a> boolean to <code>true</code> and remove it from <var>video</var>’s <a data-link-type="dfn" href="#list-of-video-frame-request-callbacks" id="ref-for-list-of-video-frame-request-callbacks②">list of video frame request callbacks</a>.</p>
      </ol>
    </dl>
-   <h3 class="heading settled" data-level="4.2" id="video-raf-procedures"><span class="secno">4.2. </span><span class="content">Procedures</span><a class="self-link" href="#video-raf-procedures"></a></h3>
+   <h3 class="heading settled" data-level="4.2" id="video-rvfc-procedures"><span class="secno">4.2. </span><span class="content">Procedures</span><a class="self-link" href="#video-rvfc-procedures"></a></h3>
    <p>An <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement" id="ref-for-htmlvideoelement⑥">HTMLVideoElement</a></code> is considered to be an <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="associated-video-element">associated video element</dfn> of a <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#document" id="ref-for-document">Document</a></code> <var>doc</var> if its <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#dom-node-ownerdocument" id="ref-for-dom-node-ownerdocument③">ownerDocument</a></code> attribute is the same as <var>doc</var>.</p>
-   <div class="algorithm" data-algorithm="video-raf-rendering-step">
+   <div class="algorithm" data-algorithm="video-rvfc-rendering-step">
     <p class="issue" id="issue-9a108000"><a class="self-link" href="#issue-9a108000"></a> This spec should eventually be merged into the HTML spec, and we should directly call <a data-link-type="dfn" href="#run-the-video-frame-request-callbacks" id="ref-for-run-the-video-frame-request-callbacks">run the
 video frame request callbacks</a> from the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#update-the-rendering" id="ref-for-update-the-rendering①">update the rendering</a> steps. This procedure describes
 where and how to invoke the algorithm in the meantime.</p>

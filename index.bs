@@ -1,16 +1,16 @@
 <pre class='metadata'>
 Title: HTMLVideoElement.requestVideoFrameCallback()
-Repository: wicg/video-raf
+Repository: wicg/video-rvfc
 Status: CG-DRAFT
-ED: https://wicg.github.io/video-raf/
-Shortname: video-raf
+ED: https://wicg.github.io/video-rvfc/
+Shortname: video-rvfc
 Level: 1
 Group: wicg
 Editor: Thomas Guilbert, w3cid 120583, Google Inc. https://google.com/
 Abstract: &lt;video&gt;.requestVideoFrameCallback() allows web authors to be notified when a frame has been presented for composition.
-!Participate: <a href="https://github.com/wicg/video-raf">Git Repository.</a>
-!Participate: <a href="https://github.com/wicg/video-raf/issues/new">File an issue.</a>
-!Version History: <a href="https://github.com/wicg/video-raf/commits">https://github.com/wicg/video-raf/commits</a>
+!Participate: <a href="https://github.com/wicg/video-rvfc">Git Repository.</a>
+!Participate: <a href="https://github.com/wicg/video-rvfc/issues/new">File an issue.</a>
+!Version History: <a href="https://github.com/wicg/video-rvfc/commits">https://github.com/wicg/video-rvfc/commits</a>
 Indent: 2
 Markup Shorthands: markdown yes
 </pre>
@@ -161,7 +161,7 @@ be used to determine the aspect ratio to use, when using the texture.
 
 Each {{VideoFrameRequestCallback}} object has a <dfn>canceled</dfn> boolean initially set to false.
 
-# HTMLVideoElement.requestVideoFrameCallback() #  {#video-raf}
+# HTMLVideoElement.requestVideoFrameCallback() #  {#video-rvfc}
 <pre class='idl'>
   partial interface HTMLVideoElement {
       unsigned long requestVideoFrameCallback(VideoFrameRequestCallback callback);
@@ -169,7 +169,7 @@ Each {{VideoFrameRequestCallback}} object has a <dfn>canceled</dfn> boolean init
   };
 </pre>
 
-## Methods ## {#video-raf-methods}
+## Methods ## {#video-rvfc-methods}
 
 Each {{HTMLVideoElement}} has a <dfn>list of video frame request callbacks</dfn>, which is initially
 empty, and a <dfn>last presented frame indentifier</dfn>, which is a number which is initialy zero.
@@ -196,12 +196,12 @@ callback identifier</dfn>, which is a number which is initially zero.
   1. Find the entry in |video|'s [=list of video frame request callbacks=] that is associated with the value |handle|.
   1. If there is such an entry, set its [=canceled=] boolean to <code>true</code> and remove it from |video|'s [=list of video frame request callbacks=].
 
-## Procedures ## {#video-raf-procedures}
+## Procedures ## {#video-rvfc-procedures}
 
 An {{HTMLVideoElement}} is considered to be an <dfn>associated video element</dfn> of a {{Document}}
 |doc| if its {{ownerDocument}} attribute is the same as |doc|.
 
-<div algorithm="video-raf-rendering-step">
+<div algorithm="video-rvfc-rendering-step">
 
 Issue: This spec should eventually be merged into the HTML spec, and we should directly call [=run the
 video frame request callbacks=] from the [=update the rendering=] steps. This procedure describes
