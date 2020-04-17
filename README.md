@@ -4,4 +4,4 @@ This is the repository for video-requestVideoFrameCallback, formerly known as vi
 [contribute](CONTRIBUTING.md)!
 
 * [Explainer](explainer.md)
-* [Draft Specification](https://wicg.github.io/video-raf)
+* [Draft Specification](https://wicg.github.io/video-rvfc)
