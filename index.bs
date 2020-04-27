@@ -204,7 +204,7 @@ An {{HTMLVideoElement}} is considered to be an <dfn>associated video element</df
 <div algorithm="video-rvfc-document-change">
 
 If a {{HTMLVideoElement}}'s {{ownerDocument}} changes, the user
-agent SHOULD clear the [=list of video frame request callbacks=].
+agent MUST clear the [=list of video frame request callbacks=].
 
 </div>
 
