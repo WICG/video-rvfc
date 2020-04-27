@@ -201,6 +201,13 @@ callback identifier</dfn>, which is a number which is initially zero.
 An {{HTMLVideoElement}} is considered to be an <dfn>associated video element</dfn> of a {{Document}}
 |doc| if its {{ownerDocument}} attribute is the same as |doc|.
 
+<div algorithm="video-rvfc-document-change">
+
+If a {{HTMLVideoElement}}'s {{ownerDocument}} changes, the user
+agent MUST clear the [=list of video frame request callbacks=].
+
+</div>
+
 <div algorithm="video-rvfc-rendering-step">
 
 Issue: This spec should eventually be merged into the HTML spec, and we should directly call [=run the
