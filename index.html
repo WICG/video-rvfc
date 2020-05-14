@@ -1224,7 +1224,7 @@ Possible extra rowspan handling
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version 8bc2fccb49a45a0af18c5e75ce18049d75f824b6" name="generator">
   <link href="https://wicg.github.io/video-rvfc/" rel="canonical">
-  <meta content="f579f72e6cc3b5a6df450b2496491c82c903fc48" name="document-revision">
+  <meta content="60463ee017503767823eb041287543261a21506b" name="document-revision">
 <style>/* style-md-lists */
 
 /* This is a weird hack for me not yet following the commonmark spec
@@ -1482,7 +1482,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">HTMLVideoElement.requestVideoFrameCallback()</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-04-27">27 April 2020</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-05-13">13 May 2020</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1675,9 +1675,8 @@ and absent otherwise.</p>
 </pre>
    <h3 class="heading settled" data-level="4.1" id="video-rvfc-methods"><span class="secno">4.1. </span><span class="content">Methods</span><a class="self-link" href="#video-rvfc-methods"></a></h3>
    <p>Each <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement" id="ref-for-htmlvideoelement②">HTMLVideoElement</a></code> has a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="list-of-video-frame-request-callbacks">list of video frame request callbacks</dfn>, which is initially
-empty, and a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="last-presented-frame-indentifier">last presented frame indentifier</dfn>, which is a number which is initialy zero.
-The <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement" id="ref-for-htmlvideoelement③">HTMLVideoElement</a></code>'s <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#dom-node-ownerdocument" id="ref-for-dom-node-ownerdocument">ownerDocument</a></code> also has a <dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="video frame request callback identifier" data-noexport id="video-frame-request-callback-identifier">video frame request
-callback identifier</dfn>, which is a number which is initially zero.</p>
+empty. It also has a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="last-presented-frame-indentifier">last presented frame indentifier</dfn> and a <dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="video frame request callback identifier" data-noexport id="video-frame-request-callback-identifier">video frame request
+callback identifier</dfn>, which are both number which are initially zero.</p>
    <dl>
     <dt data-md><dfn class="dfn-paneled idl-code" data-dfn-for="HTMLVideoElement" data-dfn-type="method" data-export id="dom-htmlvideoelement-requestvideoframecallback"><code>requestVideoFrameCallback(<var>callback</var>)</code></dfn>
     <dd data-md>
@@ -1685,12 +1684,12 @@ callback identifier</dfn>, which is a number which is initially zero.</p>
      <p>When <code>requestVideoFrameCallback</code> is called, the user agent MUST run the following steps:</p>
      <ol>
       <li data-md>
-       <p>Let <var>video</var> be the <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement" id="ref-for-htmlvideoelement④">HTMLVideoElement</a></code> on which <code>requestVideoFrameCallback</code> is
+       <p>Let <var>video</var> be the <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement" id="ref-for-htmlvideoelement③">HTMLVideoElement</a></code> on which <code>requestVideoFrameCallback</code> is
   invoked.</p>
       <li data-md>
-       <p>Increment <var>video</var>’s <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#dom-node-ownerdocument" id="ref-for-dom-node-ownerdocument①">ownerDocument</a></code>'s <a data-link-type="dfn" href="#video-frame-request-callback-identifier" id="ref-for-video-frame-request-callback-identifier">video frame request callback identifier</a> by one.</p>
+       <p>Increment <var>video</var>’s <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#dom-node-ownerdocument" id="ref-for-dom-node-ownerdocument">ownerDocument</a></code>'s <a data-link-type="dfn" href="#video-frame-request-callback-identifier" id="ref-for-video-frame-request-callback-identifier">video frame request callback identifier</a> by one.</p>
       <li data-md>
-       <p>Let <var>callbackId</var> be <var>video</var>’s <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#dom-node-ownerdocument" id="ref-for-dom-node-ownerdocument②">ownerDocument</a></code>'s <a data-link-type="dfn" href="#video-frame-request-callback-identifier" id="ref-for-video-frame-request-callback-identifier①">video frame request callback identifier</a></p>
+       <p>Let <var>callbackId</var> be <var>video</var>’s <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#dom-node-ownerdocument" id="ref-for-dom-node-ownerdocument①">ownerDocument</a></code>'s <a data-link-type="dfn" href="#video-frame-request-callback-identifier" id="ref-for-video-frame-request-callback-identifier①">video frame request callback identifier</a></p>
       <li data-md>
        <p>Append <var>callback</var> to <var>video</var>’s <a data-link-type="dfn" href="#list-of-video-frame-request-callbacks" id="ref-for-list-of-video-frame-request-callbacks">list of video frame request callbacks</a>, associated with <var>callbackId</var>.</p>
       <li data-md>
@@ -1702,7 +1701,7 @@ callback identifier</dfn>, which is a number which is initially zero.</p>
      <p>When <code>cancelVideoFrameCallback</code> is called, the user agent MUST run the following steps:</p>
      <ol>
       <li data-md>
-       <p>Let <var>video</var> be the target <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement" id="ref-for-htmlvideoelement⑤">HTMLVideoElement</a></code> object on which <code>cancelVideoFrameCallback</code> is invoked.</p>
+       <p>Let <var>video</var> be the target <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement" id="ref-for-htmlvideoelement④">HTMLVideoElement</a></code> object on which <code>cancelVideoFrameCallback</code> is invoked.</p>
       <li data-md>
        <p>Find the entry in <var>video</var>’s <a data-link-type="dfn" href="#list-of-video-frame-request-callbacks" id="ref-for-list-of-video-frame-request-callbacks①">list of video frame request callbacks</a> that is associated with the value <var>handle</var>.</p>
       <li data-md>
@@ -1710,11 +1709,7 @@ callback identifier</dfn>, which is a number which is initially zero.</p>
      </ol>
    </dl>
    <h3 class="heading settled" data-level="4.2" id="video-rvfc-procedures"><span class="secno">4.2. </span><span class="content">Procedures</span><a class="self-link" href="#video-rvfc-procedures"></a></h3>
-   <p>An <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement" id="ref-for-htmlvideoelement⑥">HTMLVideoElement</a></code> is considered to be an <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="associated-video-element">associated video element</dfn> of a <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#document" id="ref-for-document">Document</a></code> <var>doc</var> if its <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#dom-node-ownerdocument" id="ref-for-dom-node-ownerdocument③">ownerDocument</a></code> attribute is the same as <var>doc</var>.</p>
-   <div class="algorithm" data-algorithm="video-rvfc-document-change">
-    <p>If a <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement" id="ref-for-htmlvideoelement⑦">HTMLVideoElement</a></code>'s <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#dom-node-ownerdocument" id="ref-for-dom-node-ownerdocument④">ownerDocument</a></code> changes, the user
-agent SHOULD clear the <a data-link-type="dfn" href="#list-of-video-frame-request-callbacks" id="ref-for-list-of-video-frame-request-callbacks③">list of video frame request callbacks</a>.</p>
-   </div>
+   <p>An <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement" id="ref-for-htmlvideoelement⑤">HTMLVideoElement</a></code> is considered to be an <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="associated-video-element">associated video element</dfn> of a <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#document" id="ref-for-document">Document</a></code> <var>doc</var> if its <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#dom-node-ownerdocument" id="ref-for-dom-node-ownerdocument②">ownerDocument</a></code> attribute is the same as <var>doc</var>.</p>
    <div class="algorithm" data-algorithm="video-rvfc-rendering-step">
     <p class="issue" id="issue-9a108000"><a class="self-link" href="#issue-9a108000"></a> This spec should eventually be merged into the HTML spec, and we should directly call <a data-link-type="dfn" href="#run-the-video-frame-request-callbacks" id="ref-for-run-the-video-frame-request-callbacks">run the
 video frame request callbacks</a> from the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#update-the-rendering" id="ref-for-update-the-rendering①">update the rendering</a> steps. This procedure describes
@@ -1738,10 +1733,10 @@ the <code class="idl"><a data-link-type="idl" href="#callbackdef-videoframereque
 presented. When the video rate is greater than the browser rate, the <code class="idl"><a data-link-type="idl" href="#callbackdef-videoframerequestcallback" id="ref-for-callbackdef-videoframerequestcallback⑨">callbacks</a></code>' rate is limited by the frequency of the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#update-the-rendering" id="ref-for-update-the-rendering④">update the
 rendering</a> steps. This means, a 25fps video playing in a browser that paints at 60hz would fire
 callbacks at 25hz; a 120fps video in that same 60hz browser would fire callbacks at 60hz.</p>
-    <p>To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="run-the-video-frame-request-callbacks">run the video frame request callbacks</dfn> for a <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement" id="ref-for-htmlvideoelement⑧">HTMLVideoElement</a></code> <var>video</var> with a timestamp <var>now</var>, run the following steps:</p>
+    <p>To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="run-the-video-frame-request-callbacks">run the video frame request callbacks</dfn> for a <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement" id="ref-for-htmlvideoelement⑥">HTMLVideoElement</a></code> <var>video</var> with a timestamp <var>now</var>, run the following steps:</p>
     <ol>
      <li data-md>
-      <p>If <var>video</var>’s <a data-link-type="dfn" href="#list-of-video-frame-request-callbacks" id="ref-for-list-of-video-frame-request-callbacks④">list of video frame request callbacks</a> is empty, abort these steps.</p>
+      <p>If <var>video</var>’s <a data-link-type="dfn" href="#list-of-video-frame-request-callbacks" id="ref-for-list-of-video-frame-request-callbacks③">list of video frame request callbacks</a> is empty, abort these steps.</p>
      <li data-md>
       <p>Let <var>metadata</var> be the <code class="idl"><a data-link-type="idl" href="#dictdef-videoframemetadata" id="ref-for-dictdef-videoframemetadata②">VideoFrameMetadata</a></code> dictionary built from <var>video</var>’s latest presented frame.</p>
      <li data-md>
@@ -1751,9 +1746,9 @@ callbacks at 25hz; a 120fps video in that same 60hz browser would fire callbacks
      <li data-md>
       <p>Set the <a data-link-type="dfn" href="#last-presented-frame-indentifier" id="ref-for-last-presented-frame-indentifier①">last presented frame indentifier</a> to <var>presentedFrames</var>.</p>
      <li data-md>
-      <p>Let <var>callbacks</var> be the <a data-link-type="dfn" href="#list-of-video-frame-request-callbacks" id="ref-for-list-of-video-frame-request-callbacks⑤">list of video frame request callbacks</a>.</p>
+      <p>Let <var>callbacks</var> be the <a data-link-type="dfn" href="#list-of-video-frame-request-callbacks" id="ref-for-list-of-video-frame-request-callbacks④">list of video frame request callbacks</a>.</p>
      <li data-md>
-      <p>Set <var>video</var>’s <a data-link-type="dfn" href="#list-of-video-frame-request-callbacks" id="ref-for-list-of-video-frame-request-callbacks⑥">list of video frame request callbacks</a> to be empty.</p>
+      <p>Set <var>video</var>’s <a data-link-type="dfn" href="#list-of-video-frame-request-callbacks" id="ref-for-list-of-video-frame-request-callbacks⑤">list of video frame request callbacks</a> to be empty.</p>
      <li data-md>
       <p>For each entry in <var>callbacks</var></p>
       <ol>
@@ -2017,8 +2012,8 @@ can be done by using <code class="idl"><a data-link-type="idl" href="#dom-htmlvi
   <aside class="dfn-panel" data-for="term-for-dom-node-ownerdocument">
    <a href="https://dom.spec.whatwg.org/#dom-node-ownerdocument">https://dom.spec.whatwg.org/#dom-node-ownerdocument</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-node-ownerdocument">4.1. Methods</a> <a href="#ref-for-dom-node-ownerdocument①">(2)</a> <a href="#ref-for-dom-node-ownerdocument②">(3)</a>
-    <li><a href="#ref-for-dom-node-ownerdocument③">4.2. Procedures</a> <a href="#ref-for-dom-node-ownerdocument④">(2)</a>
+    <li><a href="#ref-for-dom-node-ownerdocument">4.1. Methods</a> <a href="#ref-for-dom-node-ownerdocument①">(2)</a>
+    <li><a href="#ref-for-dom-node-ownerdocument②">4.2. Procedures</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-dom-domhighrestimestamp">
@@ -2047,8 +2042,8 @@ can be done by using <code class="idl"><a data-link-type="idl" href="#dom-htmlvi
    <ul>
     <li><a href="#ref-for-htmlvideoelement">1. Introduction</a>
     <li><a href="#ref-for-htmlvideoelement①">4. HTMLVideoElement.requestVideoFrameCallback()</a>
-    <li><a href="#ref-for-htmlvideoelement②">4.1. Methods</a> <a href="#ref-for-htmlvideoelement③">(2)</a> <a href="#ref-for-htmlvideoelement④">(3)</a> <a href="#ref-for-htmlvideoelement⑤">(4)</a>
-    <li><a href="#ref-for-htmlvideoelement⑥">4.2. Procedures</a> <a href="#ref-for-htmlvideoelement⑦">(2)</a> <a href="#ref-for-htmlvideoelement⑧">(3)</a>
+    <li><a href="#ref-for-htmlvideoelement②">4.1. Methods</a> <a href="#ref-for-htmlvideoelement③">(2)</a> <a href="#ref-for-htmlvideoelement④">(3)</a>
+    <li><a href="#ref-for-htmlvideoelement⑤">4.2. Procedures</a> <a href="#ref-for-htmlvideoelement⑥">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-canvas">
@@ -2353,7 +2348,7 @@ where and how to invoke the algorithm in the meantime.<a href="#issue-9a108000">
    <b><a href="#list-of-video-frame-request-callbacks">#list-of-video-frame-request-callbacks</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-list-of-video-frame-request-callbacks">4.1. Methods</a> <a href="#ref-for-list-of-video-frame-request-callbacks①">(2)</a> <a href="#ref-for-list-of-video-frame-request-callbacks②">(3)</a>
-    <li><a href="#ref-for-list-of-video-frame-request-callbacks③">4.2. Procedures</a> <a href="#ref-for-list-of-video-frame-request-callbacks④">(2)</a> <a href="#ref-for-list-of-video-frame-request-callbacks⑤">(3)</a> <a href="#ref-for-list-of-video-frame-request-callbacks⑥">(4)</a>
+    <li><a href="#ref-for-list-of-video-frame-request-callbacks③">4.2. Procedures</a> <a href="#ref-for-list-of-video-frame-request-callbacks④">(2)</a> <a href="#ref-for-list-of-video-frame-request-callbacks⑤">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="last-presented-frame-indentifier">

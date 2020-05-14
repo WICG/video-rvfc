@@ -172,9 +172,8 @@ Each {{VideoFrameRequestCallback}} object has a <dfn>canceled</dfn> boolean init
 ## Methods ## {#video-rvfc-methods}
 
 Each {{HTMLVideoElement}} has a <dfn>list of video frame request callbacks</dfn>, which is initially
-empty, and a <dfn>last presented frame indentifier</dfn>, which is a number which is initialy zero.
-The {{HTMLVideoElement}}'s {{ownerDocument}} also has a <dfn>video frame request
-callback identifier</dfn>, which is a number which is initially zero.
+empty. It also has a <dfn>last presented frame indentifier</dfn> and a <dfn>video frame request
+callback identifier</dfn>, which are both numbers which are initially zero.
 
 : <dfn for="HTMLVideoElement" method>requestVideoFrameCallback(|callback|)</dfn>
 :: Registers a callback to be fired the next time a frame is presented to the compositor.
@@ -200,13 +199,6 @@ callback identifier</dfn>, which is a number which is initially zero.
 
 An {{HTMLVideoElement}} is considered to be an <dfn>associated video element</dfn> of a {{Document}}
 |doc| if its {{ownerDocument}} attribute is the same as |doc|.
-
-<div algorithm="video-rvfc-document-change">
-
-If a {{HTMLVideoElement}}'s {{ownerDocument}} changes, the user
-agent MUST clear the [=list of video frame request callbacks=].
-
-</div>
 
 <div algorithm="video-rvfc-rendering-step">
 
