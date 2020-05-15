@@ -226,8 +226,8 @@ between the video's rate and the browser's rate. When the video rate is lower th
 the {{VideoFrameRequestCallback|callbacks}}' rate is limited by the frequency at which new frames are
 presented. When the video rate is greater than the browser rate, the
 {{VideoFrameRequestCallback|callbacks}}' rate is limited by the frequency of the [=update the
-rendering=] steps. This means, a 25fps video playing in a browser that paints at 60hz would fire
-callbacks at 25hz; a 120fps video in that same 60hz browser would fire callbacks at 60hz.
+rendering=] steps. This means, a 25fps video playing in a browser that paints at 60Hz would fire
+callbacks at 25Hz; a 120fps video in that same 60Hz browser would fire callbacks at 60Hz.
 
 To <dfn>run the video frame request callbacks</dfn> for a {{HTMLVideoElement}} |video| with a timestamp |now|, run the following steps:
 
