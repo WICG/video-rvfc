@@ -156,7 +156,7 @@ be used to determine the aspect ratio to use, when using the texture.
 # VideoFrameRequestCallback #    {#video-frame-request-callback}
 
 <pre class='idl'>
-  callback VideoFrameRequestCallback = void(DOMHighResTimeStamp now, VideoFrameMetadata metadata);
+  callback VideoFrameRequestCallback = undefined(DOMHighResTimeStamp now, VideoFrameMetadata metadata);
 </pre>
 
 Each {{VideoFrameRequestCallback}} object has a <dfn>canceled</dfn> boolean initially set to false.
@@ -165,7 +165,7 @@ Each {{VideoFrameRequestCallback}} object has a <dfn>canceled</dfn> boolean init
 <pre class='idl'>
   partial interface HTMLVideoElement {
       unsigned long requestVideoFrameCallback(VideoFrameRequestCallback callback);
-      void cancelVideoFrameCallback(unsigned long handle);
+      undefined cancelVideoFrameCallback(unsigned long handle);
   };
 </pre>
 
