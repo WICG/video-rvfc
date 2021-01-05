@@ -53,9 +53,10 @@ dictionary VideoFrameMetadata {
 
     // For video frames coming from either a local or remote source, this is
     // the time at which the frame was captured by the camera. For a remote
-    // source, the capture time is estimated using clock synchronization and
-    // RTCP sender reports to convert RTP timestamps to capture time as
-    // specified in RFC 3550 Section 6.4.1.
+    // source, the capture time is estimated using clock synchronization. This
+    // is best effort and can use methods like using RTCP SR as specified in
+    // RFC 3550 Section 6.4.1, or by other alternative means if use by RTCP SR
+    // isn't feasible.
     DOMHighResTimeStamp captureTime;  // optional
 
     // For video frames coming from a remote source, this is the time the

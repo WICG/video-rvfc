@@ -134,9 +134,10 @@ be used to determine the aspect ratio to use, when using the texture.
 : <dfn for="VideoFrameMetadata" dict-member>captureTime</dfn>
 ::  For video frames coming from either a local or remote source, this is the
   time at which the frame was captured by the camera. For a remote source, the
-  capture time is estimated using clock synchronization and RTCP sender reports
-  to convert RTP timestamps to capture time as specified in
-  [[RFC3550#section-6.4.1|RFC 3550 Section 6.4.1]].
+  capture time is estimated using clock synchronization. This is best effort and
+  can use methods like using RTCP SR as specified in
+  [[RFC3550#section-6.4.1|RFC 3550 Section 6.4.1]], or by other alternative
+  means if use by RTCP SR isn't feasible.
 
 :: SHOULD be present for WebRTC applications, and absent otherwise.
 
