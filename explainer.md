@@ -16,7 +16,7 @@ Additionally, our proposal will enable a host of frame-accurate [web-platform-te
 
 Specific use case examples:
 * WebGL applications would like to composite at the video rate and not the display rate to save on processing complexity.
-* WebRTC applications would like to synchronize user events such as a key press with the frame that was displayed to the user when the event was triggered.
+* WebRTC or [getUserMedia](https://w3c.github.io/mediacapture-main/) applications would like to synchronize user events such as a key press with the frame that was displayed to the user when the event was triggered.
 
 
 # Proposed API
@@ -51,12 +51,13 @@ dictionary VideoFrameMetadata {
     // https://wiki.whatwg.org/wiki/Video_Metrics#presentedFrames
     required unsigned long presentedFrames;
 
-    // For video frames coming from either a local or remote source, this is
-    // the time at which the frame was captured by the camera. For a remote
-    // source, the capture time is estimated using clock synchronization. This
-    // is best effort and can use methods like using RTCP SR as specified in
-    // RFC 3550 Section 6.4.1, or by other alternative means if use by RTCP SR
-    // isn't feasible.
+    // For video frames coming from a local source, this is the time at which
+    // the frame was captured by the camera.
+    // For video frames coming from remote source, the capture time is based on
+    // the RTP timestamp of the frame and estimated using clock synchronization.
+    // This is best effort and can use methods like using RTCP SR as specified
+    // in RFC 3550 Section 6.4.1, or by other alternative means if use by
+    // RTCP SR isn't feasible.
     DOMHighResTimeStamp captureTime;  // optional
 
     // For video frames coming from a remote source, this is the time the
