@@ -1224,7 +1224,7 @@ Possible extra rowspan handling
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version 8bc2fccb49a45a0af18c5e75ce18049d75f824b6" name="generator">
   <link href="https://wicg.github.io/video-rvfc/" rel="canonical">
-  <meta content="692ba500d9f4eeb09781866d1d7f91456660de69" name="document-revision">
+  <meta content="a60851c4e663bc7b43138bc89ac0fdf5ec3b0e46" name="document-revision">
 <style>/* style-md-lists */
 
 /* This is a weird hack for me not yet following the commonmark spec
@@ -1482,7 +1482,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">HTMLVideoElement.requestVideoFrameCallback()</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2021-01-05">5 January 2021</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2021-01-25">25 January 2021</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1624,7 +1624,7 @@ be used to determine the aspect ratio to use, when using the texture.</p>
     <dd data-md>
      <p>The media presentation timestamp (PTS) in seconds of the frame presented (e.g.
 its timestamp on the <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#dom-media-currenttime" id="ref-for-dom-media-currenttime">video.currentTime</a></code> timeline).
-MAY have a zero value for live-streams or WebRTC application.</p>
+MAY have a zero value for live-streams or WebRTC applications.</p>
     <dt data-md><dfn class="dfn-paneled idl-code" data-dfn-for="VideoFrameMetadata" data-dfn-type="dict-member" data-export id="dom-videoframemetadata-presentedframes"><code>presentedFrames</code></dfn>, <span> of type <a data-link-type="idl-name" href="https://heycam.github.io/webidl/#idl-unsigned-long" id="ref-for-idl-unsigned-long⑥">unsigned long</a></span>
     <dd data-md>
      <p>A count of the number of frames submitted for composition. Allows clients
@@ -1643,13 +1643,15 @@ conversion and/or staging into GPU backed memory.</p>
 portions of the media pipeline might be owned by the OS.</p>
     <dt data-md><dfn class="dfn-paneled idl-code" data-dfn-for="VideoFrameMetadata" data-dfn-type="dict-member" data-export id="dom-videoframemetadata-capturetime"><code>captureTime</code></dfn>, <span> of type <a data-link-type="idl-name" href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp" id="ref-for-dom-domhighrestimestamp⑥">DOMHighResTimeStamp</a></span>
     <dd data-md>
-     <p>For video frames coming from either a local or remote source, this is the
-time at which the frame was captured by the camera. For a remote source, the
-capture time is estimated using clock synchronization. This is best effort and
-can use methods like using RTCP SR as specified in <a href="https://tools.ietf.org/html/rfc3550#section-6.4.1">RFC 3550 Section 6.4.1</a>, or by other alternative
-means if use by RTCP SR isn’t feasible.</p>
+     <p>For video frames coming from a local source, this is the time at which
+the frame was captured by the camera.
+For video frames coming from remote source, the capture time is based on
+the RTP timestamp of the frame and estimated using clock synchronization.
+This is best effort and can use methods like using RTCP SR as specified
+in RFC 3550 Section 6.4.1, or by other alternative means if use by
+RTCP SR isn’t feasible.</p>
     <dd data-md>
-     <p>SHOULD be present for WebRTC applications, and absent otherwise.</p>
+     <p>SHOULD be present for WebRTC or getUserMedia applications, and absent otherwise.</p>
     <dt data-md><dfn class="dfn-paneled idl-code" data-dfn-for="VideoFrameMetadata" data-dfn-type="dict-member" data-export id="dom-videoframemetadata-receivetime"><code>receiveTime</code></dfn>, <span> of type <a data-link-type="idl-name" href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp" id="ref-for-dom-domhighrestimestamp⑦">DOMHighResTimeStamp</a></span>
     <dd data-md>
      <p>For video frames coming from a remote source, this is the
@@ -1662,7 +1664,8 @@ and absent otherwise.</p>
     <dd data-md>
      <p>The RTP timestamp associated with this video frame.</p>
     <dd data-md>
-     <p>SHOULD be present for WebRTC applications, and absent otherwise.</p>
+     <p>SHOULD be present for WebRTC applications that receive data from a remote source,
+and absent otherwise.</p>
    </dl>
    <h2 class="heading settled" data-level="3" id="video-frame-request-callback"><span class="secno">3. </span><span class="content">VideoFrameRequestCallback</span><a class="self-link" href="#video-frame-request-callback"></a></h2>
 <pre class="idl highlight def"><c- b>callback</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="callback" data-export id="callbackdef-videoframerequestcallback"><code><c- g>VideoFrameRequestCallback</c-></code></dfn> = <a class="n" data-link-type="idl-name"><c- n>undefined</c-></a>(<a class="n" data-link-type="idl-name" href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp" id="ref-for-dom-domhighrestimestamp⑧"><c- n>DOMHighResTimeStamp</c-></a> <dfn class="idl-code" data-dfn-for="VideoFrameRequestCallback" data-dfn-type="argument" data-export id="dom-videoframerequestcallback-now"><code><c- g>now</c-></code><a class="self-link" href="#dom-videoframerequestcallback-now"></a></dfn>, <a class="n" data-link-type="idl-name" href="#dictdef-videoframemetadata" id="ref-for-dictdef-videoframemetadata①"><c- n>VideoFrameMetadata</c-></a> <dfn class="idl-code" data-dfn-for="VideoFrameRequestCallback" data-dfn-type="argument" data-export id="dom-videoframerequestcallback-metadata"><code><c- g>metadata</c-></code><a class="self-link" href="#dom-videoframerequestcallback-metadata"></a></dfn>);
