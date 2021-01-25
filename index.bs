@@ -113,7 +113,7 @@ be used to determine the aspect ratio to use, when using the texture.
 : <dfn for="VideoFrameMetadata" dict-member>mediaTime</dfn>
 ::  The media presentation timestamp (PTS) in seconds of the frame presented (e.g.
   its timestamp on the {{HTMLMediaElement/currentTime|video.currentTime}} timeline).
-  MAY have a zero value for live-streams or WebRTC application.
+  MAY have a zero value for live-streams or WebRTC applications.
 
 : <dfn for="VideoFrameMetadata" dict-member>presentedFrames</dfn>
 ::  A count of the number of frames submitted for composition. Allows clients
@@ -132,14 +132,15 @@ be used to determine the aspect ratio to use, when using the texture.
   portions of the media pipeline might be owned by the OS.
 
 : <dfn for="VideoFrameMetadata" dict-member>captureTime</dfn>
-::  For video frames coming from either a local or remote source, this is the
-  time at which the frame was captured by the camera. For a remote source, the
-  capture time is estimated using clock synchronization. This is best effort and
-  can use methods like using RTCP SR as specified in
-  [[RFC3550#section-6.4.1|RFC 3550 Section 6.4.1]], or by other alternative
-  means if use by RTCP SR isn't feasible.
+::  For video frames coming from a local source, this is the time at which
+  the frame was captured by the camera.
+  For video frames coming from remote source, the capture time is based on
+  the RTP timestamp of the frame and estimated using clock synchronization.
+  This is best effort and can use methods like using RTCP SR as specified
+  in RFC 3550 Section 6.4.1, or by other alternative means if use by
+  RTCP SR isn't feasible.
 
-:: SHOULD be present for WebRTC applications, and absent otherwise.
+:: SHOULD be present for WebRTC or getUserMedia applications, and absent otherwise.
 
 : <dfn for="VideoFrameMetadata" dict-member>receiveTime</dfn>
 ::  For video frames coming from a remote source, this is the
@@ -152,7 +153,8 @@ be used to determine the aspect ratio to use, when using the texture.
 : <dfn for="VideoFrameMetadata" dict-member>rtpTimestamp</dfn>
 ::  The RTP timestamp associated with this video frame.
 
-:: SHOULD be present for WebRTC applications, and absent otherwise.
+:: SHOULD be present for WebRTC applications that receive data from a remote source,
+  and absent otherwise.
 
 # VideoFrameRequestCallback #    {#video-frame-request-callback}
 
