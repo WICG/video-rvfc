@@ -3,1328 +3,14 @@
   <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
   <title>HTMLVideoElement.requestVideoFrameCallback()</title>
   <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
-<style data-fill-with="stylesheet">/******************************************************************************
- *                   Style sheet for the W3C specifications                   *
- *
- * Special classes handled by this style sheet include:
- *
- * Indices
- *   - .toc for the Table of Contents (<ol class="toc">)
- *     + <span class="secno"> for the section numbers
- *   - #toc for the Table of Contents (<nav id="toc">)
- *   - ul.index for Indices (<a href="#ref">term</a><span>, in §N.M</span>)
- *   - table.index for Index Tables (e.g. for properties or elements)
- *
- * Structural Markup
- *   - table.data for general data tables
- *     -> use 'scope' attribute, <colgroup>, <thead>, and <tbody> for best results !
- *     -> use <table class='complex data'> for extra-complex tables
- *     -> use <td class='long'> for paragraph-length cell content
- *     -> use <td class='pre'> when manual line breaks/indentation would help readability
- *   - dl.switch for switch statements
- *   - ol.algorithm for algorithms (helps to visualize nesting)
- *   - .figure and .caption (HTML4) and figure and figcaption (HTML5)
- *     -> .sidefigure for right-floated figures
- *   - ins/del
- *
- * Code
- *   - pre and code
- *
- * Special Sections
- *   - .note       for informative notes             (div, p, span, aside, details)
- *   - .example    for informative examples          (div, p, pre, span)
- *   - .issue      for issues                        (div, p, span)
- *   - .assertion  for assertions                    (div, p, span)
- *   - .advisement for loud normative statements     (div, p, strong)
- *   - .annoying-warning for spec obsoletion notices (div, aside, details)
- *
- * Definition Boxes
- *   - pre.def   for WebIDL definitions
- *   - table.def for tables that define other entities (e.g. CSS properties)
- *   - dl.def    for definition lists that define other entitles (e.g. HTML elements)
- *
- * Numbering
- *   - .secno for section numbers in .toc and headings (<span class='secno'>3.2</span>)
- *   - .marker for source-inserted example/figure/issue numbers (<span class='marker'>Issue 4</span>)
- *   - ::before styled for CSS-generated issue/example/figure numbers:
- *     -> Documents wishing to use this only need to add
- *        figcaption::before,
- *        .caption::before { content: "Figure "  counter(figure) " ";  }
- *        .example::before { content: "Example " counter(example) " "; }
- *        .issue::before   { content: "Issue "   counter(issue) " ";   }
- *
- * Header Stuff (ignore, just don't conflict with these classes)
- *   - .head for the header
- *   - .copyright for the copyright
- *
- * Miscellaneous
- *   - .overlarge for things that should be as wide as possible, even if
- *     that overflows the body text area. This can be used on an item or
- *     on its container, depending on the effect desired.
- *     Note that this styling basically doesn't help at all when printing,
- *     since A4 paper isn't much wider than the max-width here.
- *     It's better to design things to fit into a narrower measure if possible.
- *   - js-added ToC jump links (see fixup.js)
- *
- ******************************************************************************/
-
-/******************************************************************************/
-/*                                   Body                                     */
-/******************************************************************************/
-
-	body {
-		counter-reset: example figure issue;
-
-		/* Layout */
-		max-width: 50em;               /* limit line length to 50em for readability   */
-		margin: 0 auto;                /* center text within page                     */
-		padding: 1.6em 1.5em 2em 50px; /* assume 16px font size for downlevel clients */
-		padding: 1.6em 1.5em 2em calc(26px + 1.5em); /* leave space for status flag     */
-
-		/* Typography */
-		line-height: 1.5;
-		font-family: sans-serif;
-		widows: 2;
-		orphans: 2;
-		word-wrap: break-word;
-		overflow-wrap: break-word;
-		hyphens: auto;
-
-		/* Colors */
-		color: black;
-		background: white top left fixed no-repeat;
-		background-size: 25px auto;
-	}
-
-
-/******************************************************************************/
-/*                         Front Matter & Navigation                          */
-/******************************************************************************/
-
-/** Header ********************************************************************/
-
-	div.head { margin-bottom: 1em }
-	div.head hr { border-style: solid; }
-
-	div.head h1 {
-		font-weight: bold;
-		margin: 0 0 .1em;
-		font-size: 220%;
-	}
-
-	div.head h2 { margin-bottom: 1.5em;}
-
-/** W3C Logo ******************************************************************/
-
-	.head .logo {
-		float: right;
-		margin: 0.4rem 0 0.2rem .4rem;
-	}
-
-	.head img[src*="logos/W3C"] {
-		display: block;
-		border: solid #1a5e9a;
-		border-width: .65rem .7rem .6rem;
-		border-radius: .4rem;
-		background: #1a5e9a;
-		color: white;
-		font-weight: bold;
-	}
-
-	.head a:hover > img[src*="logos/W3C"],
-	.head a:focus > img[src*="logos/W3C"] {
-		opacity: .8;
-	}
-
-	.head a:active > img[src*="logos/W3C"] {
-		background: #c00;
-		border-color: #c00;
-	}
-
-	/* see also additional rules in Link Styling section */
-
-/** Copyright *****************************************************************/
-
-	p.copyright,
-	p.copyright small { font-size: small }
-
-/** Back to Top / ToC Toggle **************************************************/
-
-	@media print {
-		#toc-nav {
-			display: none;
-		}
-	}
-	@media not print {
-		#toc-nav {
-			position: fixed;
-			z-index: 2;
-			bottom: 0; left: 0;
-			margin: 0;
-			min-width: 1.33em;
-			border-top-right-radius: 2rem;
-			box-shadow: 0 0 2px;
-			font-size: 1.5em;
-			color: black;
-		}
-		#toc-nav > a {
-			display: block;
-			white-space: nowrap;
-
-			height: 1.33em;
-			padding: .1em 0.3em;
-			margin: 0;
-
-			background: white;
-			box-shadow: 0 0 2px;
-			border: none;
-			border-top-right-radius: 1.33em;
-			background: white;
-		}
-		#toc-nav > #toc-jump {
-			padding-bottom: 2em;
-			margin-bottom: -1.9em;
-		}
-
-		#toc-nav > a:hover,
-		#toc-nav > a:focus {
-			background: #f8f8f8;
-		}
-		#toc-nav > a:not(:hover):not(:focus) {
-			color: #707070;
-		}
-
-		/* statusbar gets in the way on keyboard focus; remove once browsers fix */
-		#toc-nav > a[href="#toc"]:not(:hover):focus:last-child {
-			padding-bottom: 1.5rem;
-		}
-
-		#toc-nav:not(:hover) > a:not(:focus) > span + span {
-			/* Ideally this uses :focus-within on #toc-nav */
-			display: none;
-		}
-		#toc-nav > a > span + span {
-			padding-right: 0.2em;
-		}
-
-		#toc-toggle-inline {
-			vertical-align: 0.05em;
-			font-size: 80%;
-			color: gray;
-			color: hsla(203,20%,40%,.7);
-			border-style: none;
-			background: transparent;
-			position: relative;
-		}
-		#toc-toggle-inline:hover:not(:active),
-		#toc-toggle-inline:focus:not(:active) {
-			text-shadow: 1px 1px silver;
-			top: -1px;
-			left: -1px;
-		}
-
-		#toc-nav :active {
-			color: #C00;
-		}
-	}
-
-/** ToC Sidebar ***************************************************************/
-
-	/* Floating sidebar */
-	@media screen {
-		body.toc-sidebar #toc {
-			position: fixed;
-			top: 0; bottom: 0;
-			left: 0;
-			width: 23.5em;
-			max-width: 80%;
-			max-width: calc(100% - 2em - 26px);
-			overflow: auto;
-			padding: 0 1em;
-			padding-left: 42px;
-			padding-left: calc(1em + 26px);
-			background: inherit;
-			background-color: #f7f8f9;
-			z-index: 1;
-			box-shadow: -.1em 0 .25em rgba(0,0,0,.1) inset;
-		}
-		body.toc-sidebar #toc h2 {
-			margin-top: .8rem;
-			font-variant: small-caps;
-			font-variant: all-small-caps;
-			text-transform: lowercase;
-			font-weight: bold;
-			color: gray;
-			color: hsla(203,20%,40%,.7);
-		}
-		body.toc-sidebar #toc-jump:not(:focus) {
-			width: 0;
-			height: 0;
-			padding: 0;
-			position: absolute;
-			overflow: hidden;
-		}
-	}
-	/* Hide main scroller when only the ToC is visible anyway */
-	@media screen and (max-width: 28em) {
-		body.toc-sidebar {
-			overflow: hidden;
-		}
-	}
-
-	/* Sidebar with its own space */
-	@media screen and (min-width: 78em) {
-		body:not(.toc-inline) #toc {
-			position: fixed;
-			top: 0; bottom: 0;
-			left: 0;
-			width: 23.5em;
-			overflow: auto;
-			padding: 0 1em;
-			padding-left: 42px;
-			padding-left: calc(1em + 26px);
-			background: inherit;
-			background-color: #f7f8f9;
-			z-index: 1;
-			box-shadow: -.1em 0 .25em rgba(0,0,0,.1) inset;
-		}
-		body:not(.toc-inline) #toc h2 {
-			margin-top: .8rem;
-			font-variant: small-caps;
-			font-variant: all-small-caps;
-			text-transform: lowercase;
-			font-weight: bold;
-			color: gray;
-			color: hsla(203,20%,40%,.7);
-		}
-
-		body:not(.toc-inline) {
-			padding-left: 29em;
-		}
-		/* See also Overflow section at the bottom */
-
-		body:not(.toc-inline) #toc-jump:not(:focus) {
-			width: 0;
-			height: 0;
-			padding: 0;
-			position: absolute;
-			overflow: hidden;
-		}
-	}
-	@media screen and (min-width: 90em) {
-		body:not(.toc-inline) {
-			margin: 0 4em;
-		}
-	}
-
-/******************************************************************************/
-/*                                Sectioning                                  */
-/******************************************************************************/
-
-/** Headings ******************************************************************/
-
-	h1, h2, h3, h4, h5, h6, dt {
-		page-break-after: avoid;
-		page-break-inside: avoid;
-		font: 100% sans-serif;   /* Reset all font styling to clear out UA styles */
-		font-family: inherit;    /* Inherit the font family. */
-		line-height: 1.2;        /* Keep wrapped headings compact */
-		hyphens: manual;         /* Hyphenated headings look weird */
-	}
-
-	h2, h3, h4, h5, h6 {
-		margin-top: 3rem;
-	}
-
-	h1, h2, h3 {
-		color: #005A9C;
-		background: transparent;
-	}
-
-	h1 { font-size: 170%; }
-	h2 { font-size: 140%; }
-	h3 { font-size: 120%; }
-	h4 { font-weight: bold; }
-	h5 { font-style: italic; }
-	h6 { font-variant: small-caps; }
-	dt { font-weight: bold; }
-
-/** Subheadings ***************************************************************/
-
-	h1 + h2,
-	#subtitle {
-		/* #subtitle is a subtitle in an H2 under the H1 */
-		margin-top: 0;
-	}
-	h2 + h3,
-	h3 + h4,
-	h4 + h5,
-	h5 + h6 {
-		margin-top: 1.2em; /* = 1 x line-height */
-	}
-
-/** Section divider ***********************************************************/
-
-	:not(.head) > hr {
-		font-size: 1.5em;
-		text-align: center;
-		margin: 1em auto;
-		height: auto;
-		border: transparent solid 0;
-		background: transparent;
-	}
-	:not(.head) > hr::before {
-		content: "\2727\2003\2003\2727\2003\2003\2727";
-	}
-
-/******************************************************************************/
-/*                            Paragraphs and Lists                            */
-/******************************************************************************/
-
-	p {
-		margin: 1em 0;
-	}
-
-	dd > p:first-child,
-	li > p:first-child {
-		margin-top: 0;
-	}
-
-	ul, ol {
-		margin-left: 0;
-		padding-left: 2em;
-	}
-
-	li {
-		margin: 0.25em 0 0.5em;
-		padding: 0;
-	}
-
-	dl dd {
-		margin: 0 0 .5em 2em;
-	}
-
-	.head dd + dd { /* compact for header */
-		margin-top: -.5em;
-	}
-
-	/* Style for algorithms */
-	ol.algorithm ol:not(.algorithm),
-	.algorithm > ol ol:not(.algorithm) {
-	 border-left: 0.5em solid #DEF;
-	}
-
-	/* Put nice boxes around each algorithm. */
-	[data-algorithm]:not(.heading) {
-	  padding: .5em;
-	  border: thin solid #ddd; border-radius: .5em;
-	  margin: .5em calc(-0.5em - 1px);
-	}
-	[data-algorithm]:not(.heading) > :first-child {
-	  margin-top: 0;
-	}
-	[data-algorithm]:not(.heading) > :last-child {
-	  margin-bottom: 0;
-	}
-
-	/* Style for switch/case <dl>s */
-	dl.switch > dd > ol.only,
-	dl.switch > dd > .only > ol {
-	 margin-left: 0;
-	}
-	dl.switch > dd > ol.algorithm,
-	dl.switch > dd > .algorithm > ol {
-	 margin-left: -2em;
-	}
-	dl.switch {
-	 padding-left: 2em;
-	}
-	dl.switch > dt {
-	 text-indent: -1.5em;
-	 margin-top: 1em;
-	}
-	dl.switch > dt + dt {
-	 margin-top: 0;
-	}
-	dl.switch > dt::before {
-	 content: '\21AA';
-	 padding: 0 0.5em 0 0;
-	 display: inline-block;
-	 width: 1em;
-	 text-align: right;
-	 line-height: 0.5em;
-	}
-
-/** Terminology Markup ********************************************************/
-
-
-/******************************************************************************/
-/*                                 Inline Markup                              */
-/******************************************************************************/
-
-/** Terminology Markup ********************************************************/
-	dfn   { /* Defining instance */
-		font-weight: bolder;
-	}
-	a > i { /* Instance of term */
-		font-style: normal;
-	}
-	dt dfn code, code.idl {
-		font-size: medium;
-	}
-	dfn var {
-		font-style: normal;
-	}
-
-/** Change Marking ************************************************************/
-
-	del { color: red;  text-decoration: line-through; }
-	ins { color: #080; text-decoration: underline;    }
-
-/** Miscellaneous improvements to inline formatting ***************************/
-
-	sup {
-		vertical-align: super;
-		font-size: 80%
-	}
-
-/******************************************************************************/
-/*                                    Code                                    */
-/******************************************************************************/
-
-/** General monospace/pre rules ***********************************************/
-
-	pre, code, samp {
-		font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
-		font-size: .9em;
-		page-break-inside: avoid;
-		hyphens: none;
-		text-transform: none;
-	}
-	pre code,
-	code code {
-		font-size: 100%;
-	}
-
-	pre {
-		margin-top: 1em;
-		margin-bottom: 1em;
-		overflow: auto;
-	}
-
-/** Inline Code fragments *****************************************************/
-
-  /* Do something nice. */
-
-/******************************************************************************/
-/*                                    Links                                   */
-/******************************************************************************/
-
-/** General Hyperlinks ********************************************************/
-
-	/* We hyperlink a lot, so make it less intrusive */
-	a[href] {
-		color: #034575;
-		text-decoration: none;
-		border-bottom: 1px solid #707070;
-		/* Need a bit of extending for it to look okay */
-		padding: 0 1px 0;
-		margin: 0 -1px 0;
-	}
-	a:visited {
-		border-bottom-color: #BBB;
-	}
-
-	/* Use distinguishing colors when user is interacting with the link */
-	a[href]:focus,
-	a[href]:hover {
-		background: #f8f8f8;
-		background: rgba(75%, 75%, 75%, .25);
-		border-bottom-width: 3px;
-		margin-bottom: -2px;
-	}
-	a[href]:active {
-		color: #C00;
-		border-color: #C00;
-	}
-
-	/* Backout above styling for W3C logo */
-	.head .logo,
-	.head .logo a {
-		border: none;
-		text-decoration: none;
-		background: transparent;
-	}
-
-/******************************************************************************/
-/*                                    Images                                  */
-/******************************************************************************/
-
-	img {
-		border-style: none;
-	}
-
-	/* For autogen numbers, add
-	   .caption::before, figcaption::before { content: "Figure " counter(figure) ". "; }
-	*/
-
-	figure, .figure, .sidefigure {
-		page-break-inside: avoid;
-		text-align: center;
-		margin: 2.5em 0;
-	}
-	.figure img,    .sidefigure img,    figure img,
-	.figure object, .sidefigure object, figure object {
-		max-width: 100%;
-		margin: auto;
-	}
-	.figure pre, .sidefigure pre, figure pre {
-		text-align: left;
-		display: table;
-		margin: 1em auto;
-	}
-	.figure table, figure table {
-		margin: auto;
-	}
-	@media screen and (min-width: 20em) {
-		.sidefigure {
-			float: right;
-			width: 50%;
-			margin: 0 0 0.5em 0.5em
-		}
-	}
-	.caption, figcaption, caption {
-		font-style: italic;
-		font-size: 90%;
-	}
-	.caption::before, figcaption::before, figcaption > .marker {
-		font-weight: bold;
-	}
-	.caption, figcaption {
-		counter-increment: figure;
-	}
-
-	/* DL list is indented 2em, but figure inside it is not */
-	dd > .figure, dd > figure { margin-left: -2em }
-
-/******************************************************************************/
-/*                             Colored Boxes                                  */
-/******************************************************************************/
-
-	.issue, .note, .example, .assertion, .advisement, blockquote {
-		padding: .5em;
-		border: .5em;
-		border-left-style: solid;
-		page-break-inside: avoid;
-	}
-	span.issue, span.note {
-		padding: .1em .5em .15em;
-		border-right-style: solid;
-	}
-
-	.issue,
-	.note,
-	.example,
-	.advisement,
-	.assertion,
-	blockquote {
-		margin: 1em auto;
-	}
-	.note  > p:first-child,
-	.issue > p:first-child,
-	blockquote > :first-child {
-		margin-top: 0;
-	}
-	blockquote > :last-child {
-		margin-bottom: 0;
-	}
-
-/** Blockquotes ***************************************************************/
-
-	blockquote {
-		border-color: silver;
-	}
-
-/** Open issue ****************************************************************/
-
-	.issue {
-		border-color: #E05252;
-		background: #FBE9E9;
-		counter-increment: issue;
-		overflow: auto;
-	}
-	.issue::before, .issue > .marker {
-		text-transform: uppercase;
-		color: #AE1E1E;
-		padding-right: 1em;
-		text-transform: uppercase;
-	}
-	/* Add .issue::before { content: "Issue " counter(issue) " "; } for autogen numbers,
-	   or use class="marker" to mark up the issue number in source. */
-
-/** Example *******************************************************************/
-
-	.example {
-		border-color: #E0CB52;
-		background: #FCFAEE;
-		counter-increment: example;
-		overflow: auto;
-		clear: both;
-	}
-	.example::before, .example > .marker {
-		text-transform: uppercase;
-		color: #827017;
-		min-width: 7.5em;
-		display: block;
-	}
-	/* Add .example::before { content: "Example " counter(example) " "; } for autogen numbers,
-	   or use class="marker" to mark up the example number in source. */
-
-/** Non-normative Note ********************************************************/
-
-	.note {
-		border-color: #52E052;
-		background: #E9FBE9;
-		overflow: auto;
-	}
-
-	.note::before, .note > .marker,
-	details.note > summary::before,
-	details.note > summary > .marker {
-		text-transform: uppercase;
-		display: block;
-		color: hsl(120, 70%, 30%);
-	}
-	/* Add .note::before { content: "Note"; } for autogen label,
-	   or use class="marker" to mark up the label in source. */
-
-	details.note > summary {
-		display: block;
-		color: hsl(120, 70%, 30%);
-	}
-	details.note[open] > summary {
-		border-bottom: 1px silver solid;
-	}
-
-/** Assertion Box *************************************************************/
-	/*  for assertions in algorithms */
-
-	.assertion {
-		border-color: #AAA;
-		background: #EEE;
-	}
-
-/** Advisement Box ************************************************************/
-	/*  for attention-grabbing normative statements */
-
-	.advisement {
-		border-color: orange;
-		border-style: none solid;
-		background: #FFEECC;
-	}
-	strong.advisement {
-		display: block;
-		text-align: center;
-	}
-	.advisement > .marker {
-		color: #B35F00;
-	}
-
-/** Spec Obsoletion Notice ****************************************************/
-	/* obnoxious obsoletion notice for older/abandoned specs. */
-
-	details {
-		display: block;
-	}
-	summary {
-		font-weight: bolder;
-	}
-
-	.annoying-warning:not(details),
-	details.annoying-warning:not([open]) > summary,
-	details.annoying-warning[open] {
-		background: #fdd;
-		color: red;
-		font-weight: bold;
-		padding: .75em 1em;
-		border: thick red;
-		border-style: solid;
-		border-radius: 1em;
-	}
-	.annoying-warning :last-child {
-		margin-bottom: 0;
-	}
-
-@media not print {
-	details.annoying-warning[open] {
-		position: fixed;
-		left: 1em;
-		right: 1em;
-		bottom: 1em;
-		z-index: 1000;
-	}
-}
-
-	details.annoying-warning:not([open]) > summary {
-		text-align: center;
-	}
-
-/** Entity Definition Boxes ***************************************************/
-
-	.def {
-		padding: .5em 1em;
-		background: #DEF;
-		margin: 1.2em 0;
-		border-left: 0.5em solid #8CCBF2;
-	}
-
-/******************************************************************************/
-/*                                    Tables                                  */
-/******************************************************************************/
-
-	th, td {
-		text-align: left;
-		text-align: start;
-	}
-
-/** Property/Descriptor Definition Tables *************************************/
-
-	table.def {
-		/* inherits .def box styling, see above */
-		width: 100%;
-		border-spacing: 0;
-	}
-
-	table.def td,
-	table.def th {
-		padding: 0.5em;
-		vertical-align: baseline;
-		border-bottom: 1px solid #bbd7e9;
-	}
-
-	table.def > tbody > tr:last-child th,
-	table.def > tbody > tr:last-child td {
-		border-bottom: 0;
-	}
-
-	table.def th {
-		font-style: italic;
-		font-weight: normal;
-		padding-left: 1em;
-		width: 3em;
-	}
-
-	/* For when values are extra-complex and need formatting for readability */
-	table td.pre {
-		white-space: pre-wrap;
-	}
-
-	/* A footnote at the bottom of a def table */
-	table.def           td.footnote {
-		padding-top: 0.6em;
-	}
-	table.def           td.footnote::before {
-		content: " ";
-		display: block;
-		height: 0.6em;
-		width: 4em;
-		border-top: thin solid;
-	}
-
-/** Data tables (and properly marked-up index tables) *************************/
-	/*
-		 <table class="data"> highlights structural relationships in a table
-		 when correct markup is used (e.g. thead/tbody, th vs. td, scope attribute)
-
-		 Use class="complex data" for particularly complicated tables --
-		 (This will draw more lines: busier, but clearer.)
-
-		 Use class="long" on table cells with paragraph-like contents
-		 (This will adjust text alignment accordingly.)
-		 Alternately use class="longlastcol" on tables, to have the last column assume "long".
-	*/
-
-	table {
-		word-wrap: normal;
-		overflow-wrap: normal;
-		hyphens: manual;
-	}
-
-	table.data,
-	table.index {
-		margin: 1em auto;
-		border-collapse: collapse;
-		border: hidden;
-		width: 100%;
-	}
-	table.data caption,
-	table.index caption {
-		max-width: 50em;
-		margin: 0 auto 1em;
-	}
-
-	table.data td,  table.data th,
-	table.index td, table.index th {
-		padding: 0.5em 1em;
-		border-width: 1px;
-		border-color: silver;
-		border-top-style: solid;
-	}
-
-	table.data thead td:empty {
-		padding: 0;
-		border: 0;
-	}
-
-	table.data  thead,
-	table.index thead,
-	table.data  tbody,
-	table.index tbody {
-		border-bottom: 2px solid;
-	}
-
-	table.data colgroup,
-	table.index colgroup {
-		border-left: 2px solid;
-	}
-
-	table.data  tbody th:first-child,
-	table.index tbody th:first-child  {
-		border-right: 2px solid;
-		border-top: 1px solid silver;
-		padding-right: 1em;
-	}
-
-	table.data th[colspan],
-	table.data td[colspan] {
-		text-align: center;
-	}
-
-	table.complex.data th,
-	table.complex.data td {
-		border: 1px solid silver;
-		text-align: center;
-	}
-
-	table.data.longlastcol td:last-child,
-	table.data td.long {
-	 vertical-align: baseline;
-	 text-align: left;
-	}
-
-	table.data img {
-		vertical-align: middle;
-	}
-
-
-/*
-Alternate table alignment rules
-
-	table.data,
-	table.index {
-		text-align: center;
-	}
-
-	table.data  thead th[scope="row"],
-	table.index thead th[scope="row"] {
-		text-align: right;
-	}
-
-	table.data  tbody th:first-child,
-	table.index tbody th:first-child  {
-		text-align: right;
-	}
-
-Possible extra rowspan handling
-
-	table.data  tbody th[rowspan]:not([rowspan='1']),
-	table.index tbody th[rowspan]:not([rowspan='1']),
-	table.data  tbody td[rowspan]:not([rowspan='1']),
-	table.index tbody td[rowspan]:not([rowspan='1']) {
-		border-left: 1px solid silver;
-	}
-
-	table.data  tbody th[rowspan]:first-child,
-	table.index tbody th[rowspan]:first-child,
-	table.data  tbody td[rowspan]:first-child,
-	table.index tbody td[rowspan]:first-child{
-		border-left: 0;
-		border-right: 1px solid silver;
-	}
-*/
-
-/******************************************************************************/
-/*                                  Indices                                   */
-/******************************************************************************/
-
-
-/** Table of Contents *********************************************************/
-
-	.toc a {
-		/* More spacing; use padding to make it part of the click target. */
-		padding-top: 0.1rem;
-		/* Larger, more consistently-sized click target */
-		display: block;
-		/* Reverse color scheme */
-		color: black;
-		border-color: #3980B5;
-		border-bottom-width: 3px !important;
-		margin-bottom: 0px !important;
-	}
-	.toc a:visited {
-		border-color: #054572;
-	}
-	.toc a:not(:focus):not(:hover) {
-		/* Allow colors to cascade through from link styling */
-		border-bottom-color: transparent;
-	}
-
-	.toc, .toc ol, .toc ul, .toc li {
-		list-style: none; /* Numbers must be inlined into source */
-		/* because generated content isn't search/selectable and markers can't do multilevel yet */
-		margin:  0;
-		padding: 0;
-		line-height: 1.1rem; /* consistent spacing */
-	}
-
-	/* ToC not indented until third level, but font style & margins show hierarchy */
-	.toc > li             { font-weight: bold;   }
-	.toc > li li          { font-weight: normal; }
-	.toc > li li li       { font-size:   95%;    }
-	.toc > li li li li    { font-size:   90%;    }
-	.toc > li li li li .secno { font-size: 85%; }
-	.toc > li li li li li { font-size:   85%;    }
-	.toc > li li li li li .secno { font-size: 100%; }
-
-	/* @supports not (display:grid) { */
-		.toc > li             { margin: 1.5rem 0;    }
-		.toc > li li          { margin: 0.3rem 0;    }
-		.toc > li li li       { margin-left: 2rem;   }
-
-		/* Section numbers in a column of their own */
-		.toc .secno {
-			float: left;
-			width: 4rem;
-			white-space: nowrap;
-		}
-
-		.toc li {
-			clear: both;
-		}
-
-		:not(li) > .toc              { margin-left:  5rem; }
-		.toc .secno                  { margin-left: -5rem; }
-		.toc > li li li .secno       { margin-left: -7rem; }
-		.toc > li li li li .secno    { margin-left: -9rem; }
-		.toc > li li li li li .secno { margin-left: -11rem; }
-
-		/* Tighten up indentation in narrow ToCs */
-		@media (max-width: 30em) {
-			:not(li) > .toc              { margin-left:  4rem; }
-			.toc .secno                  { margin-left: -4rem; }
-			.toc > li li li              { margin-left:  1rem; }
-			.toc > li li li .secno       { margin-left: -5rem; }
-			.toc > li li li li .secno    { margin-left: -6rem; }
-			.toc > li li li li li .secno { margin-left: -7rem; }
-		}
-	/* } */
-
-	@supports (display:grid) and (display:contents) {
-		/* Use #toc over .toc to override non-@supports rules. */
-		#toc {
-			display: grid;
-			align-content: start;
-			grid-template-columns: auto 1fr;
-			grid-column-gap: 1rem;
-			column-gap: 1rem;
-			grid-row-gap: .6rem;
-			row-gap: .6rem;
-		}
-		#toc h2 {
-			grid-column: 1 / -1;
-			margin-bottom: 0;
-		}
-		#toc ol,
-		#toc li,
-		#toc a {
-			display: contents;
-			/* Switch <a> to subgrid when supported */
-		}
-		#toc span {
-			margin: 0;
-		}
-		#toc > .toc > li > a > span {
-			/* The spans of the top-level list,
-			   comprising the first items of each top-level section. */
-			margin-top: 1.1rem;
-		}
-		#toc#toc .secno { /* Ugh, need more specificity to override base.css */
-			grid-column: 1;
-			width: auto;
-			margin-left: 0;
-		}
-		#toc .content {
-			grid-column: 2;
-			width: auto;
-			margin-right: 1rem;
-		}
-		#toc .content:hover {
-			background: rgba(75%, 75%, 75%, .25);
-			border-bottom: 3px solid #054572;
-			margin-bottom: -3px;
-		}
-		#toc li li li .content {
-			margin-left: 1rem;
-		}
-		#toc li li li li .content {
-			margin-left: 2rem;
-		}
-	}
-
-
-/** Index *********************************************************************/
-
-	/* Index Lists: Layout */
-	ul.index       { margin-left: 0; columns: 15em; text-indent: 1em hanging; }
-	ul.index li    { margin-left: 0; list-style: none; break-inside: avoid; }
-	ul.index li li { margin-left: 1em }
-	ul.index dl    { margin-top: 0; }
-	ul.index dt    { margin: .2em 0 .2em 20px;}
-	ul.index dd    { margin: .2em 0 .2em 40px;}
-	/* Index Lists: Typography */
-	ul.index ul,
-	ul.index dl { font-size: smaller; }
-	@media not print {
-		ul.index li span {
-			white-space: nowrap;
-			color: transparent; }
-		ul.index li a:hover + span,
-		ul.index li a:focus + span {
-			color: #707070;
-		}
-	}
-
-/** Index Tables *****************************************************/
-	/* See also the data table styling section, which this effectively subclasses */
-
-	table.index {
-		font-size: small;
-		border-collapse: collapse;
-		border-spacing: 0;
-		text-align: left;
-		margin: 1em 0;
-	}
-
-	table.index td,
-	table.index th {
-		padding: 0.4em;
-	}
-
-	table.index tr:hover td:not([rowspan]),
-	table.index tr:hover th:not([rowspan]) {
-		background: #f7f8f9;
-	}
-
-	/* The link in the first column in the property table (formerly a TD) */
-	table.index th:first-child a {
-		font-weight: bold;
-	}
-
-/******************************************************************************/
-/*                                    Print                                   */
-/******************************************************************************/
-
-	@media print {
-		/* Pages have their own margins. */
-		html {
-			margin: 0;
-		}
-		/* Serif for print. */
-		body {
-			font-family: serif;
-		}
-	}
-	@page {
-		margin: 1.5cm 1.1cm;
-	}
-
-/******************************************************************************/
-/*                                    Legacy                                  */
-/******************************************************************************/
-
-	/* This rule is inherited from past style sheets. No idea what it's for. */
-	.hide { display: none }
-
-
-
-/******************************************************************************/
-/*                             Overflow Control                               */
-/******************************************************************************/
-
-	.figure .caption, .sidefigure .caption, figcaption {
-		/* in case figure is overlarge, limit caption to 50em */
-		max-width: 50rem;
-		margin-left: auto;
-		margin-right: auto;
-	}
-	.overlarge {
-		/* Magic to create good table positioning:
-		   "content column" is 50ems wide at max; less on smaller screens.
-		   Extra space (after ToC + content) is empty on the right.
-
-		   1. When table < content column, centers table in column.
-		   2. When content < table < available, left-aligns.
-		   3. When table > available, fills available + scroll bar.
-		*/ 
-		display: grid;
-		grid-template-columns: minmax(0, 50em);
-	}
-	.overlarge > table {
-		/* limit preferred width of table */
-		max-width: 50em;
-		margin-left: auto;
-		margin-right: auto;
-	}
-
-	@media (min-width: 55em) {
-		.overlarge {
-			margin-right: calc(13px + 26.5rem - 50vw);
-			max-width: none;
-		}
-	}
-	@media screen and (min-width: 78em) {
-		body:not(.toc-inline) .overlarge {
-			/* 30.5em body padding 50em content area */
-			margin-right: calc(40em - 50vw) !important;
-		}
-	}
-	@media screen and (min-width: 90em) {
-		body:not(.toc-inline) .overlarge {
-			/* 4em html margin 30.5em body padding 50em content area */
-			margin-right: calc(84.5em - 100vw) !important;
-		}
-	}
-
-	@media not print {
-		.overlarge {
-			overflow-x: auto;
-			/* See Lea Verou's explanation background-attachment:
-			 * http://lea.verou.me/2012/04/background-attachment-local/
-			 *
-			background: top left  / 4em 100% linear-gradient(to right,  #ffffff, rgba(255, 255, 255, 0)) local,
-			            top right / 4em 100% linear-gradient(to left, #ffffff, rgba(255, 255, 255, 0)) local,
-			            top left  / 1em 100% linear-gradient(to right,  #c3c3c5, rgba(195, 195, 197, 0)) scroll,
-			            top right / 1em 100% linear-gradient(to left, #c3c3c5, rgba(195, 195, 197, 0)) scroll,
-			            white;
-			background-repeat: no-repeat;
-			*/
-		}
-	}
-</style>
-  <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version 8bc2fccb49a45a0af18c5e75ce18049d75f824b6" name="generator">
+  <link href="https://www.w3.org/StyleSheets/TR/2021/cg-draft" rel="stylesheet">
+  <meta content="Bikeshed version 37b7e7e68, updated Fri May 27 15:08:11 2022 -0700" name="generator">
   <link href="https://wicg.github.io/video-rvfc/" rel="canonical">
-  <meta content="a60851c4e663bc7b43138bc89ac0fdf5ec3b0e46" name="document-revision">
-<style>/* style-md-lists */
-
-/* This is a weird hack for me not yet following the commonmark spec
-   regarding paragraph and lists. */
-[data-md] > :first-child {
-    margin-top: 0;
-}
-[data-md] > :last-child {
-    margin-bottom: 0;
-}</style>
-<style>/* style-selflinks */
-
-.heading, .issue, .note, .example, li, dt {
-    position: relative;
-}
-a.self-link {
-    position: absolute;
-    top: 0;
-    left: calc(-1 * (3.5rem - 26px));
-    width: calc(3.5rem - 26px);
-    height: 2em;
-    text-align: center;
-    border: none;
-    transition: opacity .2s;
-    opacity: .5;
-}
-a.self-link:hover {
-    opacity: 1;
-}
-.heading > a.self-link {
-    font-size: 83%;
-}
-li > a.self-link {
-    left: calc(-1 * (3.5rem - 26px) - 2em);
-}
-dfn > a.self-link {
-    top: auto;
-    left: auto;
-    opacity: 0;
-    width: 1.5em;
-    height: 1.5em;
-    background: gray;
-    color: white;
-    font-style: normal;
-    transition: opacity .2s, background-color .2s, color .2s;
-}
-dfn:hover > a.self-link {
-    opacity: 1;
-}
-dfn > a.self-link:hover {
-    color: black;
-}
-
-a.self-link::before            { content: "¶"; }
-.heading > a.self-link::before { content: "§"; }
-dfn > a.self-link::before      { content: "#"; }</style>
-<style>/* style-counters */
-
-body {
-    counter-reset: example figure issue;
-}
-.issue {
-    counter-increment: issue;
-}
-.issue:not(.no-marker)::before {
-    content: "Issue " counter(issue);
-}
-
-.example {
-    counter-increment: example;
-}
-.example:not(.no-marker)::before {
-    content: "Example " counter(example);
-}
-.invalid.example:not(.no-marker)::before,
-.illegal.example:not(.no-marker)::before {
-    content: "Invalid Example" counter(example);
-}
-
-figcaption {
-    counter-increment: figure;
-}
-figcaption:not(.no-marker)::before {
-    content: "Figure " counter(figure) " ";
-}</style>
-<style>/* style-var-click-highlighting */
-
-    var { cursor: pointer; }
-    var.selected0 { background-color: #F4D200; box-shadow: 0 0 0 2px #F4D200; }
-    var.selected1 { background-color: #FF87A2; box-shadow: 0 0 0 2px #FF87A2; }
-    var.selected2 { background-color: #96E885; box-shadow: 0 0 0 2px #96E885; }
-    var.selected3 { background-color: #3EEED2; box-shadow: 0 0 0 2px #3EEED2; }
-    var.selected4 { background-color: #EACFB6; box-shadow: 0 0 0 2px #EACFB6; }
-    var.selected5 { background-color: #82DDFF; box-shadow: 0 0 0 2px #82DDFF; }
-    var.selected6 { background-color: #FFBCF2; box-shadow: 0 0 0 2px #FFBCF2; }
-    </style>
+  <meta content="0e2993020abfb9817da482ddafd1653c0176845d" name="document-revision">
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
-    color: #005a9c;
+    color: var(--a-normal-text);
     font-size: inherit;
     font-family: inherit;
 }
@@ -1383,8 +69,150 @@ pre .property::before, pre .property::after {
 [data-link-type=biblio] {
     white-space: pre;
 }</style>
+<style>/* style-colors */
+
+/* Any --*-text not paired with a --*-bg is assumed to have a transparent bg */
+:root {
+    color-scheme: light dark;
+
+    --text: black;
+    --bg: white;
+
+    --unofficial-watermark: url(https://www.w3.org/StyleSheets/TR/2016/logos/UD-watermark);
+
+    --logo-bg: #1a5e9a;
+    --logo-active-bg: #c00;
+    --logo-text: white;
+
+    --tocnav-normal-text: #707070;
+    --tocnav-normal-bg: var(--bg);
+    --tocnav-hover-text: var(--tocnav-normal-text);
+    --tocnav-hover-bg: #f8f8f8;
+    --tocnav-active-text: #c00;
+    --tocnav-active-bg: var(--tocnav-normal-bg);
+
+    --tocsidebar-text: var(--text);
+    --tocsidebar-bg: #f7f8f9;
+    --tocsidebar-shadow: rgba(0,0,0,.1);
+    --tocsidebar-heading-text: hsla(203,20%,40%,.7);
+
+    --toclink-text: var(--text);
+    --toclink-underline: #3980b5;
+    --toclink-visited-text: var(--toclink-text);
+    --toclink-visited-underline: #054572;
+
+    --heading-text: #005a9c;
+
+    --hr-text: var(--text);
+
+    --algo-border: #def;
+
+    --del-text: red;
+    --del-bg: transparent;
+    --ins-text: #080;
+    --ins-bg: transparent;
+
+    --a-normal-text: #034575;
+    --a-normal-underline: #bbb;
+    --a-visited-text: var(--a-normal-text);
+    --a-visited-underline: #707070;
+    --a-hover-bg: rgba(75%, 75%, 75%, .25);
+    --a-active-text: #c00;
+    --a-active-underline: #c00;
+
+    --blockquote-border: silver;
+    --blockquote-bg: transparent;
+    --blockquote-text: currentcolor;
+
+    --issue-border: #e05252;
+    --issue-bg: #fbe9e9;
+    --issue-text: var(--text);
+    --issueheading-text: #831616;
+
+    --example-border: #e0cb52;
+    --example-bg: #fcfaee;
+    --example-text: var(--text);
+    --exampleheading-text: #574b0f;
+
+    --note-border: #52e052;
+    --note-bg: #e9fbe9;
+    --note-text: var(--text);
+    --noteheading-text: hsl(120, 70%, 30%);
+    --notesummary-underline: silver;
+
+    --assertion-border: #aaa;
+    --assertion-bg: #eee;
+    --assertion-text: black;
+
+    --advisement-border: orange;
+    --advisement-bg: #fec;
+    --advisement-text: var(--text);
+    --advisementheading-text: #b35f00;
+
+    --warning-border: red;
+    --warning-bg: hsla(40,100%,50%,0.95);
+    --warning-text: var(--text);
+
+    --amendment-border: #330099;
+    --amendment-bg: #F5F0FF;
+    --amendment-text: var(--text);
+    --amendmentheading-text: #220066;
+
+    --def-border: #8ccbf2;
+    --def-bg: #def;
+    --def-text: var(--text);
+    --defrow-border: #bbd7e9;
+
+    --datacell-border: silver;
+
+    --indexinfo-text: #707070;
+
+    --indextable-hover-text: black;
+    --indextable-hover-bg: #f7f8f9;
+
+    --outdatedspec-bg: rgba(0, 0, 0, .5);
+    --outdatedspec-text: black;
+    --outdated-bg: maroon;
+    --outdated-text: white;
+    --outdated-shadow: red;
+
+    --editedrec-bg: darkorange;
+}</style>
+<style>/* style-counters */
+
+body {
+    counter-reset: example figure issue;
+}
+.issue {
+    counter-increment: issue;
+}
+.issue:not(.no-marker)::before {
+    content: "Issue " counter(issue);
+}
+
+.example {
+    counter-increment: example;
+}
+.example:not(.no-marker)::before {
+    content: "Example " counter(example);
+}
+.invalid.example:not(.no-marker)::before,
+.illegal.example:not(.no-marker)::before {
+    content: "Invalid Example" counter(example);
+}
+
+figcaption {
+    counter-increment: figure;
+}
+figcaption:not(.no-marker)::before {
+    content: "Figure " counter(figure) " ";
+}</style>
 <style>/* style-dfn-panel */
 
+:root {
+    --dfnpanel-bg: #ddd;
+    --dfnpanel-text: var(--text);
+}
 .dfn-panel {
     position: absolute;
     z-index: 35;
@@ -1396,14 +224,14 @@ pre .property::before, pre .property::after {
     overflow: auto;
     padding: 0.5em 0.75em;
     font: small Helvetica Neue, sans-serif, Droid Sans Fallback;
-    background: #DDDDDD;
-    color: black;
+    background: var(--dfnpanel-bg);
+    color: var(--dfnpanel-text);
     border: outset 0.2em;
 }
 .dfn-panel:not(.on) { display: none; }
 .dfn-panel * { margin: 0; padding: 0; text-indent: 0; }
 .dfn-panel > b { display: block; }
-.dfn-panel a { color: black; }
+.dfn-panel a { color: var(--dfnpanel-text); }
 .dfn-panel a:not(:hover) { text-decoration: none !important; border-bottom: none !important; }
 .dfn-panel > b + b { margin-top: 0.25em; }
 .dfn-panel ul { padding: 0; }
@@ -1420,11 +248,88 @@ pre .property::before, pre .property::after {
 
 .dfn-paneled { cursor: pointer; }
 </style>
+<style>/* style-issues */
+
+a[href].issue-return {
+    float: right;
+    float: inline-end;
+    color: var(--issueheading-text);
+    font-weight: bold;
+    text-decoration: none;
+}
+</style>
+<style>/* style-md-lists */
+
+/* This is a weird hack for me not yet following the commonmark spec
+   regarding paragraph and lists. */
+[data-md] > :first-child {
+    margin-top: 0;
+}
+[data-md] > :last-child {
+    margin-bottom: 0;
+}</style>
+<style>/* style-selflinks */
+
+:root {
+    --selflink-text: white;
+    --selflink-bg: gray;
+    --selflink-hover-text: black;
+}
+.heading, .issue, .note, .example, li, dt {
+    position: relative;
+}
+a.self-link {
+    position: absolute;
+    top: 0;
+    left: calc(-1 * (3.5rem - 26px));
+    width: calc(3.5rem - 26px);
+    height: 2em;
+    text-align: center;
+    border: none;
+    transition: opacity .2s;
+    opacity: .5;
+}
+a.self-link:hover {
+    opacity: 1;
+}
+.heading > a.self-link {
+    font-size: 83%;
+}
+li > a.self-link {
+    left: calc(-1 * (3.5rem - 26px) - 2em);
+}
+dfn > a.self-link {
+    top: auto;
+    left: auto;
+    opacity: 0;
+    width: 1.5em;
+    height: 1.5em;
+    background: var(--selflink-bg);
+    color: var(--selflink-text);
+    font-style: normal;
+    transition: opacity .2s, background-color .2s, color .2s;
+}
+dfn:hover > a.self-link {
+    opacity: 1;
+}
+dfn > a.self-link:hover {
+    color: var(--selflink-hover-text);
+}
+
+a.self-link::before            { content: "¶"; }
+.heading > a.self-link::before { content: "§"; }
+dfn > a.self-link::before      { content: "#"; }
+</style>
 <style>/* style-syntax-highlighting */
-pre.idl.highlight { color: #708090; }
-.highlight:not(.idl) { background: hsl(24, 20%, 95%); }
+
+            pre.idl.highlight {
+                background: var(--borderedblock-bg, var(--def-bg));
+            }
+            
 code.highlight { padding: .1em; border-radius: .3em; }
 pre.highlight, pre > code.highlight { display: block; padding: 1em; margin: .5em 0; overflow: auto; border-radius: 0; }
+
+.highlight:not(.idl) { background: rgba(0, 0, 0, .03); }
 c-[a] { color: #990055 } /* Keyword.Declaration */
 c-[b] { color: #990055 } /* Keyword.Type */
 c-[c] { color: #708090 } /* Comment */
@@ -1478,11 +383,212 @@ c-[vg] { color: #0077aa } /* Name.Variable.Global */
 c-[vi] { color: #0077aa } /* Name.Variable.Instance */
 c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
 </style>
+<style>/* style-var-click-highlighting */
+
+    var { cursor: pointer; }
+    var.selected0 { background-color: #F4D200; box-shadow: 0 0 0 2px #F4D200; }
+    var.selected1 { background-color: #FF87A2; box-shadow: 0 0 0 2px #FF87A2; }
+    var.selected2 { background-color: #96E885; box-shadow: 0 0 0 2px #96E885; }
+    var.selected3 { background-color: #3EEED2; box-shadow: 0 0 0 2px #3EEED2; }
+    var.selected4 { background-color: #EACFB6; box-shadow: 0 0 0 2px #EACFB6; }
+    var.selected5 { background-color: #82DDFF; box-shadow: 0 0 0 2px #82DDFF; }
+    var.selected6 { background-color: #FFBCF2; box-shadow: 0 0 0 2px #FFBCF2; }
+    </style>
+<style>/* style-darkmode */
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --text: #ddd;
+        --bg: black;
+
+        --unofficial-watermark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cg fill='%23100808' transform='translate(200 200) rotate(-45) translate(-200 -200)' stroke='%23100808' stroke-width='3'%3E%3Ctext x='50%25' y='220' style='font: bold 70px sans-serif; text-anchor: middle; letter-spacing: 6px;'%3EUNOFFICIAL%3C/text%3E%3Ctext x='50%25' y='305' style='font: bold 70px sans-serif; text-anchor: middle; letter-spacing: 6px;'%3EDRAFT%3C/text%3E%3C/g%3E%3C/svg%3E");
+
+        --logo-bg: #1a5e9a;
+        --logo-active-bg: #c00;
+        --logo-text: white;
+
+        --tocnav-normal-text: #999;
+        --tocnav-normal-bg: var(--bg);
+        --tocnav-hover-text: var(--tocnav-normal-text);
+        --tocnav-hover-bg: #080808;
+        --tocnav-active-text: #f44;
+        --tocnav-active-bg: var(--tocnav-normal-bg);
+
+        --tocsidebar-text: var(--text);
+        --tocsidebar-bg: #080808;
+        --tocsidebar-shadow: rgba(255,255,255,.1);
+        --tocsidebar-heading-text: hsla(203,20%,40%,.7);
+
+        --toclink-text: var(--text);
+        --toclink-underline: #6af;
+        --toclink-visited-text: var(--toclink-text);
+        --toclink-visited-underline: #054572;
+
+        --heading-text: #8af;
+
+        --hr-text: var(--text);
+
+        --algo-border: #456;
+
+        --del-text: #f44;
+        --del-bg: transparent;
+        --ins-text: #4a4;
+        --ins-bg: transparent;
+
+        --a-normal-text: #6af;
+        --a-normal-underline: #555;
+        --a-visited-text: var(--a-normal-text);
+        --a-visited-underline: var(--a-normal-underline);
+        --a-hover-bg: rgba(25%, 25%, 25%, .2);
+        --a-active-text: #f44;
+        --a-active-underline: var(--a-active-text);
+
+        --borderedblock-bg: rgba(255, 255, 255, .05);
+
+        --blockquote-border: silver;
+        --blockquote-bg: var(--borderedblock-bg);
+        --blockquote-text: currentcolor;
+
+        --issue-border: #e05252;
+        --issue-bg: var(--borderedblock-bg);
+        --issue-text: var(--text);
+        --issueheading-text: hsl(0deg, 70%, 70%);
+
+        --example-border: hsl(50deg, 90%, 60%);
+        --example-bg: var(--borderedblock-bg);
+        --example-text: var(--text);
+        --exampleheading-text: hsl(50deg, 70%, 70%);
+
+        --note-border: hsl(120deg, 100%, 35%);
+        --note-bg: var(--borderedblock-bg);
+        --note-text: var(--text);
+        --noteheading-text: hsl(120, 70%, 70%);
+        --notesummary-underline: silver;
+
+        --assertion-border: #444;
+        --assertion-bg: var(--borderedblock-bg);
+        --assertion-text: var(--text);
+
+        --advisement-border: orange;
+        --advisement-bg: #222218;
+        --advisement-text: var(--text);
+        --advisementheading-text: #f84;
+
+        --warning-border: red;
+        --warning-bg: hsla(40,100%,20%,0.95);
+        --warning-text: var(--text);
+
+        --amendment-border: #330099;
+        --amendment-bg: #080010;
+        --amendment-text: var(--text);
+        --amendmentheading-text: #cc00ff;
+
+        --def-border: #8ccbf2;
+        --def-bg: #080818;
+        --def-text: var(--text);
+        --defrow-border: #136;
+
+        --datacell-border: silver;
+
+        --indexinfo-text: #aaa;
+
+        --indextable-hover-text: var(--text);
+        --indextable-hover-bg: #181818;
+
+        --outdatedspec-bg: rgba(255, 255, 255, .5);
+        --outdatedspec-text: black;
+        --outdated-bg: maroon;
+        --outdated-text: white;
+        --outdated-shadow: red;
+
+        --editedrec-bg: darkorange;
+    }
+    /* In case a transparent-bg image doesn't expect to be on a dark bg,
+       which is quite common in practice... */
+    img { background: white; }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --selflink-text: black;
+        --selflink-bg: silver;
+        --selflink-hover-text: white;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    .highlight:not(.idl) { background: rgba(255, 255, 255, .05); }
+
+    c-[a] { color: #d33682 } /* Keyword.Declaration */
+    c-[b] { color: #d33682 } /* Keyword.Type */
+    c-[c] { color: #2aa198 } /* Comment */
+    c-[d] { color: #2aa198 } /* Comment.Multiline */
+    c-[e] { color: #268bd2 } /* Name.Attribute */
+    c-[f] { color: #b58900 } /* Name.Tag */
+    c-[g] { color: #cb4b16 } /* Name.Variable */
+    c-[k] { color: #d33682 } /* Keyword */
+    c-[l] { color: #657b83 } /* Literal */
+    c-[m] { color: #657b83 } /* Literal.Number */
+    c-[n] { color: #268bd2 } /* Name */
+    c-[o] { color: #657b83 } /* Operator */
+    c-[p] { color: #657b83 } /* Punctuation */
+    c-[s] { color: #6c71c4 } /* Literal.String */
+    c-[t] { color: #6c71c4 } /* Literal.String.Single */
+    c-[u] { color: #6c71c4 } /* Literal.String.Double */
+    c-[ch] { color: #2aa198 } /* Comment.Hashbang */
+    c-[cp] { color: #2aa198 } /* Comment.Preproc */
+    c-[cpf] { color: #2aa198 } /* Comment.PreprocFile */
+    c-[c1] { color: #2aa198 } /* Comment.Single */
+    c-[cs] { color: #2aa198 } /* Comment.Special */
+    c-[kc] { color: #d33682 } /* Keyword.Constant */
+    c-[kn] { color: #d33682 } /* Keyword.Namespace */
+    c-[kp] { color: #d33682 } /* Keyword.Pseudo */
+    c-[kr] { color: #d33682 } /* Keyword.Reserved */
+    c-[ld] { color: #657b83 } /* Literal.Date */
+    c-[nc] { color: #268bd2 } /* Name.Class */
+    c-[no] { color: #268bd2 } /* Name.Constant */
+    c-[nd] { color: #268bd2 } /* Name.Decorator */
+    c-[ni] { color: #268bd2 } /* Name.Entity */
+    c-[ne] { color: #268bd2 } /* Name.Exception */
+    c-[nf] { color: #268bd2 } /* Name.Function */
+    c-[nl] { color: #268bd2 } /* Name.Label */
+    c-[nn] { color: #268bd2 } /* Name.Namespace */
+    c-[py] { color: #268bd2 } /* Name.Property */
+    c-[ow] { color: #657b83 } /* Operator.Word */
+    c-[mb] { color: #657b83 } /* Literal.Number.Bin */
+    c-[mf] { color: #657b83 } /* Literal.Number.Float */
+    c-[mh] { color: #657b83 } /* Literal.Number.Hex */
+    c-[mi] { color: #657b83 } /* Literal.Number.Integer */
+    c-[mo] { color: #657b83 } /* Literal.Number.Oct */
+    c-[sa] { color: #6c71c4 } /* Literal.String.Affix */
+    c-[sb] { color: #6c71c4 } /* Literal.String.Backtick */
+    c-[sc] { color: #6c71c4 } /* Literal.String.Char */
+    c-[dl] { color: #6c71c4 } /* Literal.String.Delimiter */
+    c-[sd] { color: #6c71c4 } /* Literal.String.Doc */
+    c-[se] { color: #6c71c4 } /* Literal.String.Escape */
+    c-[sh] { color: #6c71c4 } /* Literal.String.Heredoc */
+    c-[si] { color: #6c71c4 } /* Literal.String.Interpol */
+    c-[sx] { color: #6c71c4 } /* Literal.String.Other */
+    c-[sr] { color: #6c71c4 } /* Literal.String.Regex */
+    c-[ss] { color: #6c71c4 } /* Literal.String.Symbol */
+    c-[fm] { color: #268bd2 } /* Name.Function.Magic */
+    c-[vc] { color: #cb4b16 } /* Name.Variable.Class */
+    c-[vg] { color: #cb4b16 } /* Name.Variable.Global */
+    c-[vi] { color: #cb4b16 } /* Name.Variable.Instance */
+    c-[vm] { color: #cb4b16 } /* Name.Variable.Magic */
+    c-[il] { color: #657b83 } /* Literal.Number.Integer.Long */
+}
+</style>
  <body class="h-entry">
   <div class="head">
-   <p data-fill-with="logo"></p>
+   <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">HTMLVideoElement.requestVideoFrameCallback()</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2021-01-25">25 January 2021</time></span></h2>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2022-09-19">19 September 2022</time></p>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1500,7 +606,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     </dl>
    </div>
    <div data-fill-with="warning"></div>
-   <p class="copyright" data-fill-with="copyright"><a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> © 2021 the Contributors to the HTMLVideoElement.requestVideoFrameCallback() Specification, published by the <a href="https://www.w3.org/community/wicg/">Web Platform Incubator Community Group</a> under the <a href="https://www.w3.org/community/about/agreements/cla/">W3C Community Contributor License Agreement (CLA)</a>.
+   <p class="copyright" data-fill-with="copyright"><a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> © 2022 the Contributors to the HTMLVideoElement.requestVideoFrameCallback() Specification, published by the <a href="https://www.w3.org/community/wicg/">Web Platform Incubator Community Group</a> under the <a href="https://www.w3.org/community/about/agreements/cla/">W3C Community Contributor License Agreement (CLA)</a>.
 A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/">summary</a> is available. </p>
    <hr title="Separator for header">
   </div>
@@ -1525,10 +631,10 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
    <ol class="toc" role="directory">
     <li><a href="#introduction"><span class="secno">1</span> <span class="content">Introduction</span></a>
     <li>
-     <a href="#video-frame-metadata"><span class="secno">2</span> <span class="content">VideoFrameMetadata</span></a>
+     <a href="#video-frame-metadata-callback"><span class="secno">2</span> <span class="content">VideoFrameCallbackMetadata</span></a>
      <ol class="toc">
-      <li><a href="#video-frame-metadata-definitions"><span class="secno">2.1</span> <span class="content">Definitions</span></a>
-      <li><a href="#video-frame-metadata-attributes"><span class="secno">2.2</span> <span class="content">Attributes</span></a>
+      <li><a href="#video-frame-metadata-callback-definitions"><span class="secno">2.1</span> <span class="content">Definitions</span></a>
+      <li><a href="#video-frame-metadata-callback-attributes"><span class="secno">2.2</span> <span class="content">Attributes</span></a>
      </ol>
     <li><a href="#video-frame-request-callback"><span class="secno">3</span> <span class="content">VideoFrameRequestCallback</span></a>
     <li>
@@ -1543,7 +649,12 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
      <ol class="toc">
       <li><a href="#example-drawing"><span class="secno">6.1</span> <span class="content">Drawing frames at the video rate</span></a>
      </ol>
-    <li><a href="#conformance"><span class="secno"></span> <span class="content"> Conformance</span></a>
+    <li>
+     <a href="#w3c-conformance"><span class="secno"></span> <span class="content">Conformance</span></a>
+     <ol class="toc">
+      <li><a href="#w3c-conventions"><span class="secno"></span> <span class="content">Document conventions</span></a>
+      <li><a href="#w3c-conformant-algorithms"><span class="secno"></span> <span class="content">Conformant Algorithms</span></a>
+     </ol>
     <li>
      <a href="#index"><span class="secno"></span> <span class="content">Index</span></a>
      <ol class="toc">
@@ -1574,66 +685,66 @@ means that, even with a normal work load, a <code class="idl"><a data-link-type=
 fired one v-sync late, relative to when the new video frame was presented. This means that drawing
 operations might occasionally appear on screen one v-sync after the video frame does. Additionally, if
 there is a heavy load on the main thread, we might not get a callback for every frame (as measured by a
-discontinuity in the <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-presentedframes" id="ref-for-dom-videoframemetadata-presentedframes">presentedFrames</a></code>).</p>
-   <p class="note" role="note"><span>Note:</span> A web author could know if a callback is late by checking whether <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-expecteddisplaytime" id="ref-for-dom-videoframemetadata-expecteddisplaytime">expectedDisplayTime</a></code> is equal
+discontinuity in the <code class="idl"><a data-link-type="idl" href="#dom-videoframecallbackmetadata-presentedframes" id="ref-for-dom-videoframecallbackmetadata-presentedframes">presentedFrames</a></code>).</p>
+   <p class="note" role="note"><span>Note:</span> A web author could know if a callback is late by checking whether <code class="idl"><a data-link-type="idl" href="#dom-videoframecallbackmetadata-expecteddisplaytime" id="ref-for-dom-videoframecallbackmetadata-expecteddisplaytime">expectedDisplayTime</a></code> is equal
 to <em>now</em>, as opposed to roughly one v-sync in the future.</p>
-   <p>The <code class="idl"><a data-link-type="idl" href="#callbackdef-videoframerequestcallback" id="ref-for-callbackdef-videoframerequestcallback③">VideoFrameRequestCallback</a></code> also provides useful <code class="idl"><a data-link-type="idl" href="#dictdef-videoframemetadata" id="ref-for-dictdef-videoframemetadata">metadata</a></code> about the video
+   <p>The <code class="idl"><a data-link-type="idl" href="#callbackdef-videoframerequestcallback" id="ref-for-callbackdef-videoframerequestcallback③">VideoFrameRequestCallback</a></code> also provides useful <code class="idl"><a data-link-type="idl" href="#dictdef-videoframecallbackmetadata" id="ref-for-dictdef-videoframecallbackmetadata">metadata</a></code> about the video
 frame that was most recently presented for composition, which can be used for automated metrics analysis.</p>
-   <h2 class="heading settled" data-level="2" id="video-frame-metadata"><span class="secno">2. </span><span class="content">VideoFrameMetadata</span><a class="self-link" href="#video-frame-metadata"></a></h2>
-<pre class="idl highlight def"><c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-videoframemetadata"><code><c- g>VideoFrameMetadata</c-></code></dfn> {
-  <c- b>required</c-> <a class="n" data-link-type="idl-name" href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp" id="ref-for-dom-domhighrestimestamp"><c- n>DOMHighResTimeStamp</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="DOMHighResTimeStamp " href="#dom-videoframemetadata-presentationtime" id="ref-for-dom-videoframemetadata-presentationtime"><c- g>presentationTime</c-></a>;
-  <c- b>required</c-> <a class="n" data-link-type="idl-name" href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp" id="ref-for-dom-domhighrestimestamp①"><c- n>DOMHighResTimeStamp</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="DOMHighResTimeStamp " href="#dom-videoframemetadata-expecteddisplaytime" id="ref-for-dom-videoframemetadata-expecteddisplaytime①"><c- g>expectedDisplayTime</c-></a>;
+   <h2 class="heading settled" data-level="2" id="video-frame-metadata-callback"><span class="secno">2. </span><span class="content">VideoFrameCallbackMetadata</span><a class="self-link" href="#video-frame-metadata-callback"></a></h2>
+<pre class="idl highlight def"><c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-videoframecallbackmetadata"><code><c- g>VideoFrameCallbackMetadata</c-></code></dfn> {
+  <c- b>required</c-> <a data-link-type="idl-name" href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp" id="ref-for-dom-domhighrestimestamp"><c- n>DOMHighResTimeStamp</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="DOMHighResTimeStamp " href="#dom-videoframecallbackmetadata-presentationtime" id="ref-for-dom-videoframecallbackmetadata-presentationtime"><c- g>presentationTime</c-></a>;
+  <c- b>required</c-> <a data-link-type="idl-name" href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp" id="ref-for-dom-domhighrestimestamp①"><c- n>DOMHighResTimeStamp</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="DOMHighResTimeStamp " href="#dom-videoframecallbackmetadata-expecteddisplaytime" id="ref-for-dom-videoframecallbackmetadata-expecteddisplaytime①"><c- g>expectedDisplayTime</c-></a>;
 
-  <c- b>required</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long" id="ref-for-idl-unsigned-long"><c- b>unsigned</c-> <c- b>long</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="unsigned long " href="#dom-videoframemetadata-width" id="ref-for-dom-videoframemetadata-width"><c- g>width</c-></a>;
-  <c- b>required</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long" id="ref-for-idl-unsigned-long①"><c- b>unsigned</c-> <c- b>long</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="unsigned long " href="#dom-videoframemetadata-height" id="ref-for-dom-videoframemetadata-height"><c- g>height</c-></a>;
-  <c- b>required</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-double" id="ref-for-idl-double"><c- b>double</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="double " href="#dom-videoframemetadata-mediatime" id="ref-for-dom-videoframemetadata-mediatime"><c- g>mediaTime</c-></a>;
+  <c- b>required</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-unsigned-long" id="ref-for-idl-unsigned-long"><c- b>unsigned</c-> <c- b>long</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="unsigned long " href="#dom-videoframecallbackmetadata-width" id="ref-for-dom-videoframecallbackmetadata-width"><c- g>width</c-></a>;
+  <c- b>required</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-unsigned-long" id="ref-for-idl-unsigned-long①"><c- b>unsigned</c-> <c- b>long</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="unsigned long " href="#dom-videoframecallbackmetadata-height" id="ref-for-dom-videoframecallbackmetadata-height"><c- g>height</c-></a>;
+  <c- b>required</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-double" id="ref-for-idl-double"><c- b>double</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="double " href="#dom-videoframecallbackmetadata-mediatime" id="ref-for-dom-videoframecallbackmetadata-mediatime"><c- g>mediaTime</c-></a>;
 
-  <c- b>required</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long" id="ref-for-idl-unsigned-long②"><c- b>unsigned</c-> <c- b>long</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="unsigned long " href="#dom-videoframemetadata-presentedframes" id="ref-for-dom-videoframemetadata-presentedframes①"><c- g>presentedFrames</c-></a>;
-  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-double" id="ref-for-idl-double①"><c- b>double</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="double " href="#dom-videoframemetadata-processingduration" id="ref-for-dom-videoframemetadata-processingduration"><c- g>processingDuration</c-></a>;
+  <c- b>required</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-unsigned-long" id="ref-for-idl-unsigned-long②"><c- b>unsigned</c-> <c- b>long</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="unsigned long " href="#dom-videoframecallbackmetadata-presentedframes" id="ref-for-dom-videoframecallbackmetadata-presentedframes①"><c- g>presentedFrames</c-></a>;
+  <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-double" id="ref-for-idl-double①"><c- b>double</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="double " href="#dom-videoframecallbackmetadata-processingduration" id="ref-for-dom-videoframecallbackmetadata-processingduration"><c- g>processingDuration</c-></a>;
 
-  <a class="n" data-link-type="idl-name" href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp" id="ref-for-dom-domhighrestimestamp②"><c- n>DOMHighResTimeStamp</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="DOMHighResTimeStamp " href="#dom-videoframemetadata-capturetime" id="ref-for-dom-videoframemetadata-capturetime"><c- g>captureTime</c-></a>;
-  <a class="n" data-link-type="idl-name" href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp" id="ref-for-dom-domhighrestimestamp③"><c- n>DOMHighResTimeStamp</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="DOMHighResTimeStamp " href="#dom-videoframemetadata-receivetime" id="ref-for-dom-videoframemetadata-receivetime"><c- g>receiveTime</c-></a>;
-  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long" id="ref-for-idl-unsigned-long③"><c- b>unsigned</c-> <c- b>long</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="unsigned long " href="#dom-videoframemetadata-rtptimestamp" id="ref-for-dom-videoframemetadata-rtptimestamp"><c- g>rtpTimestamp</c-></a>;
+  <a data-link-type="idl-name" href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp" id="ref-for-dom-domhighrestimestamp②"><c- n>DOMHighResTimeStamp</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="DOMHighResTimeStamp " href="#dom-videoframecallbackmetadata-capturetime" id="ref-for-dom-videoframecallbackmetadata-capturetime"><c- g>captureTime</c-></a>;
+  <a data-link-type="idl-name" href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp" id="ref-for-dom-domhighrestimestamp③"><c- n>DOMHighResTimeStamp</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="DOMHighResTimeStamp " href="#dom-videoframecallbackmetadata-receivetime" id="ref-for-dom-videoframecallbackmetadata-receivetime"><c- g>receiveTime</c-></a>;
+  <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-unsigned-long" id="ref-for-idl-unsigned-long③"><c- b>unsigned</c-> <c- b>long</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="unsigned long " href="#dom-videoframecallbackmetadata-rtptimestamp" id="ref-for-dom-videoframecallbackmetadata-rtptimestamp"><c- g>rtpTimestamp</c-></a>;
 };
 </pre>
-   <h3 class="heading settled" data-level="2.1" id="video-frame-metadata-definitions"><span class="secno">2.1. </span><span class="content">Definitions</span><a class="self-link" href="#video-frame-metadata-definitions"></a></h3>
+   <h3 class="heading settled" data-level="2.1" id="video-frame-metadata-callback-definitions"><span class="secno">2.1. </span><span class="content">Definitions</span><a class="self-link" href="#video-frame-metadata-callback-definitions"></a></h3>
    <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="media-pixels">media pixels</dfn> are defined as a media resource’s visible decoded pixels, without pixel aspect
 ratio adjustments. They are different from <a data-link-type="dfn" href="https://drafts.csswg.org/css-values/#px" id="ref-for-px">CSS pixels</a>, which account for pixel aspect ratio
 adjustments.</p>
-   <h3 class="heading settled" data-level="2.2" id="video-frame-metadata-attributes"><span class="secno">2.2. </span><span class="content">Attributes</span><a class="self-link" href="#video-frame-metadata-attributes"></a></h3>
+   <h3 class="heading settled" data-level="2.2" id="video-frame-metadata-callback-attributes"><span class="secno">2.2. </span><span class="content">Attributes</span><a class="self-link" href="#video-frame-metadata-callback-attributes"></a></h3>
    <dl>
-    <dt data-md><dfn class="dfn-paneled idl-code" data-dfn-for="VideoFrameMetadata" data-dfn-type="dict-member" data-export id="dom-videoframemetadata-presentationtime"><code>presentationTime</code></dfn>, <span> of type <a data-link-type="idl-name" href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp" id="ref-for-dom-domhighrestimestamp④">DOMHighResTimeStamp</a></span>
+    <dt data-md><dfn class="dfn-paneled idl-code" data-dfn-for="VideoFrameCallbackMetadata" data-dfn-type="dict-member" data-export id="dom-videoframecallbackmetadata-presentationtime"><code>presentationTime</code></dfn>, <span> of type <a data-link-type="idl-name" href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp" id="ref-for-dom-domhighrestimestamp④">DOMHighResTimeStamp</a></span>
     <dd data-md>
      <p>The time at which the user agent submitted the frame for composition.</p>
-    <dt data-md><dfn class="dfn-paneled idl-code" data-dfn-for="VideoFrameMetadata" data-dfn-type="dict-member" data-export id="dom-videoframemetadata-expecteddisplaytime"><code>expectedDisplayTime</code></dfn>, <span> of type <a data-link-type="idl-name" href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp" id="ref-for-dom-domhighrestimestamp⑤">DOMHighResTimeStamp</a></span>
+    <dt data-md><dfn class="dfn-paneled idl-code" data-dfn-for="VideoFrameCallbackMetadata" data-dfn-type="dict-member" data-export id="dom-videoframecallbackmetadata-expecteddisplaytime"><code>expectedDisplayTime</code></dfn>, <span> of type <a data-link-type="idl-name" href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp" id="ref-for-dom-domhighrestimestamp⑤">DOMHighResTimeStamp</a></span>
     <dd data-md>
      <p>The time at which the user agent expects the frame to be visible.</p>
-    <dt data-md><dfn class="dfn-paneled idl-code" data-dfn-for="VideoFrameMetadata" data-dfn-type="dict-member" data-export id="dom-videoframemetadata-width"><code>width</code></dfn>, <span> of type <a data-link-type="idl-name" href="https://heycam.github.io/webidl/#idl-unsigned-long" id="ref-for-idl-unsigned-long④">unsigned long</a></span>
+    <dt data-md><dfn class="dfn-paneled idl-code" data-dfn-for="VideoFrameCallbackMetadata" data-dfn-type="dict-member" data-export id="dom-videoframecallbackmetadata-width"><code>width</code></dfn>, <span> of type <a data-link-type="idl-name" href="https://webidl.spec.whatwg.org/#idl-unsigned-long" id="ref-for-idl-unsigned-long④">unsigned long</a></span>
     <dd data-md>
      <p>The width of the video frame, in <a data-link-type="dfn" href="#media-pixels" id="ref-for-media-pixels">media pixels</a>.</p>
-    <dt data-md><dfn class="dfn-paneled idl-code" data-dfn-for="VideoFrameMetadata" data-dfn-type="dict-member" data-export id="dom-videoframemetadata-height"><code>height</code></dfn>, <span> of type <a data-link-type="idl-name" href="https://heycam.github.io/webidl/#idl-unsigned-long" id="ref-for-idl-unsigned-long⑤">unsigned long</a></span>
+    <dt data-md><dfn class="dfn-paneled idl-code" data-dfn-for="VideoFrameCallbackMetadata" data-dfn-type="dict-member" data-export id="dom-videoframecallbackmetadata-height"><code>height</code></dfn>, <span> of type <a data-link-type="idl-name" href="https://webidl.spec.whatwg.org/#idl-unsigned-long" id="ref-for-idl-unsigned-long⑤">unsigned long</a></span>
     <dd data-md>
      <p>The height of the video frame, in <a data-link-type="dfn" href="#media-pixels" id="ref-for-media-pixels①">media pixels</a>.</p>
    </dl>
-   <p class="note" role="note"><span>Note:</span> <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-width" id="ref-for-dom-videoframemetadata-width①">width</a></code> and <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-height" id="ref-for-dom-videoframemetadata-height①">height</a></code> might differ from <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#dom-video-videowidth" id="ref-for-dom-video-videowidth">videoWidth</a></code> and <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#dom-video-videoheight" id="ref-for-dom-video-videoheight">videoHeight</a></code> in certain cases (e.g, an anamorphic video might
-have rectangular pixels). When a calling <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/texImage2D"><code>texImage2D()</code></a>, <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-width" id="ref-for-dom-videoframemetadata-width②">width</a></code> and <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-height" id="ref-for-dom-videoframemetadata-height②">height</a></code> are the dimensions used to copy the video’s <a data-link-type="dfn" href="#media-pixels" id="ref-for-media-pixels②">media pixels</a> to the texture,
+   <p class="note" role="note"><span>Note:</span> <code class="idl"><a data-link-type="idl" href="#dom-videoframecallbackmetadata-width" id="ref-for-dom-videoframecallbackmetadata-width①">width</a></code> and <code class="idl"><a data-link-type="idl" href="#dom-videoframecallbackmetadata-height" id="ref-for-dom-videoframecallbackmetadata-height①">height</a></code> might differ from <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#dom-video-videowidth" id="ref-for-dom-video-videowidth">videoWidth</a></code> and <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#dom-video-videoheight" id="ref-for-dom-video-videoheight">videoHeight</a></code> in certain cases (e.g, an anamorphic video might
+have rectangular pixels). When a calling <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/texImage2D"><code>texImage2D()</code></a>, <code class="idl"><a data-link-type="idl" href="#dom-videoframecallbackmetadata-width" id="ref-for-dom-videoframecallbackmetadata-width②">width</a></code> and <code class="idl"><a data-link-type="idl" href="#dom-videoframecallbackmetadata-height" id="ref-for-dom-videoframecallbackmetadata-height②">height</a></code> are the dimensions used to copy the video’s <a data-link-type="dfn" href="#media-pixels" id="ref-for-media-pixels②">media pixels</a> to the texture,
 while <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#dom-video-videowidth" id="ref-for-dom-video-videowidth①">videoWidth</a></code> and <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#dom-video-videoheight" id="ref-for-dom-video-videoheight①">videoHeight</a></code> can
 be used to determine the aspect ratio to use, when using the texture.</p>
    <dl>
-    <dt data-md><dfn class="dfn-paneled idl-code" data-dfn-for="VideoFrameMetadata" data-dfn-type="dict-member" data-export id="dom-videoframemetadata-mediatime"><code>mediaTime</code></dfn>, <span> of type <a data-link-type="idl-name" href="https://heycam.github.io/webidl/#idl-double" id="ref-for-idl-double②">double</a></span>
+    <dt data-md><dfn class="dfn-paneled idl-code" data-dfn-for="VideoFrameCallbackMetadata" data-dfn-type="dict-member" data-export id="dom-videoframecallbackmetadata-mediatime"><code>mediaTime</code></dfn>, <span> of type <a data-link-type="idl-name" href="https://webidl.spec.whatwg.org/#idl-double" id="ref-for-idl-double②">double</a></span>
     <dd data-md>
      <p>The media presentation timestamp (PTS) in seconds of the frame presented (e.g.
 its timestamp on the <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/media.html#dom-media-currenttime" id="ref-for-dom-media-currenttime">video.currentTime</a></code> timeline).
 MAY have a zero value for live-streams or WebRTC applications.</p>
-    <dt data-md><dfn class="dfn-paneled idl-code" data-dfn-for="VideoFrameMetadata" data-dfn-type="dict-member" data-export id="dom-videoframemetadata-presentedframes"><code>presentedFrames</code></dfn>, <span> of type <a data-link-type="idl-name" href="https://heycam.github.io/webidl/#idl-unsigned-long" id="ref-for-idl-unsigned-long⑥">unsigned long</a></span>
+    <dt data-md><dfn class="dfn-paneled idl-code" data-dfn-for="VideoFrameCallbackMetadata" data-dfn-type="dict-member" data-export id="dom-videoframecallbackmetadata-presentedframes"><code>presentedFrames</code></dfn>, <span> of type <a data-link-type="idl-name" href="https://webidl.spec.whatwg.org/#idl-unsigned-long" id="ref-for-idl-unsigned-long⑥">unsigned long</a></span>
     <dd data-md>
      <p>A count of the number of frames submitted for composition. Allows clients
 to determine if frames were missed between <code class="idl"><a data-link-type="idl" href="#callbackdef-videoframerequestcallback" id="ref-for-callbackdef-videoframerequestcallback④">VideoFrameRequestCallback</a></code>s. MUST be monotonically
 increasing.</p>
-    <dt data-md><dfn class="dfn-paneled idl-code" data-dfn-for="VideoFrameMetadata" data-dfn-type="dict-member" data-export id="dom-videoframemetadata-processingduration"><code>processingDuration</code></dfn>, <span> of type <a data-link-type="idl-name" href="https://heycam.github.io/webidl/#idl-double" id="ref-for-idl-double③">double</a></span>
+    <dt data-md><dfn class="dfn-paneled idl-code" data-dfn-for="VideoFrameCallbackMetadata" data-dfn-type="dict-member" data-export id="dom-videoframecallbackmetadata-processingduration"><code>processingDuration</code></dfn>, <span> of type <a data-link-type="idl-name" href="https://webidl.spec.whatwg.org/#idl-double" id="ref-for-idl-double③">double</a></span>
     <dd data-md>
      <p>The elapsed duration in seconds from submission of the encoded packet with the same
-presentation timestamp (PTS) as this frame (e.g. same as the <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-mediatime" id="ref-for-dom-videoframemetadata-mediatime①">mediaTime</a></code>) to the decoder
+presentation timestamp (PTS) as this frame (e.g. same as the <code class="idl"><a data-link-type="idl" href="#dom-videoframecallbackmetadata-mediatime" id="ref-for-dom-videoframecallbackmetadata-mediatime①">mediaTime</a></code>) to the decoder
 until the decoded frame was ready for presentation.</p>
     <dd data-md>
      <p>In addition to decoding time, may include processing time. E.g., YUV
@@ -1641,7 +752,7 @@ conversion and/or staging into GPU backed memory.</p>
     <dd data-md>
      <p>SHOULD be present. In some cases, user-agents might not be able to surface this information since
 portions of the media pipeline might be owned by the OS.</p>
-    <dt data-md><dfn class="dfn-paneled idl-code" data-dfn-for="VideoFrameMetadata" data-dfn-type="dict-member" data-export id="dom-videoframemetadata-capturetime"><code>captureTime</code></dfn>, <span> of type <a data-link-type="idl-name" href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp" id="ref-for-dom-domhighrestimestamp⑥">DOMHighResTimeStamp</a></span>
+    <dt data-md><dfn class="dfn-paneled idl-code" data-dfn-for="VideoFrameCallbackMetadata" data-dfn-type="dict-member" data-export id="dom-videoframecallbackmetadata-capturetime"><code>captureTime</code></dfn>, <span> of type <a data-link-type="idl-name" href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp" id="ref-for-dom-domhighrestimestamp⑥">DOMHighResTimeStamp</a></span>
     <dd data-md>
      <p>For video frames coming from a local source, this is the time at which
 the frame was captured by the camera.
@@ -1652,7 +763,7 @@ in RFC 3550 Section 6.4.1, or by other alternative means if use by
 RTCP SR isn’t feasible.</p>
     <dd data-md>
      <p>SHOULD be present for WebRTC or getUserMedia applications, and absent otherwise.</p>
-    <dt data-md><dfn class="dfn-paneled idl-code" data-dfn-for="VideoFrameMetadata" data-dfn-type="dict-member" data-export id="dom-videoframemetadata-receivetime"><code>receiveTime</code></dfn>, <span> of type <a data-link-type="idl-name" href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp" id="ref-for-dom-domhighrestimestamp⑦">DOMHighResTimeStamp</a></span>
+    <dt data-md><dfn class="dfn-paneled idl-code" data-dfn-for="VideoFrameCallbackMetadata" data-dfn-type="dict-member" data-export id="dom-videoframecallbackmetadata-receivetime"><code>receiveTime</code></dfn>, <span> of type <a data-link-type="idl-name" href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp" id="ref-for-dom-domhighrestimestamp⑦">DOMHighResTimeStamp</a></span>
     <dd data-md>
      <p>For video frames coming from a remote source, this is the
 time the encoded frame was received by the platform, i.e., the time at
@@ -1660,7 +771,7 @@ which the last packet belonging to this frame was received over the network.</p>
     <dd data-md>
      <p>SHOULD be present for WebRTC applications that receive data from a remote source,
 and absent otherwise.</p>
-    <dt data-md><dfn class="dfn-paneled idl-code" data-dfn-for="VideoFrameMetadata" data-dfn-type="dict-member" data-export id="dom-videoframemetadata-rtptimestamp"><code>rtpTimestamp</code></dfn>, <span> of type <a data-link-type="idl-name" href="https://heycam.github.io/webidl/#idl-unsigned-long" id="ref-for-idl-unsigned-long⑦">unsigned long</a></span>
+    <dt data-md><dfn class="dfn-paneled idl-code" data-dfn-for="VideoFrameCallbackMetadata" data-dfn-type="dict-member" data-export id="dom-videoframecallbackmetadata-rtptimestamp"><code>rtpTimestamp</code></dfn>, <span> of type <a data-link-type="idl-name" href="https://webidl.spec.whatwg.org/#idl-unsigned-long" id="ref-for-idl-unsigned-long⑦">unsigned long</a></span>
     <dd data-md>
      <p>The RTP timestamp associated with this video frame.</p>
     <dd data-md>
@@ -1668,13 +779,13 @@ and absent otherwise.</p>
 and absent otherwise.</p>
    </dl>
    <h2 class="heading settled" data-level="3" id="video-frame-request-callback"><span class="secno">3. </span><span class="content">VideoFrameRequestCallback</span><a class="self-link" href="#video-frame-request-callback"></a></h2>
-<pre class="idl highlight def"><c- b>callback</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="callback" data-export id="callbackdef-videoframerequestcallback"><code><c- g>VideoFrameRequestCallback</c-></code></dfn> = <a class="n" data-link-type="idl-name"><c- n>undefined</c-></a>(<a class="n" data-link-type="idl-name" href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp" id="ref-for-dom-domhighrestimestamp⑧"><c- n>DOMHighResTimeStamp</c-></a> <dfn class="idl-code" data-dfn-for="VideoFrameRequestCallback" data-dfn-type="argument" data-export id="dom-videoframerequestcallback-now"><code><c- g>now</c-></code><a class="self-link" href="#dom-videoframerequestcallback-now"></a></dfn>, <a class="n" data-link-type="idl-name" href="#dictdef-videoframemetadata" id="ref-for-dictdef-videoframemetadata①"><c- n>VideoFrameMetadata</c-></a> <dfn class="idl-code" data-dfn-for="VideoFrameRequestCallback" data-dfn-type="argument" data-export id="dom-videoframerequestcallback-metadata"><code><c- g>metadata</c-></code><a class="self-link" href="#dom-videoframerequestcallback-metadata"></a></dfn>);
+<pre class="idl highlight def"><c- b>callback</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="callback" data-export id="callbackdef-videoframerequestcallback"><code><c- g>VideoFrameRequestCallback</c-></code></dfn> = <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-undefined" id="ref-for-idl-undefined"><c- b>undefined</c-></a>(<a data-link-type="idl-name" href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp" id="ref-for-dom-domhighrestimestamp⑧"><c- n>DOMHighResTimeStamp</c-></a> <dfn class="idl-code" data-dfn-for="VideoFrameRequestCallback" data-dfn-type="argument" data-export id="dom-videoframerequestcallback-now"><code><c- g>now</c-></code><a class="self-link" href="#dom-videoframerequestcallback-now"></a></dfn>, <a data-link-type="idl-name" href="#dictdef-videoframecallbackmetadata" id="ref-for-dictdef-videoframecallbackmetadata①"><c- n>VideoFrameCallbackMetadata</c-></a> <dfn class="idl-code" data-dfn-for="VideoFrameRequestCallback" data-dfn-type="argument" data-export id="dom-videoframerequestcallback-metadata"><code><c- g>metadata</c-></code><a class="self-link" href="#dom-videoframerequestcallback-metadata"></a></dfn>);
 </pre>
    <p>Each <code class="idl"><a data-link-type="idl" href="#callbackdef-videoframerequestcallback" id="ref-for-callbackdef-videoframerequestcallback⑤">VideoFrameRequestCallback</a></code> object has a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="canceled">canceled</dfn> boolean initially set to false.</p>
    <h2 class="heading settled" data-level="4" id="video-rvfc"><span class="secno">4. </span><span class="content">HTMLVideoElement.requestVideoFrameCallback()</span><a class="self-link" href="#video-rvfc"></a></h2>
 <pre class="idl highlight def"><c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement" id="ref-for-htmlvideoelement①"><c- g>HTMLVideoElement</c-></a> {
-    <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long" id="ref-for-idl-unsigned-long⑧"><c- b>unsigned</c-> <c- b>long</c-></a> <a class="idl-code" data-link-type="method" href="#dom-htmlvideoelement-requestvideoframecallback" id="ref-for-dom-htmlvideoelement-requestvideoframecallback①"><c- g>requestVideoFrameCallback</c-></a>(<a class="n" data-link-type="idl-name" href="#callbackdef-videoframerequestcallback" id="ref-for-callbackdef-videoframerequestcallback⑥"><c- n>VideoFrameRequestCallback</c-></a> <dfn class="idl-code" data-dfn-for="HTMLVideoElement/requestVideoFrameCallback(callback)" data-dfn-type="argument" data-export id="dom-htmlvideoelement-requestvideoframecallback-callback-callback"><code><c- g>callback</c-></code><a class="self-link" href="#dom-htmlvideoelement-requestvideoframecallback-callback-callback"></a></dfn>);
-    <a class="n" data-link-type="idl-name"><c- n>undefined</c-></a> <a class="idl-code" data-link-type="method" href="#dom-htmlvideoelement-cancelvideoframecallback" id="ref-for-dom-htmlvideoelement-cancelvideoframecallback"><c- g>cancelVideoFrameCallback</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long" id="ref-for-idl-unsigned-long⑨"><c- b>unsigned</c-> <c- b>long</c-></a> <dfn class="idl-code" data-dfn-for="HTMLVideoElement/cancelVideoFrameCallback(handle)" data-dfn-type="argument" data-export id="dom-htmlvideoelement-cancelvideoframecallback-handle-handle"><code><c- g>handle</c-></code><a class="self-link" href="#dom-htmlvideoelement-cancelvideoframecallback-handle-handle"></a></dfn>);
+    <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-unsigned-long" id="ref-for-idl-unsigned-long⑧"><c- b>unsigned</c-> <c- b>long</c-></a> <a class="idl-code" data-link-type="method" href="#dom-htmlvideoelement-requestvideoframecallback" id="ref-for-dom-htmlvideoelement-requestvideoframecallback①"><c- g>requestVideoFrameCallback</c-></a>(<a data-link-type="idl-name" href="#callbackdef-videoframerequestcallback" id="ref-for-callbackdef-videoframerequestcallback⑥"><c- n>VideoFrameRequestCallback</c-></a> <dfn class="idl-code" data-dfn-for="HTMLVideoElement/requestVideoFrameCallback(callback)" data-dfn-type="argument" data-export id="dom-htmlvideoelement-requestvideoframecallback-callback-callback"><code><c- g>callback</c-></code><a class="self-link" href="#dom-htmlvideoelement-requestvideoframecallback-callback-callback"></a></dfn>);
+    <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-undefined" id="ref-for-idl-undefined①"><c- b>undefined</c-></a> <a class="idl-code" data-link-type="method" href="#dom-htmlvideoelement-cancelvideoframecallback" id="ref-for-dom-htmlvideoelement-cancelvideoframecallback"><c- g>cancelVideoFrameCallback</c-></a>(<a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-unsigned-long" id="ref-for-idl-unsigned-long⑨"><c- b>unsigned</c-> <c- b>long</c-></a> <dfn class="idl-code" data-dfn-for="HTMLVideoElement/cancelVideoFrameCallback(handle)" data-dfn-type="argument" data-export id="dom-htmlvideoelement-cancelvideoframecallback-handle-handle"><code><c- g>handle</c-></code><a class="self-link" href="#dom-htmlvideoelement-cancelvideoframecallback-handle-handle"></a></dfn>);
 };
 </pre>
    <h3 class="heading settled" data-level="4.1" id="video-rvfc-methods"><span class="secno">4.1. </span><span class="content">Methods</span><a class="self-link" href="#video-rvfc-methods"></a></h3>
@@ -1742,9 +853,9 @@ callbacks at 25Hz; a 120fps video in that same 60Hz browser would fire callbacks
      <li data-md>
       <p>If <var>video</var>’s <a data-link-type="dfn" href="#list-of-video-frame-request-callbacks" id="ref-for-list-of-video-frame-request-callbacks③">list of video frame request callbacks</a> is empty, abort these steps.</p>
      <li data-md>
-      <p>Let <var>metadata</var> be the <code class="idl"><a data-link-type="idl" href="#dictdef-videoframemetadata" id="ref-for-dictdef-videoframemetadata②">VideoFrameMetadata</a></code> dictionary built from <var>video</var>’s latest presented frame.</p>
+      <p>Let <var>metadata</var> be the <code class="idl"><a data-link-type="idl" href="#dictdef-videoframecallbackmetadata" id="ref-for-dictdef-videoframecallbackmetadata②">VideoFrameCallbackMetadata</a></code> dictionary built from <var>video</var>’s latest presented frame.</p>
      <li data-md>
-      <p>Let <var>presentedFrames</var> be the value of <var>metadata</var>’s <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-presentedframes" id="ref-for-dom-videoframemetadata-presentedframes②">presentedFrames</a></code> field.</p>
+      <p>Let <var>presentedFrames</var> be the value of <var>metadata</var>’s <code class="idl"><a data-link-type="idl" href="#dom-videoframecallbackmetadata-presentedframes" id="ref-for-dom-videoframecallbackmetadata-presentedframes②">presentedFrames</a></code> field.</p>
      <li data-md>
       <p>If the <a data-link-type="dfn" href="#last-presented-frame-indentifier" id="ref-for-last-presented-frame-indentifier">last presented frame indentifier</a> is equal to <var>presentedFrames</var>, abort these steps.</p>
      <li data-md>
@@ -1759,7 +870,7 @@ callbacks at 25Hz; a 120fps video in that same 60Hz browser would fire callbacks
        <li data-md>
         <p>If the entry’s <a data-link-type="dfn" href="#canceled" id="ref-for-canceled①">canceled</a> boolean is <code>true</code>, continue to the next entry.</p>
        <li data-md>
-        <p><a data-link-type="dfn" href="https://heycam.github.io/webidl/#invoke-a-callback-function" id="ref-for-invoke-a-callback-function">Invoke</a> the callback, passing <var>now</var> and <var>metadata</var> as arguments</p>
+        <p><a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#invoke-a-callback-function" id="ref-for-invoke-a-callback-function">Invoke</a> the callback, passing <var>now</var> and <var>metadata</var> as arguments</p>
        <li data-md>
         <p>If an exception is thrown, <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#report-the-exception" id="ref-for-report-the-exception">report the exception</a>.</p>
       </ol>
@@ -1774,11 +885,11 @@ video frame does.<br> <br> Offering stricter guarantees would likely force imple
    <h2 class="heading settled" data-level="5" id="security-and-privacy"><span class="secno">5. </span><span class="content">Security and Privacy Considerations</span><a class="self-link" href="#security-and-privacy"></a></h2>
    <p>This specification does not expose any new privacy-sensitive information. However, the location
 correlation opportunities outlined in the Privacy and Security section of <a data-link-type="biblio" href="#biblio-webrtc-stats">[webrtc-stats]</a> also hold
-true for this spec: <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-capturetime" id="ref-for-dom-videoframemetadata-capturetime①">captureTime</a></code>, <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-receivetime" id="ref-for-dom-videoframemetadata-receivetime①">receiveTime</a></code>, and <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-rtptimestamp" id="ref-for-dom-videoframemetadata-rtptimestamp①">rtpTimestamp</a></code> expose network-layer
-information which can be correlated to location information. E.g., reusing the same example, <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-capturetime" id="ref-for-dom-videoframemetadata-capturetime②">captureTime</a></code> and <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-receivetime" id="ref-for-dom-videoframemetadata-receivetime②">receiveTime</a></code> can be used to estimate network end-to-end travel time, which can
+true for this spec: <code class="idl"><a data-link-type="idl" href="#dom-videoframecallbackmetadata-capturetime" id="ref-for-dom-videoframecallbackmetadata-capturetime①">captureTime</a></code>, <code class="idl"><a data-link-type="idl" href="#dom-videoframecallbackmetadata-receivetime" id="ref-for-dom-videoframecallbackmetadata-receivetime①">receiveTime</a></code>, and <code class="idl"><a data-link-type="idl" href="#dom-videoframecallbackmetadata-rtptimestamp" id="ref-for-dom-videoframecallbackmetadata-rtptimestamp①">rtpTimestamp</a></code> expose network-layer
+information which can be correlated to location information. E.g., reusing the same example, <code class="idl"><a data-link-type="idl" href="#dom-videoframecallbackmetadata-capturetime" id="ref-for-dom-videoframecallbackmetadata-capturetime②">captureTime</a></code> and <code class="idl"><a data-link-type="idl" href="#dom-videoframecallbackmetadata-receivetime" id="ref-for-dom-videoframecallbackmetadata-receivetime②">receiveTime</a></code> can be used to estimate network end-to-end travel time, which can
 give indication as to how far the peers are located, and can give some location information about a peer
 if the location of the other peer is known. Since this information is already available via the <a data-link-type="biblio" href="#biblio-webrtc-stats">RTCStats</a>, this specification doesn’t introduce any novel privacy considerations.</p>
-   <p>This specification might introduce some new GPU fingerprinting opportunities. <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-processingduration" id="ref-for-dom-videoframemetadata-processingduration①">processingDuration</a></code> exposes some under-the-hood performance information about the video pipeline, which is otherwise
+   <p>This specification might introduce some new GPU fingerprinting opportunities. <code class="idl"><a data-link-type="idl" href="#dom-videoframecallbackmetadata-processingduration" id="ref-for-dom-videoframecallbackmetadata-processingduration①">processingDuration</a></code> exposes some under-the-hood performance information about the video pipeline, which is otherwise
 inaccessible to web developers. Using this information, one could correlate the performance of various
 codecs and video sizes to a known GPU’s profile. We therefore propose a resolution of 100μs, which is
 still useful for automated quality analysis, but doesn’t offer any new sources of high resolution
@@ -1787,7 +898,7 @@ between hardware and software decoders to infer information about a GPU’s feat
 would make it easier to fingerprint the newest GPUs, which have hardware decoders for the latest
 codecs, which don’t yet have widespread hardware decoding support. However, rather than measuring the
 profiles themselves, one could directly get equivalent information from getting the <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/media-capabilities#dictdef-mediacapabilitiesinfo" id="ref-for-dictdef-mediacapabilitiesinfo">MediaCapabilitiesInfo</a></code>.</p>
-   <p>This specification also introduces some new timing information. <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-presentationtime" id="ref-for-dom-videoframemetadata-presentationtime①">presentationTime</a></code> and <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-expecteddisplaytime" id="ref-for-dom-videoframemetadata-expecteddisplaytime②">expectedDisplayTime</a></code> expose compositor timing information; <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-capturetime" id="ref-for-dom-videoframemetadata-capturetime③">captureTime</a></code> and <code class="idl"><a data-link-type="idl" href="#dom-videoframemetadata-receivetime" id="ref-for-dom-videoframemetadata-receivetime③">receiveTime</a></code> expose network timing information. The <a data-link-type="dfn" href="https://w3c.github.io/hr-time/#clock-resolution" id="ref-for-clock-resolution">clock resolution</a> of these fields should
+   <p>This specification also introduces some new timing information. <code class="idl"><a data-link-type="idl" href="#dom-videoframecallbackmetadata-presentationtime" id="ref-for-dom-videoframecallbackmetadata-presentationtime①">presentationTime</a></code> and <code class="idl"><a data-link-type="idl" href="#dom-videoframecallbackmetadata-expecteddisplaytime" id="ref-for-dom-videoframecallbackmetadata-expecteddisplaytime②">expectedDisplayTime</a></code> expose compositor timing information; <code class="idl"><a data-link-type="idl" href="#dom-videoframecallbackmetadata-capturetime" id="ref-for-dom-videoframecallbackmetadata-capturetime③">captureTime</a></code> and <code class="idl"><a data-link-type="idl" href="#dom-videoframecallbackmetadata-receivetime" id="ref-for-dom-videoframecallbackmetadata-receivetime③">receiveTime</a></code> expose network timing information. The <a data-link-type="dfn" href="https://w3c.github.io/hr-time/#clock-resolution" id="ref-for-clock-resolution">clock resolution</a> of these fields should
 therefore be coarse enough not to facilitate timing attacks.</p>
    <h2 class="heading settled" data-level="6" id="examples"><span class="secno">6. </span><span class="content">Examples</span><a class="self-link" href="#examples"></a></h2>
    <h3 class="heading settled" data-level="6.1" id="example-drawing"><span class="secno">6.1. </span><span class="content">Drawing frames at the video rate</span><a class="self-link" href="#example-drawing"></a></h3>
@@ -1806,17 +917,17 @@ can be done by using <code class="idl"><a data-link-type="idl" href="#dom-htmlvi
     <c- a>var</c-> canvas <c- o>=</c-> document<c- p>.</c->querySelector<c- p>(</c-><c- t>'canvas'</c-><c- p>);</c->
     <c- a>var</c-> ctx <c- o>=</c-> canvas<c- p>.</c->getContext<c- p>(</c-><c- t>'2d'</c-><c- p>);</c->
 
-    <c- a>var</c-> paint_count <c- o>=</c-> <c- mi>0</c-><c- p>;</c->
+    <c- a>var</c-> paint_count <c- o>=</c-> <c- mf>0</c-><c- p>;</c->
     <c- a>var</c-> start_time <c- o>=</c-> <c- mf>0.0</c-><c- p>;</c->
 
     <c- a>var</c-> updateCanvas <c- o>=</c-> <c- a>function</c-><c- p>(</c->now<c- p>)</c-> <c- p>{</c->
       <c- k>if</c-><c- p>(</c->start_time <c- o>==</c-> <c- mf>0.0</c-><c- p>)</c->
         start_time <c- o>=</c-> now<c- p>;</c->
 
-      ctx<c- p>.</c->drawImage<c- p>(</c->video<c- p>,</c-> <c- mi>0</c-><c- p>,</c-> <c- mi>0</c-><c- p>,</c-> canvas<c- p>.</c->width<c- p>,</c-> canvas<c- p>.</c->height<c- p>);</c->
+      ctx<c- p>.</c->drawImage<c- p>(</c->video<c- p>,</c-> <c- mf>0</c-><c- p>,</c-> <c- mf>0</c-><c- p>,</c-> canvas<c- p>.</c->width<c- p>,</c-> canvas<c- p>.</c->height<c- p>);</c->
 
       <c- a>var</c-> elapsed <c- o>=</c-> <c- p>(</c->now <c- o>-</c-> start_time<c- p>)</c-> <c- o>/</c-> <c- mf>1000.0</c-><c- p>;</c->
-      <c- a>var</c-> fps <c- o>=</c-> <c- p>(</c-><c- o>++</c->paint_count <c- o>/</c-> elapsed<c- p>).</c->toFixed<c- p>(</c-><c- mi>3</c-><c- p>);</c->
+      <c- a>var</c-> fps <c- o>=</c-> <c- p>(</c-><c- o>++</c->paint_count <c- o>/</c-> elapsed<c- p>).</c->toFixed<c- p>(</c-><c- mf>3</c-><c- p>);</c->
       document<c- p>.</c->querySelector<c- p>(</c-><c- t>'#fps_text'</c-><c- p>).</c->innerText <c- o>=</c-> <c- t>'video fps: '</c-> <c- o>+</c-> fps<c- p>;</c->
 
       video<c- p>.</c->requestVideoFrameCallback<c- p>(</c->updateCanvas<c- p>);</c->
@@ -1831,175 +942,71 @@ can be done by using <code class="idl"><a data-link-type="idl" href="#dom-htmlvi
 </pre>
   </main>
   <div data-fill-with="conformance">
-   <h2 class="no-ref no-num heading settled" id="conformance"><span class="content"> Conformance</span><a class="self-link" href="#conformance"></a></h2>
-   <p> Conformance requirements are expressed with a combination of descriptive assertions and RFC 2119 terminology.
-            The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL NOT”, “SHOULD”, “SHOULD NOT”, “RECOMMENDED”, “MAY”, and “OPTIONAL”
-            in the normative parts of this document
-            are to be interpreted as described in RFC 2119.
-            However, for readability,
-            these words do not appear in all uppercase letters in this specification. </p>
-   <p> All of the text of this specification is normative
-            except sections explicitly marked as non-normative, examples, and notes. <a data-link-type="biblio" href="#biblio-rfc2119">[RFC2119]</a> </p>
-   <p> Examples in this specification are introduced with the words “for example”
-            or are set apart from the normative text with <code>class="example"</code>, like this: </p>
-   <div class="example" id="example-example"><a class="self-link" href="#example-example"></a> This is an example of an informative example. </div>
-   <p> Informative notes begin with the word “Note”
-            and are set apart from the normative text with <code>class="note"</code>, like this: </p>
-   <p class="note" role="note"> Note, this is an informative note. </p>
+   <h2 class="no-ref no-num heading settled" id="w3c-conformance"><span class="content">Conformance</span><a class="self-link" href="#w3c-conformance"></a></h2>
+   <h3 class="no-ref no-num heading settled" id="w3c-conventions"><span class="content">Document conventions</span><a class="self-link" href="#w3c-conventions"></a></h3>
+   <p>Conformance requirements are expressed
+    with a combination of descriptive assertions
+    and RFC 2119 terminology.
+    The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL NOT”, “SHOULD”, “SHOULD NOT”, “RECOMMENDED”, “MAY”, and “OPTIONAL”
+    in the normative parts of this document
+    are to be interpreted as described in RFC 2119.
+    However, for readability,
+    these words do not appear in all uppercase letters in this specification. </p>
+   <p>All of the text of this specification is normative
+    except sections explicitly marked as non-normative, examples, and notes. <a data-link-type="biblio" href="#biblio-rfc2119">[RFC2119]</a> </p>
+   <p>Examples in this specification are introduced with the words “for example”
+    or are set apart from the normative text
+    with <code>class="example"</code>,
+    like this: </p>
+   <div class="example" id="w3c-example">
+    <a class="self-link" href="#w3c-example"></a> 
+    <p>This is an example of an informative example. </p>
+   </div>
+   <p>Informative notes begin with the word “Note”
+    and are set apart from the normative text
+    with <code>class="note"</code>,
+    like this: </p>
+   <p class="note" role="note">Note, this is an informative note. </p>
+   <h3 class="no-ref no-num heading settled" id="w3c-conformant-algorithms"><span class="content">Conformant Algorithms</span><a class="self-link" href="#w3c-conformant-algorithms"></a></h3>
+   <p>Requirements phrased in the imperative as part of algorithms
+    (such as "strip any leading space characters"
+    or "return false and abort these steps")
+    are to be interpreted with the meaning of the key word
+    ("must", "should", "may", etc)
+    used in introducing the algorithm. </p>
+   <p>Conformance requirements phrased as algorithms or specific steps
+    can be implemented in any manner,
+    so long as the end result is equivalent.
+    In particular, the algorithms defined in this specification
+    are intended to be easy to understand
+    and are not intended to be performant.
+    Implementers are encouraged to optimize. </p>
   </div>
-<script>
-(function() {
-  "use strict";
-  var collapseSidebarText = '<span aria-hidden="true">←</span> '
-                          + '<span>Collapse Sidebar</span>';
-  var expandSidebarText   = '<span aria-hidden="true">→</span> '
-                          + '<span>Pop Out Sidebar</span>';
-  var tocJumpText         = '<span aria-hidden="true">↑</span> '
-                          + '<span>Jump to Table of Contents</span>';
-
-  var sidebarMedia = window.matchMedia('screen and (min-width: 78em)');
-  var autoToggle   = function(e){ toggleSidebar(e.matches) };
-  if(sidebarMedia.addListener) {
-    sidebarMedia.addListener(autoToggle);
-  }
-
-  function toggleSidebar(on) {
-    if (on == undefined) {
-      on = !document.body.classList.contains('toc-sidebar');
-    }
-
-    /* Don’t scroll to compensate for the ToC if we’re above it already. */
-    var headY = 0;
-    var head = document.querySelector('.head');
-    if (head) {
-      // terrible approx of "top of ToC"
-      headY += head.offsetTop + head.offsetHeight;
-    }
-    var skipScroll = window.scrollY < headY;
-
-    var toggle = document.getElementById('toc-toggle');
-    var tocNav = document.getElementById('toc');
-    if (on) {
-      var tocHeight = tocNav.offsetHeight;
-      document.body.classList.add('toc-sidebar');
-      document.body.classList.remove('toc-inline');
-      toggle.innerHTML = collapseSidebarText;
-      if (!skipScroll) {
-        window.scrollBy(0, 0 - tocHeight);
-      }
-      tocNav.focus();
-      sidebarMedia.addListener(autoToggle); // auto-collapse when out of room
-    }
-    else {
-      document.body.classList.add('toc-inline');
-      document.body.classList.remove('toc-sidebar');
-      toggle.innerHTML = expandSidebarText;
-      if (!skipScroll) {
-        window.scrollBy(0, tocNav.offsetHeight);
-      }
-      if (toggle.matches(':hover')) {
-        /* Unfocus button when not using keyboard navigation,
-           because I don’t know where else to send the focus. */
-        toggle.blur();
-      }
-    }
-  }
-
-  function createSidebarToggle() {
-    /* Create the sidebar toggle in JS; it shouldn’t exist when JS is off. */
-    var toggle = document.createElement('a');
-      /* This should probably be a button, but appearance isn’t standards-track.*/
-    toggle.id = 'toc-toggle';
-    toggle.class = 'toc-toggle';
-    toggle.href = '#toc';
-    toggle.innerHTML = collapseSidebarText;
-
-    sidebarMedia.addListener(autoToggle);
-    var toggler = function(e) {
-      e.preventDefault();
-      sidebarMedia.removeListener(autoToggle); // persist explicit off states
-      toggleSidebar();
-      return false;
-    }
-    toggle.addEventListener('click', toggler, false);
-
-
-    /* Get <nav id=toc-nav>, or make it if we don’t have one. */
-    var tocNav = document.getElementById('toc-nav');
-    if (!tocNav) {
-      tocNav = document.createElement('p');
-      tocNav.id = 'toc-nav';
-      /* Prepend for better keyboard navigation */
-      document.body.insertBefore(tocNav, document.body.firstChild);
-    }
-    /* While we’re at it, make sure we have a Jump to Toc link. */
-    var tocJump = document.getElementById('toc-jump');
-    if (!tocJump) {
-      tocJump = document.createElement('a');
-      tocJump.id = 'toc-jump';
-      tocJump.href = '#toc';
-      tocJump.innerHTML = tocJumpText;
-      tocNav.appendChild(tocJump);
-    }
-
-    tocNav.appendChild(toggle);
-  }
-
-  var toc = document.getElementById('toc');
-  if (toc) {
-    createSidebarToggle();
-    toggleSidebar(sidebarMedia.matches);
-
-    /* If the sidebar has been manually opened and is currently overlaying the text
-       (window too small for the MQ to add the margin to body),
-       then auto-close the sidebar once you click on something in there. */
-    toc.addEventListener('click', function(e) {
-      if(e.target.tagName.toLowerCase() == "a" && document.body.classList.contains('toc-sidebar') && !sidebarMedia.matches) {
-        toggleSidebar(false);
-      }
-    }, false);
-  }
-  else {
-    console.warn("Can’t find Table of Contents. Please use <nav id='toc'> around the ToC.");
-  }
-
-  /* Wrap tables in case they overflow */
-  var tables = document.querySelectorAll(':not(.overlarge) > table.data, :not(.overlarge) > table.index');
-  var numTables = tables.length;
-  for (var i = 0; i < numTables; i++) {
-    var table = tables[i];
-    var wrapper = document.createElement('div');
-    wrapper.className = 'overlarge';
-    table.parentNode.insertBefore(wrapper, table);
-    wrapper.appendChild(table);
-  }
-
-})();
-</script>
+<script src="https://www.w3.org/scripts/TR/2021/fixup.js"></script>
   <h2 class="no-num no-ref heading settled" id="index"><span class="content">Index</span><a class="self-link" href="#index"></a></h2>
   <h3 class="no-num no-ref heading settled" id="index-defined-here"><span class="content">Terms defined by this specification</span><a class="self-link" href="#index-defined-here"></a></h3>
   <ul class="index">
-   <li><a href="#associated-video-element">associated video element</a><span>, in §4.2</span>
-   <li><a href="#canceled">canceled</a><span>, in §3</span>
-   <li><a href="#dom-htmlvideoelement-cancelvideoframecallback">cancelVideoFrameCallback(handle)</a><span>, in §4.1</span>
-   <li><a href="#dom-videoframemetadata-capturetime">captureTime</a><span>, in §2.2</span>
-   <li><a href="#dom-videoframemetadata-expecteddisplaytime">expectedDisplayTime</a><span>, in §2.2</span>
-   <li><a href="#dom-videoframemetadata-height">height</a><span>, in §2.2</span>
-   <li><a href="#last-presented-frame-indentifier">last presented frame indentifier</a><span>, in §4.1</span>
-   <li><a href="#list-of-video-frame-request-callbacks">list of video frame request callbacks</a><span>, in §4.1</span>
-   <li><a href="#media-pixels">media pixels</a><span>, in §2.1</span>
-   <li><a href="#dom-videoframemetadata-mediatime">mediaTime</a><span>, in §2.2</span>
-   <li><a href="#dom-videoframemetadata-presentationtime">presentationTime</a><span>, in §2.2</span>
-   <li><a href="#dom-videoframemetadata-presentedframes">presentedFrames</a><span>, in §2.2</span>
-   <li><a href="#dom-videoframemetadata-processingduration">processingDuration</a><span>, in §2.2</span>
-   <li><a href="#dom-videoframemetadata-receivetime">receiveTime</a><span>, in §2.2</span>
-   <li><a href="#dom-htmlvideoelement-requestvideoframecallback">requestVideoFrameCallback(callback)</a><span>, in §4.1</span>
-   <li><a href="#dom-videoframemetadata-rtptimestamp">rtpTimestamp</a><span>, in §2.2</span>
-   <li><a href="#run-the-video-frame-request-callbacks">run the video frame request callbacks</a><span>, in §4.2</span>
-   <li><a href="#dictdef-videoframemetadata">VideoFrameMetadata</a><span>, in §2</span>
-   <li><a href="#callbackdef-videoframerequestcallback">VideoFrameRequestCallback</a><span>, in §3</span>
-   <li><a href="#video-frame-request-callback-identifier">video frame request callback identifier</a><span>, in §4.1</span>
-   <li><a href="#dom-videoframemetadata-width">width</a><span>, in §2.2</span>
+   <li><a href="#associated-video-element">associated video element</a><span>, in § 4.2</span>
+   <li><a href="#canceled">canceled</a><span>, in § 3</span>
+   <li><a href="#dom-htmlvideoelement-cancelvideoframecallback">cancelVideoFrameCallback(handle)</a><span>, in § 4.1</span>
+   <li><a href="#dom-videoframecallbackmetadata-capturetime">captureTime</a><span>, in § 2.2</span>
+   <li><a href="#dom-videoframecallbackmetadata-expecteddisplaytime">expectedDisplayTime</a><span>, in § 2.2</span>
+   <li><a href="#dom-videoframecallbackmetadata-height">height</a><span>, in § 2.2</span>
+   <li><a href="#last-presented-frame-indentifier">last presented frame indentifier</a><span>, in § 4.1</span>
+   <li><a href="#list-of-video-frame-request-callbacks">list of video frame request callbacks</a><span>, in § 4.1</span>
+   <li><a href="#media-pixels">media pixels</a><span>, in § 2.1</span>
+   <li><a href="#dom-videoframecallbackmetadata-mediatime">mediaTime</a><span>, in § 2.2</span>
+   <li><a href="#dom-videoframecallbackmetadata-presentationtime">presentationTime</a><span>, in § 2.2</span>
+   <li><a href="#dom-videoframecallbackmetadata-presentedframes">presentedFrames</a><span>, in § 2.2</span>
+   <li><a href="#dom-videoframecallbackmetadata-processingduration">processingDuration</a><span>, in § 2.2</span>
+   <li><a href="#dom-videoframecallbackmetadata-receivetime">receiveTime</a><span>, in § 2.2</span>
+   <li><a href="#dom-htmlvideoelement-requestvideoframecallback">requestVideoFrameCallback(callback)</a><span>, in § 4.1</span>
+   <li><a href="#dom-videoframecallbackmetadata-rtptimestamp">rtpTimestamp</a><span>, in § 2.2</span>
+   <li><a href="#run-the-video-frame-request-callbacks">run the video frame request callbacks</a><span>, in § 4.2</span>
+   <li><a href="#dictdef-videoframecallbackmetadata">VideoFrameCallbackMetadata</a><span>, in § 2</span>
+   <li><a href="#callbackdef-videoframerequestcallback">VideoFrameRequestCallback</a><span>, in § 3</span>
+   <li><a href="#video-frame-request-callback-identifier">video frame request callback identifier</a><span>, in § 4.1</span>
+   <li><a href="#dom-videoframecallbackmetadata-width">width</a><span>, in § 2.2</span>
   </ul>
   <aside class="dfn-panel" data-for="term-for-px">
    <a href="https://drafts.csswg.org/css-values/#px">https://drafts.csswg.org/css-values/#px</a><b>Referenced in:</b>
@@ -2023,7 +1030,7 @@ can be done by using <code class="idl"><a data-link-type="idl" href="#dom-htmlvi
   <aside class="dfn-panel" data-for="term-for-dom-domhighrestimestamp">
    <a href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp">https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-domhighrestimestamp">2. VideoFrameMetadata</a> <a href="#ref-for-dom-domhighrestimestamp①">(2)</a> <a href="#ref-for-dom-domhighrestimestamp②">(3)</a> <a href="#ref-for-dom-domhighrestimestamp③">(4)</a>
+    <li><a href="#ref-for-dom-domhighrestimestamp">2. VideoFrameCallbackMetadata</a> <a href="#ref-for-dom-domhighrestimestamp①">(2)</a> <a href="#ref-for-dom-domhighrestimestamp②">(3)</a> <a href="#ref-for-dom-domhighrestimestamp③">(4)</a>
     <li><a href="#ref-for-dom-domhighrestimestamp④">2.2. Attributes</a> <a href="#ref-for-dom-domhighrestimestamp⑤">(2)</a> <a href="#ref-for-dom-domhighrestimestamp⑥">(3)</a> <a href="#ref-for-dom-domhighrestimestamp⑦">(4)</a>
     <li><a href="#ref-for-dom-domhighrestimestamp⑧">3. VideoFrameRequestCallback</a>
    </ul>
@@ -2119,22 +1126,29 @@ can be done by using <code class="idl"><a data-link-type="idl" href="#dom-htmlvi
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-idl-double">
-   <a href="https://heycam.github.io/webidl/#idl-double">https://heycam.github.io/webidl/#idl-double</a><b>Referenced in:</b>
+   <a href="https://webidl.spec.whatwg.org/#idl-double">https://webidl.spec.whatwg.org/#idl-double</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-idl-double">2. VideoFrameMetadata</a> <a href="#ref-for-idl-double①">(2)</a>
+    <li><a href="#ref-for-idl-double">2. VideoFrameCallbackMetadata</a> <a href="#ref-for-idl-double①">(2)</a>
     <li><a href="#ref-for-idl-double②">2.2. Attributes</a> <a href="#ref-for-idl-double③">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-invoke-a-callback-function">
-   <a href="https://heycam.github.io/webidl/#invoke-a-callback-function">https://heycam.github.io/webidl/#invoke-a-callback-function</a><b>Referenced in:</b>
+   <a href="https://webidl.spec.whatwg.org/#invoke-a-callback-function">https://webidl.spec.whatwg.org/#invoke-a-callback-function</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-invoke-a-callback-function">4.2. Procedures</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-idl-unsigned-long">
-   <a href="https://heycam.github.io/webidl/#idl-unsigned-long">https://heycam.github.io/webidl/#idl-unsigned-long</a><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="term-for-idl-undefined">
+   <a href="https://webidl.spec.whatwg.org/#idl-undefined">https://webidl.spec.whatwg.org/#idl-undefined</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-idl-unsigned-long">2. VideoFrameMetadata</a> <a href="#ref-for-idl-unsigned-long①">(2)</a> <a href="#ref-for-idl-unsigned-long②">(3)</a> <a href="#ref-for-idl-unsigned-long③">(4)</a>
+    <li><a href="#ref-for-idl-undefined">3. VideoFrameRequestCallback</a>
+    <li><a href="#ref-for-idl-undefined①">4. HTMLVideoElement.requestVideoFrameCallback()</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-idl-unsigned-long">
+   <a href="https://webidl.spec.whatwg.org/#idl-unsigned-long">https://webidl.spec.whatwg.org/#idl-unsigned-long</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-idl-unsigned-long">2. VideoFrameCallbackMetadata</a> <a href="#ref-for-idl-unsigned-long①">(2)</a> <a href="#ref-for-idl-unsigned-long②">(3)</a> <a href="#ref-for-idl-unsigned-long③">(4)</a>
     <li><a href="#ref-for-idl-unsigned-long④">2.2. Attributes</a> <a href="#ref-for-idl-unsigned-long⑤">(2)</a> <a href="#ref-for-idl-unsigned-long⑥">(3)</a> <a href="#ref-for-idl-unsigned-long⑦">(4)</a>
     <li><a href="#ref-for-idl-unsigned-long⑧">4. HTMLVideoElement.requestVideoFrameCallback()</a> <a href="#ref-for-idl-unsigned-long⑨">(2)</a>
    </ul>
@@ -2144,98 +1158,99 @@ can be done by using <code class="idl"><a data-link-type="idl" href="#dom-htmlvi
    <li>
     <a data-link-type="biblio">[css-values-3]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-px" style="color:initial">css pixels</span>
+     <li><span class="dfn-paneled" id="term-for-px">css pixels</span>
     </ul>
    <li>
     <a data-link-type="biblio">[DOM]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-document" style="color:initial">Document</span>
-     <li><span class="dfn-paneled" id="term-for-dom-node-ownerdocument" style="color:initial">ownerDocument</span>
+     <li><span class="dfn-paneled" id="term-for-document">Document</span>
+     <li><span class="dfn-paneled" id="term-for-dom-node-ownerdocument">ownerDocument</span>
     </ul>
    <li>
     <a data-link-type="biblio">[hr-time-2]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-dom-domhighrestimestamp" style="color:initial">DOMHighResTimeStamp</span>
+     <li><span class="dfn-paneled" id="term-for-dom-domhighrestimestamp">DOMHighResTimeStamp</span>
     </ul>
    <li>
-    <a data-link-type="biblio">[hr-timing]</a> defines the following terms:
+    <a data-link-type="biblio">[HR-TIMING]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-clock-resolution" style="color:initial">clock resolution</span>
+     <li><span class="dfn-paneled" id="term-for-clock-resolution">clock resolution</span>
     </ul>
    <li>
     <a data-link-type="biblio">[HTML]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-animationframeprovider" style="color:initial">AnimationFrameProvider</span>
-     <li><span class="dfn-paneled" id="term-for-htmlvideoelement" style="color:initial">HTMLVideoElement</span>
-     <li><span class="dfn-paneled" id="term-for-canvas" style="color:initial">canvas</span>
-     <li><span class="dfn-paneled" id="term-for-dom-media-currenttime" style="color:initial">currentTime</span>
-     <li><span class="dfn-paneled" id="term-for-dom-context-2d-drawimage" style="color:initial">drawImage(image, dx, dy, dw, dh)</span>
-     <li><span class="dfn-paneled" id="term-for-event-loop-processing-model" style="color:initial">event loop processing model</span>
-     <li><span class="dfn-paneled" id="term-for-fully-active" style="color:initial">fully active</span>
-     <li><span class="dfn-paneled" id="term-for-report-the-exception" style="color:initial">report the exception</span>
-     <li><span class="dfn-paneled" id="term-for-run-the-animation-frame-callbacks" style="color:initial">run the animation frame callbacks</span>
-     <li><span class="dfn-paneled" id="term-for-update-the-rendering" style="color:initial">update the rendering</span>
-     <li><span class="dfn-paneled" id="term-for-dom-video-videoheight" style="color:initial">videoHeight</span>
-     <li><span class="dfn-paneled" id="term-for-dom-video-videowidth" style="color:initial">videoWidth</span>
+     <li><span class="dfn-paneled" id="term-for-animationframeprovider">AnimationFrameProvider</span>
+     <li><span class="dfn-paneled" id="term-for-htmlvideoelement">HTMLVideoElement</span>
+     <li><span class="dfn-paneled" id="term-for-canvas">canvas</span>
+     <li><span class="dfn-paneled" id="term-for-dom-media-currenttime">currentTime</span>
+     <li><span class="dfn-paneled" id="term-for-dom-context-2d-drawimage">drawImage(image, dx, dy, dw, dh)</span>
+     <li><span class="dfn-paneled" id="term-for-event-loop-processing-model">event loop processing model</span>
+     <li><span class="dfn-paneled" id="term-for-fully-active">fully active</span>
+     <li><span class="dfn-paneled" id="term-for-report-the-exception">report the exception</span>
+     <li><span class="dfn-paneled" id="term-for-run-the-animation-frame-callbacks">run the animation frame callbacks</span>
+     <li><span class="dfn-paneled" id="term-for-update-the-rendering">update the rendering</span>
+     <li><span class="dfn-paneled" id="term-for-dom-video-videoheight">videoHeight</span>
+     <li><span class="dfn-paneled" id="term-for-dom-video-videowidth">videoWidth</span>
     </ul>
    <li>
     <a data-link-type="biblio">[media-capabilities]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-dictdef-mediacapabilitiesinfo" style="color:initial">MediaCapabilitiesInfo</span>
+     <li><span class="dfn-paneled" id="term-for-dictdef-mediacapabilitiesinfo">MediaCapabilitiesInfo</span>
     </ul>
    <li>
-    <a data-link-type="biblio">[WebIDL]</a> defines the following terms:
+    <a data-link-type="biblio">[WEBIDL]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-idl-double" style="color:initial">double</span>
-     <li><span class="dfn-paneled" id="term-for-invoke-a-callback-function" style="color:initial">invoke</span>
-     <li><span class="dfn-paneled" id="term-for-idl-unsigned-long" style="color:initial">unsigned long</span>
+     <li><span class="dfn-paneled" id="term-for-idl-double">double</span>
+     <li><span class="dfn-paneled" id="term-for-invoke-a-callback-function">invoke</span>
+     <li><span class="dfn-paneled" id="term-for-idl-undefined">undefined</span>
+     <li><span class="dfn-paneled" id="term-for-idl-unsigned-long">unsigned long</span>
     </ul>
   </ul>
   <h2 class="no-num no-ref heading settled" id="references"><span class="content">References</span><a class="self-link" href="#references"></a></h2>
   <h3 class="no-num no-ref heading settled" id="normative"><span class="content">Normative References</span><a class="self-link" href="#normative"></a></h3>
   <dl>
    <dt id="biblio-css-values-3">[CSS-VALUES-3]
-   <dd>Tab Atkins Jr.; Elika Etemad. <a href="https://www.w3.org/TR/css-values-3/">CSS Values and Units Module Level 3</a>. 6 June 2019. CR. URL: <a href="https://www.w3.org/TR/css-values-3/">https://www.w3.org/TR/css-values-3/</a>
+   <dd>Tab Atkins Jr.; Elika Etemad. <a href="https://www.w3.org/TR/css-values-3/"><cite>CSS Values and Units Module Level 3</cite></a>. 6 June 2019. CR. URL: <a href="https://www.w3.org/TR/css-values-3/">https://www.w3.org/TR/css-values-3/</a>
    <dt id="biblio-dom">[DOM]
-   <dd>Anne van Kesteren. <a href="https://dom.spec.whatwg.org/">DOM Standard</a>. Living Standard. URL: <a href="https://dom.spec.whatwg.org/">https://dom.spec.whatwg.org/</a>
+   <dd>Anne van Kesteren. <a href="https://dom.spec.whatwg.org/"><cite>DOM Standard</cite></a>. Living Standard. URL: <a href="https://dom.spec.whatwg.org/">https://dom.spec.whatwg.org/</a>
    <dt id="biblio-hr-time-2">[HR-TIME-2]
-   <dd>Ilya Grigorik. <a href="https://www.w3.org/TR/hr-time-2/">High Resolution Time Level 2</a>. 21 November 2019. REC. URL: <a href="https://www.w3.org/TR/hr-time-2/">https://www.w3.org/TR/hr-time-2/</a>
+   <dd>Ilya Grigorik. <a href="https://www.w3.org/TR/hr-time-2/"><cite>High Resolution Time Level 2</cite></a>. 21 November 2019. REC. URL: <a href="https://www.w3.org/TR/hr-time-2/">https://www.w3.org/TR/hr-time-2/</a>
    <dt id="biblio-html">[HTML]
-   <dd>Anne van Kesteren; et al. <a href="https://html.spec.whatwg.org/multipage/">HTML Standard</a>. Living Standard. URL: <a href="https://html.spec.whatwg.org/multipage/">https://html.spec.whatwg.org/multipage/</a>
+   <dd>Anne van Kesteren; et al. <a href="https://html.spec.whatwg.org/multipage/"><cite>HTML Standard</cite></a>. Living Standard. URL: <a href="https://html.spec.whatwg.org/multipage/">https://html.spec.whatwg.org/multipage/</a>
    <dt id="biblio-media-capabilities">[MEDIA-CAPABILITIES]
-   <dd>Mounir Lamouri. <a href="https://w3c.github.io/media-capabilities/">Media Capabilities</a>. ED. URL: <a href="https://w3c.github.io/media-capabilities/">https://w3c.github.io/media-capabilities/</a>
+   <dd>Mounir Lamouri; Chris Cunningham; Vi Nguyen. <a href="https://www.w3.org/TR/media-capabilities/"><cite>Media Capabilities</cite></a>. 11 January 2022. WD. URL: <a href="https://www.w3.org/TR/media-capabilities/">https://www.w3.org/TR/media-capabilities/</a>
    <dt id="biblio-rfc2119">[RFC2119]
-   <dd>S. Bradner. <a href="https://tools.ietf.org/html/rfc2119">Key words for use in RFCs to Indicate Requirement Levels</a>. March 1997. Best Current Practice. URL: <a href="https://tools.ietf.org/html/rfc2119">https://tools.ietf.org/html/rfc2119</a>
-   <dt id="biblio-webidl">[WebIDL]
-   <dd>Boris Zbarsky. <a href="https://heycam.github.io/webidl/">Web IDL</a>. 15 December 2016. ED. URL: <a href="https://heycam.github.io/webidl/">https://heycam.github.io/webidl/</a>
+   <dd>S. Bradner. <a href="https://datatracker.ietf.org/doc/html/rfc2119"><cite>Key words for use in RFCs to Indicate Requirement Levels</cite></a>. March 1997. Best Current Practice. URL: <a href="https://datatracker.ietf.org/doc/html/rfc2119">https://datatracker.ietf.org/doc/html/rfc2119</a>
+   <dt id="biblio-webidl">[WEBIDL]
+   <dd>Edgar Chen; Timothy Gu. <a href="https://webidl.spec.whatwg.org/"><cite>Web IDL Standard</cite></a>. Living Standard. URL: <a href="https://webidl.spec.whatwg.org/">https://webidl.spec.whatwg.org/</a>
   </dl>
   <h3 class="no-num no-ref heading settled" id="informative"><span class="content">Informative References</span><a class="self-link" href="#informative"></a></h3>
   <dl>
    <dt id="biblio-webrtc-stats">[WEBRTC-STATS]
-   <dd>Harald Alvestrand; Varun Singh. <a href="https://www.w3.org/TR/webrtc-stats/">Identifiers for WebRTC's Statistics API</a>. 3 July 2018. CR. URL: <a href="https://www.w3.org/TR/webrtc-stats/">https://www.w3.org/TR/webrtc-stats/</a>
+   <dd>Harald Alvestrand; Varun Singh; Henrik Boström. <a href="https://www.w3.org/TR/webrtc-stats/"><cite>Identifiers for WebRTC's Statistics API</cite></a>. 10 November 2021. CR. URL: <a href="https://www.w3.org/TR/webrtc-stats/">https://www.w3.org/TR/webrtc-stats/</a>
   </dl>
   <h2 class="no-num no-ref heading settled" id="idl-index"><span class="content">IDL Index</span><a class="self-link" href="#idl-index"></a></h2>
-<pre class="idl highlight def"><c- b>dictionary</c-> <a href="#dictdef-videoframemetadata"><code><c- g>VideoFrameMetadata</c-></code></a> {
-  <c- b>required</c-> <a class="n" data-link-type="idl-name" href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp" id="ref-for-dom-domhighrestimestamp⑨"><c- n>DOMHighResTimeStamp</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="DOMHighResTimeStamp " href="#dom-videoframemetadata-presentationtime" id="ref-for-dom-videoframemetadata-presentationtime②"><c- g>presentationTime</c-></a>;
-  <c- b>required</c-> <a class="n" data-link-type="idl-name" href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp" id="ref-for-dom-domhighrestimestamp①①"><c- n>DOMHighResTimeStamp</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="DOMHighResTimeStamp " href="#dom-videoframemetadata-expecteddisplaytime" id="ref-for-dom-videoframemetadata-expecteddisplaytime①①"><c- g>expectedDisplayTime</c-></a>;
+<pre class="idl highlight def"><c- b>dictionary</c-> <a href="#dictdef-videoframecallbackmetadata"><code><c- g>VideoFrameCallbackMetadata</c-></code></a> {
+  <c- b>required</c-> <a data-link-type="idl-name" href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp"><c- n>DOMHighResTimeStamp</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="DOMHighResTimeStamp " href="#dom-videoframecallbackmetadata-presentationtime"><c- g>presentationTime</c-></a>;
+  <c- b>required</c-> <a data-link-type="idl-name" href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp"><c- n>DOMHighResTimeStamp</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="DOMHighResTimeStamp " href="#dom-videoframecallbackmetadata-expecteddisplaytime"><c- g>expectedDisplayTime</c-></a>;
 
-  <c- b>required</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long" id="ref-for-idl-unsigned-long①⓪"><c- b>unsigned</c-> <c- b>long</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="unsigned long " href="#dom-videoframemetadata-width" id="ref-for-dom-videoframemetadata-width③"><c- g>width</c-></a>;
-  <c- b>required</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long" id="ref-for-idl-unsigned-long①①"><c- b>unsigned</c-> <c- b>long</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="unsigned long " href="#dom-videoframemetadata-height" id="ref-for-dom-videoframemetadata-height③"><c- g>height</c-></a>;
-  <c- b>required</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-double" id="ref-for-idl-double④"><c- b>double</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="double " href="#dom-videoframemetadata-mediatime" id="ref-for-dom-videoframemetadata-mediatime②"><c- g>mediaTime</c-></a>;
+  <c- b>required</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-unsigned-long"><c- b>unsigned</c-> <c- b>long</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="unsigned long " href="#dom-videoframecallbackmetadata-width"><c- g>width</c-></a>;
+  <c- b>required</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-unsigned-long"><c- b>unsigned</c-> <c- b>long</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="unsigned long " href="#dom-videoframecallbackmetadata-height"><c- g>height</c-></a>;
+  <c- b>required</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-double"><c- b>double</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="double " href="#dom-videoframecallbackmetadata-mediatime"><c- g>mediaTime</c-></a>;
 
-  <c- b>required</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long" id="ref-for-idl-unsigned-long②①"><c- b>unsigned</c-> <c- b>long</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="unsigned long " href="#dom-videoframemetadata-presentedframes" id="ref-for-dom-videoframemetadata-presentedframes①①"><c- g>presentedFrames</c-></a>;
-  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-double" id="ref-for-idl-double①①"><c- b>double</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="double " href="#dom-videoframemetadata-processingduration" id="ref-for-dom-videoframemetadata-processingduration②"><c- g>processingDuration</c-></a>;
+  <c- b>required</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-unsigned-long"><c- b>unsigned</c-> <c- b>long</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="unsigned long " href="#dom-videoframecallbackmetadata-presentedframes"><c- g>presentedFrames</c-></a>;
+  <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-double"><c- b>double</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="double " href="#dom-videoframecallbackmetadata-processingduration"><c- g>processingDuration</c-></a>;
 
-  <a class="n" data-link-type="idl-name" href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp" id="ref-for-dom-domhighrestimestamp②①"><c- n>DOMHighResTimeStamp</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="DOMHighResTimeStamp " href="#dom-videoframemetadata-capturetime" id="ref-for-dom-videoframemetadata-capturetime④"><c- g>captureTime</c-></a>;
-  <a class="n" data-link-type="idl-name" href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp" id="ref-for-dom-domhighrestimestamp③①"><c- n>DOMHighResTimeStamp</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="DOMHighResTimeStamp " href="#dom-videoframemetadata-receivetime" id="ref-for-dom-videoframemetadata-receivetime④"><c- g>receiveTime</c-></a>;
-  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long" id="ref-for-idl-unsigned-long③①"><c- b>unsigned</c-> <c- b>long</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="unsigned long " href="#dom-videoframemetadata-rtptimestamp" id="ref-for-dom-videoframemetadata-rtptimestamp②"><c- g>rtpTimestamp</c-></a>;
+  <a data-link-type="idl-name" href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp"><c- n>DOMHighResTimeStamp</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="DOMHighResTimeStamp " href="#dom-videoframecallbackmetadata-capturetime"><c- g>captureTime</c-></a>;
+  <a data-link-type="idl-name" href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp"><c- n>DOMHighResTimeStamp</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="DOMHighResTimeStamp " href="#dom-videoframecallbackmetadata-receivetime"><c- g>receiveTime</c-></a>;
+  <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-unsigned-long"><c- b>unsigned</c-> <c- b>long</c-></a> <a class="idl-code" data-link-type="dict-member" data-type="unsigned long " href="#dom-videoframecallbackmetadata-rtptimestamp"><c- g>rtpTimestamp</c-></a>;
 };
 
-<c- b>callback</c-> <a href="#callbackdef-videoframerequestcallback"><code><c- g>VideoFrameRequestCallback</c-></code></a> = <a class="n" data-link-type="idl-name"><c- n>undefined</c-></a>(<a class="n" data-link-type="idl-name" href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp" id="ref-for-dom-domhighrestimestamp⑧①"><c- n>DOMHighResTimeStamp</c-></a> <a href="#dom-videoframerequestcallback-now"><code><c- g>now</c-></code></a>, <a class="n" data-link-type="idl-name" href="#dictdef-videoframemetadata" id="ref-for-dictdef-videoframemetadata①①"><c- n>VideoFrameMetadata</c-></a> <a href="#dom-videoframerequestcallback-metadata"><code><c- g>metadata</c-></code></a>);
+<c- b>callback</c-> <a href="#callbackdef-videoframerequestcallback"><code><c- g>VideoFrameRequestCallback</c-></code></a> = <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-undefined"><c- b>undefined</c-></a>(<a data-link-type="idl-name" href="https://www.w3.org/TR/hr-time-2/#dom-domhighrestimestamp"><c- n>DOMHighResTimeStamp</c-></a> <a href="#dom-videoframerequestcallback-now"><code><c- g>now</c-></code></a>, <a data-link-type="idl-name" href="#dictdef-videoframecallbackmetadata"><c- n>VideoFrameCallbackMetadata</c-></a> <a href="#dom-videoframerequestcallback-metadata"><code><c- g>metadata</c-></code></a>);
 
-<c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement" id="ref-for-htmlvideoelement①①"><c- g>HTMLVideoElement</c-></a> {
-    <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long" id="ref-for-idl-unsigned-long⑧①"><c- b>unsigned</c-> <c- b>long</c-></a> <a class="idl-code" data-link-type="method" href="#dom-htmlvideoelement-requestvideoframecallback" id="ref-for-dom-htmlvideoelement-requestvideoframecallback①①"><c- g>requestVideoFrameCallback</c-></a>(<a class="n" data-link-type="idl-name" href="#callbackdef-videoframerequestcallback" id="ref-for-callbackdef-videoframerequestcallback⑥①"><c- n>VideoFrameRequestCallback</c-></a> <a href="#dom-htmlvideoelement-requestvideoframecallback-callback-callback"><code><c- g>callback</c-></code></a>);
-    <a class="n" data-link-type="idl-name"><c- n>undefined</c-></a> <a class="idl-code" data-link-type="method" href="#dom-htmlvideoelement-cancelvideoframecallback" id="ref-for-dom-htmlvideoelement-cancelvideoframecallback①"><c- g>cancelVideoFrameCallback</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long" id="ref-for-idl-unsigned-long⑨①"><c- b>unsigned</c-> <c- b>long</c-></a> <a href="#dom-htmlvideoelement-cancelvideoframecallback-handle-handle"><code><c- g>handle</c-></code></a>);
+<c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement"><c- g>HTMLVideoElement</c-></a> {
+    <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-unsigned-long"><c- b>unsigned</c-> <c- b>long</c-></a> <a class="idl-code" data-link-type="method" href="#dom-htmlvideoelement-requestvideoframecallback"><c- g>requestVideoFrameCallback</c-></a>(<a data-link-type="idl-name" href="#callbackdef-videoframerequestcallback"><c- n>VideoFrameRequestCallback</c-></a> <a href="#dom-htmlvideoelement-requestvideoframecallback-callback-callback"><code><c- g>callback</c-></code></a>);
+    <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-undefined"><c- b>undefined</c-></a> <a class="idl-code" data-link-type="method" href="#dom-htmlvideoelement-cancelvideoframecallback"><c- g>cancelVideoFrameCallback</c-></a>(<a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-unsigned-long"><c- b>unsigned</c-> <c- b>long</c-></a> <a href="#dom-htmlvideoelement-cancelvideoframecallback-handle-handle"><code><c- g>handle</c-></code></a>);
 };
 
 </pre>
@@ -2243,14 +1258,14 @@ can be done by using <code class="idl"><a data-link-type="idl" href="#dom-htmlvi
   <div style="counter-reset:issue">
    <div class="issue"> This spec should eventually be merged into the HTML spec, and we should directly call <a data-link-type="dfn" href="#run-the-video-frame-request-callbacks">run the
 video frame request callbacks</a> from the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#update-the-rendering">update the rendering</a> steps. This procedure describes
-where and how to invoke the algorithm in the meantime.<a href="#issue-9a108000"> ↵ </a></div>
+where and how to invoke the algorithm in the meantime. <a class="issue-return" href="#issue-9a108000" title="Jump to section">↵</a></div>
   </div>
-  <aside class="dfn-panel" data-for="dictdef-videoframemetadata">
-   <b><a href="#dictdef-videoframemetadata">#dictdef-videoframemetadata</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="dictdef-videoframecallbackmetadata">
+   <b><a href="#dictdef-videoframecallbackmetadata">#dictdef-videoframecallbackmetadata</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dictdef-videoframemetadata">1. Introduction</a>
-    <li><a href="#ref-for-dictdef-videoframemetadata①">3. VideoFrameRequestCallback</a>
-    <li><a href="#ref-for-dictdef-videoframemetadata②">4.2. Procedures</a>
+    <li><a href="#ref-for-dictdef-videoframecallbackmetadata">1. Introduction</a>
+    <li><a href="#ref-for-dictdef-videoframecallbackmetadata①">3. VideoFrameRequestCallback</a>
+    <li><a href="#ref-for-dictdef-videoframecallbackmetadata②">4.2. Procedures</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="media-pixels">
@@ -2259,76 +1274,76 @@ where and how to invoke the algorithm in the meantime.<a href="#issue-9a108000">
     <li><a href="#ref-for-media-pixels">2.2. Attributes</a> <a href="#ref-for-media-pixels①">(2)</a> <a href="#ref-for-media-pixels②">(3)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="dom-videoframemetadata-presentationtime">
-   <b><a href="#dom-videoframemetadata-presentationtime">#dom-videoframemetadata-presentationtime</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="dom-videoframecallbackmetadata-presentationtime">
+   <b><a href="#dom-videoframecallbackmetadata-presentationtime">#dom-videoframecallbackmetadata-presentationtime</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-videoframemetadata-presentationtime">2. VideoFrameMetadata</a>
-    <li><a href="#ref-for-dom-videoframemetadata-presentationtime①">5. Security and Privacy Considerations</a>
+    <li><a href="#ref-for-dom-videoframecallbackmetadata-presentationtime">2. VideoFrameCallbackMetadata</a>
+    <li><a href="#ref-for-dom-videoframecallbackmetadata-presentationtime①">5. Security and Privacy Considerations</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="dom-videoframemetadata-expecteddisplaytime">
-   <b><a href="#dom-videoframemetadata-expecteddisplaytime">#dom-videoframemetadata-expecteddisplaytime</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="dom-videoframecallbackmetadata-expecteddisplaytime">
+   <b><a href="#dom-videoframecallbackmetadata-expecteddisplaytime">#dom-videoframecallbackmetadata-expecteddisplaytime</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-videoframemetadata-expecteddisplaytime">1. Introduction</a>
-    <li><a href="#ref-for-dom-videoframemetadata-expecteddisplaytime①">2. VideoFrameMetadata</a>
-    <li><a href="#ref-for-dom-videoframemetadata-expecteddisplaytime②">5. Security and Privacy Considerations</a>
+    <li><a href="#ref-for-dom-videoframecallbackmetadata-expecteddisplaytime">1. Introduction</a>
+    <li><a href="#ref-for-dom-videoframecallbackmetadata-expecteddisplaytime①">2. VideoFrameCallbackMetadata</a>
+    <li><a href="#ref-for-dom-videoframecallbackmetadata-expecteddisplaytime②">5. Security and Privacy Considerations</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="dom-videoframemetadata-width">
-   <b><a href="#dom-videoframemetadata-width">#dom-videoframemetadata-width</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="dom-videoframecallbackmetadata-width">
+   <b><a href="#dom-videoframecallbackmetadata-width">#dom-videoframecallbackmetadata-width</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-videoframemetadata-width">2. VideoFrameMetadata</a>
-    <li><a href="#ref-for-dom-videoframemetadata-width①">2.2. Attributes</a> <a href="#ref-for-dom-videoframemetadata-width②">(2)</a>
+    <li><a href="#ref-for-dom-videoframecallbackmetadata-width">2. VideoFrameCallbackMetadata</a>
+    <li><a href="#ref-for-dom-videoframecallbackmetadata-width①">2.2. Attributes</a> <a href="#ref-for-dom-videoframecallbackmetadata-width②">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="dom-videoframemetadata-height">
-   <b><a href="#dom-videoframemetadata-height">#dom-videoframemetadata-height</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="dom-videoframecallbackmetadata-height">
+   <b><a href="#dom-videoframecallbackmetadata-height">#dom-videoframecallbackmetadata-height</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-videoframemetadata-height">2. VideoFrameMetadata</a>
-    <li><a href="#ref-for-dom-videoframemetadata-height①">2.2. Attributes</a> <a href="#ref-for-dom-videoframemetadata-height②">(2)</a>
+    <li><a href="#ref-for-dom-videoframecallbackmetadata-height">2. VideoFrameCallbackMetadata</a>
+    <li><a href="#ref-for-dom-videoframecallbackmetadata-height①">2.2. Attributes</a> <a href="#ref-for-dom-videoframecallbackmetadata-height②">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="dom-videoframemetadata-mediatime">
-   <b><a href="#dom-videoframemetadata-mediatime">#dom-videoframemetadata-mediatime</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="dom-videoframecallbackmetadata-mediatime">
+   <b><a href="#dom-videoframecallbackmetadata-mediatime">#dom-videoframecallbackmetadata-mediatime</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-videoframemetadata-mediatime">2. VideoFrameMetadata</a>
-    <li><a href="#ref-for-dom-videoframemetadata-mediatime①">2.2. Attributes</a>
+    <li><a href="#ref-for-dom-videoframecallbackmetadata-mediatime">2. VideoFrameCallbackMetadata</a>
+    <li><a href="#ref-for-dom-videoframecallbackmetadata-mediatime①">2.2. Attributes</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="dom-videoframemetadata-presentedframes">
-   <b><a href="#dom-videoframemetadata-presentedframes">#dom-videoframemetadata-presentedframes</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="dom-videoframecallbackmetadata-presentedframes">
+   <b><a href="#dom-videoframecallbackmetadata-presentedframes">#dom-videoframecallbackmetadata-presentedframes</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-videoframemetadata-presentedframes">1. Introduction</a>
-    <li><a href="#ref-for-dom-videoframemetadata-presentedframes①">2. VideoFrameMetadata</a>
-    <li><a href="#ref-for-dom-videoframemetadata-presentedframes②">4.2. Procedures</a>
+    <li><a href="#ref-for-dom-videoframecallbackmetadata-presentedframes">1. Introduction</a>
+    <li><a href="#ref-for-dom-videoframecallbackmetadata-presentedframes①">2. VideoFrameCallbackMetadata</a>
+    <li><a href="#ref-for-dom-videoframecallbackmetadata-presentedframes②">4.2. Procedures</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="dom-videoframemetadata-processingduration">
-   <b><a href="#dom-videoframemetadata-processingduration">#dom-videoframemetadata-processingduration</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="dom-videoframecallbackmetadata-processingduration">
+   <b><a href="#dom-videoframecallbackmetadata-processingduration">#dom-videoframecallbackmetadata-processingduration</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-videoframemetadata-processingduration">2. VideoFrameMetadata</a>
-    <li><a href="#ref-for-dom-videoframemetadata-processingduration①">5. Security and Privacy Considerations</a>
+    <li><a href="#ref-for-dom-videoframecallbackmetadata-processingduration">2. VideoFrameCallbackMetadata</a>
+    <li><a href="#ref-for-dom-videoframecallbackmetadata-processingduration①">5. Security and Privacy Considerations</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="dom-videoframemetadata-capturetime">
-   <b><a href="#dom-videoframemetadata-capturetime">#dom-videoframemetadata-capturetime</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="dom-videoframecallbackmetadata-capturetime">
+   <b><a href="#dom-videoframecallbackmetadata-capturetime">#dom-videoframecallbackmetadata-capturetime</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-videoframemetadata-capturetime">2. VideoFrameMetadata</a>
-    <li><a href="#ref-for-dom-videoframemetadata-capturetime①">5. Security and Privacy Considerations</a> <a href="#ref-for-dom-videoframemetadata-capturetime②">(2)</a> <a href="#ref-for-dom-videoframemetadata-capturetime③">(3)</a>
+    <li><a href="#ref-for-dom-videoframecallbackmetadata-capturetime">2. VideoFrameCallbackMetadata</a>
+    <li><a href="#ref-for-dom-videoframecallbackmetadata-capturetime①">5. Security and Privacy Considerations</a> <a href="#ref-for-dom-videoframecallbackmetadata-capturetime②">(2)</a> <a href="#ref-for-dom-videoframecallbackmetadata-capturetime③">(3)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="dom-videoframemetadata-receivetime">
-   <b><a href="#dom-videoframemetadata-receivetime">#dom-videoframemetadata-receivetime</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="dom-videoframecallbackmetadata-receivetime">
+   <b><a href="#dom-videoframecallbackmetadata-receivetime">#dom-videoframecallbackmetadata-receivetime</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-videoframemetadata-receivetime">2. VideoFrameMetadata</a>
-    <li><a href="#ref-for-dom-videoframemetadata-receivetime①">5. Security and Privacy Considerations</a> <a href="#ref-for-dom-videoframemetadata-receivetime②">(2)</a> <a href="#ref-for-dom-videoframemetadata-receivetime③">(3)</a>
+    <li><a href="#ref-for-dom-videoframecallbackmetadata-receivetime">2. VideoFrameCallbackMetadata</a>
+    <li><a href="#ref-for-dom-videoframecallbackmetadata-receivetime①">5. Security and Privacy Considerations</a> <a href="#ref-for-dom-videoframecallbackmetadata-receivetime②">(2)</a> <a href="#ref-for-dom-videoframecallbackmetadata-receivetime③">(3)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="dom-videoframemetadata-rtptimestamp">
-   <b><a href="#dom-videoframemetadata-rtptimestamp">#dom-videoframemetadata-rtptimestamp</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="dom-videoframecallbackmetadata-rtptimestamp">
+   <b><a href="#dom-videoframecallbackmetadata-rtptimestamp">#dom-videoframecallbackmetadata-rtptimestamp</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-videoframemetadata-rtptimestamp">2. VideoFrameMetadata</a>
-    <li><a href="#ref-for-dom-videoframemetadata-rtptimestamp①">5. Security and Privacy Considerations</a>
+    <li><a href="#ref-for-dom-videoframecallbackmetadata-rtptimestamp">2. VideoFrameCallbackMetadata</a>
+    <li><a href="#ref-for-dom-videoframecallbackmetadata-rtptimestamp①">5. Security and Privacy Considerations</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="callbackdef-videoframerequestcallback">
@@ -2393,90 +1408,6 @@ where and how to invoke the algorithm in the meantime.<a href="#issue-9a108000">
     <li><a href="#ref-for-run-the-video-frame-request-callbacks">4.2. Procedures</a> <a href="#ref-for-run-the-video-frame-request-callbacks①">(2)</a> <a href="#ref-for-run-the-video-frame-request-callbacks②">(3)</a>
    </ul>
   </aside>
-<script>/* script-var-click-highlighting */
-
-    document.addEventListener("click", e=>{
-        if(e.target.nodeName == "VAR") {
-            highlightSameAlgoVars(e.target);
-        }
-    });
-    {
-        const indexCounts = new Map();
-        const indexNames = new Map();
-        function highlightSameAlgoVars(v) {
-            // Find the algorithm container.
-            let algoContainer = null;
-            let searchEl = v;
-            while(algoContainer == null && searchEl != document.body) {
-                searchEl = searchEl.parentNode;
-                if(searchEl.hasAttribute("data-algorithm")) {
-                    algoContainer = searchEl;
-                }
-            }
-
-            // Not highlighting document-global vars,
-            // too likely to be unrelated.
-            if(algoContainer == null) return;
-
-            const algoName = algoContainer.getAttribute("data-algorithm");
-            const varName = getVarName(v);
-            const addClass = !v.classList.contains("selected");
-            let highlightClass = null;
-            if(addClass) {
-                const index = chooseHighlightIndex(algoName, varName);
-                indexCounts.get(algoName)[index] += 1;
-                indexNames.set(algoName+"///"+varName, index);
-                highlightClass = nameFromIndex(index);
-            } else {
-                const index = previousHighlightIndex(algoName, varName);
-                indexCounts.get(algoName)[index] -= 1;
-                highlightClass = nameFromIndex(index);
-            }
-
-            // Find all same-name vars, and toggle their class appropriately.
-            for(const el of algoContainer.querySelectorAll("var")) {
-                if(getVarName(el) == varName) {
-                    el.classList.toggle("selected", addClass);
-                    el.classList.toggle(highlightClass, addClass);
-                }
-            }
-        }
-        function getVarName(el) {
-            return el.textContent.replace(/(\s| )+/, " ").trim();
-        }
-        function chooseHighlightIndex(algoName, varName) {
-            let indexes = null;
-            if(indexCounts.has(algoName)) {
-                indexes = indexCounts.get(algoName);
-            } else {
-                // 7 classes right now
-                indexes = [0,0,0,0,0,0,0];
-                indexCounts.set(algoName, indexes);
-            }
-
-            // If the element was recently unclicked,
-            // *and* that color is still unclaimed,
-            // give it back the same color.
-            const lastIndex = previousHighlightIndex(algoName, varName);
-            if(indexes[lastIndex] === 0) return lastIndex;
-
-            // Find the earliest index with the lowest count.
-            const minCount = Math.min.apply(null, indexes);
-            let index = null;
-            for(var i = 0; i < indexes.length; i++) {
-                if(indexes[i] == minCount) {
-                    return i;
-                }
-            }
-        }
-        function previousHighlightIndex(algoName, varName) {
-            return indexNames.get(algoName+"///"+varName);
-        }
-        function nameFromIndex(index) {
-            return "selected" + index;
-        }
-    }
-    </script>
 <script>/* script-dfn-panel */
 
 document.body.addEventListener("click", function(e) {
@@ -2533,3 +1464,87 @@ document.body.addEventListener("click", function(e) {
 
 });
 </script>
+<script>/* script-var-click-highlighting */
+
+    document.addEventListener("click", e=>{
+        if(e.target.nodeName == "VAR") {
+            highlightSameAlgoVars(e.target);
+        }
+    });
+    {
+        const indexCounts = new Map();
+        const indexNames = new Map();
+        function highlightSameAlgoVars(v) {
+            // Find the algorithm container.
+            let algoContainer = null;
+            let searchEl = v;
+            while(algoContainer == null && searchEl != document.body) {
+                searchEl = searchEl.parentNode;
+                if(searchEl.hasAttribute("data-algorithm")) {
+                    algoContainer = searchEl;
+                }
+            }
+
+            // Not highlighting document-global vars,
+            // too likely to be unrelated.
+            if(algoContainer == null) return;
+
+            const algoName = algoContainer.getAttribute("data-algorithm");
+            const varName = getVarName(v);
+            const addClass = !v.classList.contains("selected");
+            let highlightClass = null;
+            if(addClass) {
+                const index = chooseHighlightIndex(algoName, varName);
+                indexCounts.get(algoName)[index] += 1;
+                indexNames.set(algoName+"///"+varName, index);
+                highlightClass = nameFromIndex(index);
+            } else {
+                const index = previousHighlightIndex(algoName, varName);
+                indexCounts.get(algoName)[index] -= 1;
+                highlightClass = nameFromIndex(index);
+            }
+
+            // Find all same-name vars, and toggle their class appropriately.
+            for(const el of algoContainer.querySelectorAll("var")) {
+                if(getVarName(el) == varName) {
+                    el.classList.toggle("selected", addClass);
+                    el.classList.toggle(highlightClass, addClass);
+                }
+            }
+        }
+        function getVarName(el) {
+            return el.textContent.replace(/(\s|\xa0)+/, " ").trim();
+        }
+        function chooseHighlightIndex(algoName, varName) {
+            let indexes = null;
+            if(indexCounts.has(algoName)) {
+                indexes = indexCounts.get(algoName);
+            } else {
+                // 7 classes right now
+                indexes = [0,0,0,0,0,0,0];
+                indexCounts.set(algoName, indexes);
+            }
+
+            // If the element was recently unclicked,
+            // *and* that color is still unclaimed,
+            // give it back the same color.
+            const lastIndex = previousHighlightIndex(algoName, varName);
+            if(indexes[lastIndex] === 0) return lastIndex;
+
+            // Find the earliest index with the lowest count.
+            const minCount = Math.min.apply(null, indexes);
+            let index = null;
+            for(var i = 0; i < indexes.length; i++) {
+                if(indexes[i] == minCount) {
+                    return i;
+                }
+            }
+        }
+        function previousHighlightIndex(algoName, varName) {
+            return indexNames.get(algoName+"///"+varName);
+        }
+        function nameFromIndex(index) {
+            return "selected" + index;
+        }
+    }
+    </script>
