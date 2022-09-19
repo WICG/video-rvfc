@@ -62,7 +62,7 @@ to *now*, as opposed to roughly one v-sync in the future.
 The {{VideoFrameRequestCallback}} also provides useful {{VideoFrameCallbackMetadata|metadata}} about the video
 frame that was most recently presented for composition, which can be used for automated metrics analysis.
 
-# VideoFrameCallbackMetadata #    {#video-frame-metadata-callback}
+# VideoFrameCallbackMetadata #    {#video-frame-callback-metadata}
 
 <pre class='idl'>
   dictionary VideoFrameCallbackMetadata {
@@ -82,13 +82,13 @@ frame that was most recently presented for composition, which can be used for au
   };
 </pre>
 
-## Definitions ## {#video-frame-metadata-callback-definitions}
+## Definitions ## {#video-frame-callback-metadata-definitions}
 
 <dfn>media pixels</dfn> are defined as a media resource's visible decoded pixels, without pixel aspect
 ratio adjustments. They are different from [=CSS pixels=], which account for pixel aspect ratio
 adjustments.
 
-## Attributes ## {#video-frame-metadata-callback-attributes}
+## Attributes ## {#video-frame-callback-metadata-attributes}
 
 : <dfn for="VideoFrameCallbackMetadata" dict-member>presentationTime</dfn>
 :: The time at which the user agent submitted the frame for composition.
