@@ -175,7 +175,7 @@ Each {{VideoFrameRequestCallback}} object has a <dfn>canceled</dfn> boolean init
 ## Methods ## {#video-rvfc-methods}
 
 Each {{HTMLVideoElement}} has a <dfn>list of video frame request callbacks</dfn>, which is initially
-empty. It also has a <dfn>last presented frame indentifier</dfn> and a <dfn>video frame request
+empty. It also has a <dfn>last presented frame identifier</dfn> and a <dfn>video frame request
 callback identifier</dfn>, which are both numbers which are initially zero.
 
 : <dfn for="HTMLVideoElement" method>requestVideoFrameCallback(|callback|)</dfn>
@@ -237,8 +237,8 @@ To <dfn>run the video frame request callbacks</dfn> for a {{HTMLVideoElement}} |
 1. If |video|'s [=list of video frame request callbacks=] is empty, abort these steps.
 1. Let |metadata| be the {{VideoFrameCallbackMetadata}} dictionary built from |video|'s latest presented frame.
 1. Let |presentedFrames| be the value of |metadata|'s {{presentedFrames}} field.
-1. If the [=last presented frame indentifier=] is equal to |presentedFrames|, abort these steps.
-1. Set the [=last presented frame indentifier=] to |presentedFrames|.
+1. If the [=last presented frame identifier=] is equal to |presentedFrames|, abort these steps.
+1. Set the [=last presented frame identifier=] to |presentedFrames|.
 1. Let |callbacks| be the [=list of video frame request callbacks=].
 1. Set |video|'s [=list of video frame request callbacks=] to be empty.
 1. For each entry in |callbacks|
